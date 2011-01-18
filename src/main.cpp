@@ -1,8 +1,12 @@
 #include "codemap.h"
+#include "seeker.h"
+#include "cache.h"
 
 #include <QDebug>
 #include <QFile>
 #include <QStringList>
+
+#include <QtGui>
 
 CodeMap* load_codemap( QString file_path ) {
     QFile file( file_path ) ;
@@ -32,16 +36,24 @@ CodeMap* load_codemap( QString file_path ) {
 
 int main( int argc, char** argv ) {
     CodeMap* map = load_codemap( "../data/formated" ) ;
-    Node* node = map->seek( "zhe" ) ;
+    qDebug() << "done" ;
+    Seeker seeker ;
+    seeker.setStart( map->root ) ;
+    QueryCache cache;
+
+    while (1) {
+        QString path ;
+        QVector<Node*> result ;
+        QTextStream cin( stdin, QIODevice::ReadOnly ) ;
+        cin >> path ;
+        cache.set( seeker.powerSeek( path ) ) ;
+        cache.gen( 6 ) ;
+        for( int i = 0; i < cache.cand.count(); i++ ) {
+            Record* record = cache.cand[i] ;
+            qDebug() << QString( record->hanzi ) << record->freq ;
+        }
+    }
     
-    for ( int i = 0; i < node->child.count(); i++ ) {
-        const Node* child = node->child.at(i) ;
-        qDebug() << QString( child->code )  ;
-    }
-    for ( int i = 0; i < node->record.count(); i++ ) {
-        const RecordList* record = node->record.at(i) ;
-        qDebug() << record->pinyin ;
-    }
 
     return 0 ;
 }

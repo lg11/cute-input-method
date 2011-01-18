@@ -16,16 +16,3 @@ void CodeMap::insertRecord( QString path, QString pinyin, QString hanzi, qreal f
     list->insertRecord( hanzi, freq ) ;
 }
 
-Node* CodeMap::seek( QString path ) {
-    Node* current = this->root ;
-    for ( int i = 0; i < path.length(); i++ ) {
-        QChar code = path[i] ;
-        Node* next = current->findChild( code ) ;
-        if ( next )
-            current = next ;
-        else 
-            return NULL ;
-    }
-    return current ;
-}
-
