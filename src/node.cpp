@@ -1,41 +1,44 @@
 #include "node.h"
 
-#include <stdlib.h>
 
-struct Node* node_new( char code ) {
-    struct Node* node = malloc( sizeof( struct Node ) ) ;
-    node->code = code ;
-    node->child = NULL ;
-    node->child_count = 0 ;
-    return node ;
+Node* Node::findChild( QChar code ) {
+    int i = 0 ;
+    while ( i < this->child.count() ) {
+        Node* child = this->child[i] ;
+        if ( child->code == code )
+            return child ;
+        else 
+            i++ ;
+    }
+    return NULL ;
 }
 
-struct Node* node_find( struct Node* node, char code ) {
-    char flag = 0 ;
+Node* Node::addChild( QChar code ) {
+    Node* child = this->findChild( code ) ;
+    if ( !child ) {
+        child = new Node( code ) ;
+        this->child.append( child ) ;
+    }
+    return child ;
+}
+
+RecordList* Node::findRecord( QString pinyin ) {
     int i = 0 ;
-    while ( i < node->child_count && !flag ) {
-        if ( node->child[i]->code == code )
-            flag = 1 ;
+    while ( i < this->record.count() ) {
+        RecordList* record = this->record[i] ;
+        if ( record->pinyin == pinyin )
+            return record ;
         else
             i++ ;
     }
-    if ( flag )
-        return node->child[i] ;
-    else 
-        return NULL ;
+    return NULL ;
 }
 
-struct Node* node_add( struct Node* node, char code ) {
-    struct Node* result = node_find( node, code ) ;
-    if ( result ) 
-        return result ;
-    else {
-        result = node_new( code ) ;
-        if ( node->child_count )
-            node->child = realloc( node->child, ( node->child_count + 1 ) * sizeof( struct Node* ) ) ;
-        else 
-            node->child = malloc( sizeof( struct Node* ) ) ;
-        node->child[node->child_count] = result ;
-        node->child_count++ ;
+RecordList* Node::addRecord( QString pinyin ) {
+    RecordList* record = this->findRecord( pinyin ) ;
+    if ( !record ) {
+        record = new RecordList( pinyin ) ;
+        this->record.append( record ) ;
     }
+    return record ;
 }

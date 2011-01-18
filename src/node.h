@@ -1,10 +1,22 @@
-#ifndef NODE_H
-#define NODE_H
+#ifndef __NODE_H
+#define __NODE_H
 
-struct Node {
-    char code ;
-    struct Node** child ;
-    char child_count ;
+#include <QChar>
+#include <QVector>
+
+#include "record.h"
+
+class Node {
+public :
+    QChar code ;
+    QVector<Node*> child ;
+    QVector<RecordList*> record ;
+
+    Node( QChar code ) : code( code ) {}
+    Node* findChild( QChar code ) ;
+    Node* addChild( QChar code ) ;
+    RecordList* findRecord( QString pinyin ) ;
+    RecordList* addRecord( QString pinyin ) ;
 } ;
 
 #endif
