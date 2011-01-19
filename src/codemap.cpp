@@ -13,6 +13,7 @@ Node* CodeMap::addPath( QString path ) {
 void CodeMap::insertRecord( QString path, QString pinyin, QString hanzi, qreal freq ) {
     Node* node = this->addPath( path ) ;
     RecordList* list = node->addRecord( pinyin ) ;
-    list->insertRecord( hanzi, freq ) ;
+    Record* record = list->insertRecord( hanzi, freq ) ;
+    record->setPinyin( list->pinyin ) ;
 }
 

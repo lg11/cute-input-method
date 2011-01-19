@@ -6,10 +6,12 @@
 
 class Record {
 public :
+    QString pinyin ;
     QString hanzi ;
     qreal freq ;
     Record( QString hanzi ) : hanzi( hanzi ) { this->freq = 0 ; }
     Record( QString hanzi, qreal freq ) : hanzi( hanzi ) { this->freq = freq ; }
+    void setPinyin( QString pinyin ) { this->pinyin = pinyin ; }
 } ;
 
 class RecordList {
