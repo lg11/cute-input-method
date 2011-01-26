@@ -17,12 +17,14 @@ Node* Seeker::seek( QString path ) {
 }
 
 QVector<Node*> Seeker::powerSeek( QString path ) {
+    this->flag = false ;
     this->result.clear() ;
     Node* node = this->seek( path ) ;
     if ( node ) {
         if ( node->record.count() ) {
             //qDebug() << "get" ;
             this->result.append( node ) ;
+            this->flag = true ;
         }
         else {
             //qDebug() << "power seek" ;

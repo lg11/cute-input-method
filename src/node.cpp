@@ -22,7 +22,7 @@ Node* Node::addChild( QChar code ) {
     return child ;
 }
 
-RecordList* Node::findRecord( QString pinyin ) {
+RecordList* Node::findRecord( QStringList pinyin ) {
     int i = 0 ;
     while ( i < this->record.count() ) {
         RecordList* record = this->record[i] ;
@@ -34,7 +34,7 @@ RecordList* Node::findRecord( QString pinyin ) {
     return NULL ;
 }
 
-RecordList* Node::addRecord( QString pinyin ) {
+RecordList* Node::addRecord( QStringList pinyin ) {
     RecordList* record = this->findRecord( pinyin ) ;
     if ( !record ) {
         record = new RecordList( pinyin ) ;

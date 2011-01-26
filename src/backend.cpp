@@ -16,7 +16,7 @@ void Backend::load( QString file_path ) {
             QString line = in.readLine() ;
             QStringList list = line.split( " " ) ;
             QString code = list.at(0) ;
-            QString pinyin = list.at(1) ;
+            QStringList pinyin = list.at(1).split( "\'" ) ;
             QString hanzi = list.at(2) ;
             qreal freq = list.at(3).toDouble() ;
             this->map.insertRecord( code, pinyin, hanzi, freq ) ;

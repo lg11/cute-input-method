@@ -9,7 +9,7 @@ public :
 
     CodeMap() { this->root = new Node( 0x00 ) ; } 
     Node* addPath( QString path ) ;
-    void insertRecord( QString path, QString pinyin, QString hanzi, qreal freq ) ;
+    void insertRecord( QString path, QStringList pinyin, QString hanzi, qreal freq ) ;
 } ;
 
 //class Worker {

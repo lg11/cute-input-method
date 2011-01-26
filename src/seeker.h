@@ -10,8 +10,9 @@ public :
     Node* start ;
     Node* current ;
     QVector<Node*> result ;
+    bool flag ;
 
-    Seeker() {}
+    Seeker() { this->flag = false; }
     void setStart( Node* start ) { this->start = start; }
     Node* seek( QString path ) ;
     QVector<Node*> powerSeek( QString path ) ;

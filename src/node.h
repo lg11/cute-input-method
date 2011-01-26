@@ -15,8 +15,8 @@ public :
     Node( QChar code ) : code( code ) {}
     Node* findChild( QChar code ) ;
     Node* addChild( QChar code ) ;
-    RecordList* findRecord( QString pinyin ) ;
-    RecordList* addRecord( QString pinyin ) ;
+    RecordList* findRecord( QStringList pinyin ) ;
+    RecordList* addRecord( QStringList pinyin ) ;
 } ;
 
 #endif

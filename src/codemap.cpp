@@ -10,7 +10,7 @@ Node* CodeMap::addPath( QString path ) {
     return current ;
 }
 
-void CodeMap::insertRecord( QString path, QString pinyin, QString hanzi, qreal freq ) {
+void CodeMap::insertRecord( QString path, QStringList pinyin, QString hanzi, qreal freq ) {
     Node* node = this->addPath( path ) ;
     RecordList* list = node->addRecord( pinyin ) ;
     Record* record = list->insertRecord( hanzi, freq ) ;
