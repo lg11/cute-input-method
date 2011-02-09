@@ -115,7 +115,7 @@ class Paper( QtGui.QGraphicsItem ) :
     def __init__( self, parent = None, scene = None ) :
         QtGui.QGraphicsItem.__init__( self, parent, scene )
         self.charFont = QtGui.QFont( "Monospace" )
-        self.charFont.setPointSize( 16 )
+        self.charFont.setPointSize( 18 )
         #self.charFont = QtGui.QFont()
         self.charMetrics = QtGui.QFontMetrics( self.charFont )
         self.charWidth = self.charMetrics.width( "M" ) 
@@ -228,10 +228,19 @@ if __name__ == "__main__" :
     paper.setText( s.decode( "utf-8" ) )
     paper.setCursor( 62 )
     scene.addItem( paper )
+    #text = QtGui.QGraphicsTextItem( s.decode( "utf-8" ) )
+    #scene.addItem( text )
     controlor = Controlor()
     controlor.moveBy( 450, 50 )
     scene.addItem( controlor )
     scene.addItem( Background() )
+
+    edit = QtGui.QGraphicsTextItem()
+    edit.moveBy( 450, 50 )
+    edit.setPlainText( "hello" )
+    edit.setTextWidth( 300 )
+    edit.setTextInteractionFlags( QtCore.Qt.TextEditable )
+    scene.addItem( edit )
 
     view.setFixedSize( 800, 480 )
     #layout = QtGui.QHBoxLayout()
