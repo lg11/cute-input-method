@@ -23,7 +23,7 @@ class Spring( QtCore.QObject ) :
     @QtCore.Slot()
     def recover( self ) :
         d = abs( self.target - self.value )
-        step = max( pow( d / 2, 0.5 ), 2 )
+        step = max( pow( d / 1.5, 0.5 ), 2 )
         self.timer.stop()
         if self.value > self.target :
             self.value = self.value - step
