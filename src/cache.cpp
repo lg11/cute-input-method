@@ -4,6 +4,7 @@
 
 void QueryCache::set( QVector<Node*> result ) {
     this->result = result ;
+    //qDebug() << result.count() ;
     this->list.clear() ;
     this->itor.clear() ;
     this->max = 0 ;

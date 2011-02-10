@@ -16,6 +16,7 @@ public :
     void load( QString file_path ) ;
     void append( QChar code ) ;
     void pop() ;
+    void clear() ;
 } ;
 
 #endif

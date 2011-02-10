@@ -3,6 +3,7 @@
 #include <QFile>
 #include <QStringList>
 #include <QTextStream>
+#include <QDebug>
 
 void Backend::load( QString file_path ) {
     QFile file( file_path ) ;
@@ -25,9 +26,19 @@ void Backend::load( QString file_path ) {
 }
 
 void Backend::append( QChar code ) {
+    //qDebug() << "append" << this->code ;
     int i = this->code.length() ;
     this->code += code ;
     if ( this->cache.count() < this->code.length() )
         this->cache.append( QueryCache() ) ;
     this->cache[i].set( this->seeker.powerSeek( this->code ) ) ;
+}
+
+void Backend::pop() {
+    this->code.truncate( this->code.length() - 1 ) ;
+}
+
+void Backend::clear() {
+    this->code.clear() ;
+    //qDebug() << "clear" << this->code ;
 }
