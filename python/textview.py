@@ -123,7 +123,7 @@ class TextView( QtGui.QWidget ) :
         #self.spring.setTarget( dy / 2 )
     @QtCore.Slot( int, int )
     def scroll( self, dx, dy ) :
-        self.spring.setTarget( dy / 2 )
+        self.spring.setTarget( dy / 3 )
     @QtCore.Slot( int )
     def vScroll( self, offset ) :
         areaSize = self.size()
