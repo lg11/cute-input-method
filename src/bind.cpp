@@ -42,28 +42,32 @@ static PyObject* clear( PyObject* self, PyObject* args ) {
 static PyObject* get( PyObject* self, PyObject* args ) {
     int index ;
     int cacheIndex ;
-    QString pinyin ;
     QueryCache* cache ;
+    QString pinyin ;
 
     if ( ! PyArg_Parse( args, "(i)", &index ) )
         return NULL ;
 
-    for ( cacheIndex = backend->code.length() - 1 ; cacheIndex >= 0 ; cacheIndex-- ) {
-        cache = &( backend->cache[cacheIndex] ) ;
-        if ( index < cache->max )
-            break ;
-        else 
-            index = index - cache->max ;
-        //qDebug() << index << cacheIndex ;
-    }
-    if ( cacheIndex >= 0 ) {
-        cache = &( backend->cache[cacheIndex] ) ;
-        cache->gen( index + 1 ) ;
-        if ( index < cache->cand.count() ) {
-            Record* record = cache->cand[index] ;
-            pinyin = record->pinyin.join( "\'" ) ;
-            //qDebug() << pinyin ;
-            return Py_BuildValue( "(ss)", pinyin.toUtf8().data(), record->hanzi.toUtf8().data() ) ;
+    cacheIndex = backend->code.length() - 1 ;
+    cache = &( backend->cache[cacheIndex] ) ;
+    if ( cache->max > 0 ) {
+        for ( ; cacheIndex >= 0 ; cacheIndex-- ) {
+            cache = &( backend->cache[cacheIndex] ) ;
+            if ( index < cache->max )
+                break ;
+            else 
+                index = index - cache->max ;
+            //qDebug() << index << cacheIndex ;
+        }
+        if ( cacheIndex >= 0 ) {
+            cache = &( backend->cache[cacheIndex] ) ;
+            cache->gen( index + 1 ) ;
+            if ( index < cache->cand.count() ) {
+                Record* record = cache->cand[index] ;
+                pinyin = record->pinyin.join( "\'" ) ;
+                //qDebug() << pinyin << record->hanzi ;
+                return Py_BuildValue( "(ss)", pinyin.toUtf8().data(), record->hanzi.toUtf8().data() ) ;
+            }
         }
     }
     return Py_None ;

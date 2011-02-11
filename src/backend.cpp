@@ -35,7 +35,8 @@ void Backend::append( QChar code ) {
 }
 
 void Backend::pop() {
-    this->code.truncate( this->code.length() - 1 ) ;
+    this->code.chop( 1 ) ;
+    //this->code.truncate( this->code.length() - 1 ) ;
 }
 
 void Backend::clear() {
