@@ -3,6 +3,7 @@
 import backend
 
 import string
+import os
 
 class Selected() :
     def __init__( self, code, fullCode, pinyin, hanzi ) :
@@ -58,6 +59,8 @@ class SelectedStack() :
 class Backend() :
     CAND_LENGTH = 6
     CODEMAP_PATH = "../data/formated"
+    if not os.path.exists( CODEMAP_PATH ) :
+        CODEMAP_PATH = "/opt/cim/data/formated"
     CHAR = "abcdefghijklmnopqrstuvwxyz"
     CODE  = "22233344455566677778889999"
     TRANS = string.maketrans( CHAR, CODE )
@@ -131,7 +134,6 @@ class Backend() :
             self.set_code( code )
         return code
     def select( self, index ) :
-        index = self.CAND_LENGTH * self.page_index + index
         if index < len( self.cand_list ) :
             r = self.cand_list[index]
             code = r[0]
@@ -142,6 +144,7 @@ class Backend() :
             if len( self.vailed_code ) > codeLength :
                 remained_code = self.vailed_code[codeLength:]
                 self.vailed_code = self.vailed_code[:codeLength]
+            #print "select", code, pinyin, hanzi
             self.selected.push( self.vailed_code, code, pinyin, hanzi )
             remained_code = remained_code + self.invailed_code
             self.set_code( remained_code )

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<node name="/me/maemo/input/chinese/plugin/dbus_conn">
+    <interface name="me.maemo.input.chinese.plugin.dbus_conn">
+        <annotation name="org.freedesktop.DBus.GLib.CSymbol" value="dbus_conn"/>
+        <method name="request_commit">
+            <annotation name="org.freedesktop.DBus.GLib.CSymbol" value="dbus_conn_request_commit"/>
+            <arg type="s" name="gstr" direction="in" />
+        </method>
+    </interface>
+</node>
+
