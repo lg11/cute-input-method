@@ -31,7 +31,8 @@ void Backend::append( QChar code ) {
     this->code += code ;
     if ( this->cache.count() < this->code.length() )
         this->cache.append( QueryCache() ) ;
-    this->cache[i].set( this->seeker.powerSeek( this->code ) ) ;
+    this->seeker.powerSeek( this->code ) ;
+    this->cache[i].set( this->seeker.flag, this->seeker.result ) ;
 }
 
 void Backend::pop() {

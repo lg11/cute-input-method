@@ -281,7 +281,7 @@ class NumPad( QtGui.QWidget ) :
                 self.context_update()
             elif code == 8 :
                 self.pinyin_list = self.backend.get_pinyin_list()
-                self.pinyin_list.reverse()
+                #self.pinyin_list.reverse()
                 self.pinyin_index = 0
                 self.set_mode( self.MODE_FILTER )
                 self.context_update()

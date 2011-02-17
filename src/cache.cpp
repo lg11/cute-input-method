@@ -2,7 +2,8 @@
 
 #include <QDebug>
 
-void QueryCache::set( QVector<Node*> result ) {
+void QueryCache::set( bool flag, QVector<Node*> result ) {
+    this->flag = flag ;
     this->result = result ;
     //qDebug() << result.count() ;
     this->list.clear() ;
@@ -19,6 +20,21 @@ void QueryCache::set( QVector<Node*> result ) {
         }
     }
     this->cand.clear() ;
+}
+
+Record* QueryCache::get( int listIndex, int recordIndex ) {
+    if ( listIndex < this->list.count() ) {
+        RecordList* list = this->list[listIndex] ;
+        if ( recordIndex < list->list.count() ) {
+            QLinkedList<Record*>::iterator itor ;
+            itor = list->list.begin() ;
+            for ( int i = 0 ; i < recordIndex ; i++ ) {
+                itor++ ;
+            }
+            return *itor ;
+        }
+    }
+    return NULL ;
 }
 
 int QueryCache::gen( int length ) {
@@ -50,23 +66,3 @@ int QueryCache::gen( int length ) {
     return this->cand.count() ;
 }
 
-//void QueryCache::setFocus( QString pinyin ) {
-    //if ( pinyin.length() > 0 ) {
-        //for ( int i = 0; i < this->list.count(); i++ ) {
-            //Recordlist* list = this->list[i] ;
-            //if ( list->pinyin == pinyin ) :
-                //this->itor[i] = list->list.begin() ;
-                //this->focus = &(this->itor[i]) ;
-                //this->cand.clear() ;
-                //break ;
-        //}
-    //}
-    //else {
-        //this->focus = NULL ;
-        //for ( int i = 0; i < this->list.count(); i++ ) {
-            //Recordlist* list = this->list[i] ;
-            //this->itor[i] = list->list.begin() ;
-        //}
-        //this->cand.clear() ;
-    //}
-//}

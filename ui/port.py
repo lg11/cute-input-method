@@ -35,9 +35,9 @@ class SelectedStack() :
     def pop( self ) :
         code = ""
         if len( self.stack ) > 0 :
-            top = self.stack.top()
-            if len( top.code ) > 0 :
-                code = top.pop()
+            selected = self.stack[-1]
+            if len( selected.code ) > 0 :
+                code = selected.pop()
             else :
                 self.stack.pop()
                 code = self.pop()
@@ -71,9 +71,20 @@ class Backend() :
         self.page_index = 0
         self.cand_list = []
         self.selected = SelectedStack()
-        self.get_pinyin_list = None
+        #self.get_pinyin_list = None
+    def get_pinyin_list( self ) :
+        pinyin_list = []
+        i = 0
+        r = backend.getPinyin( i )
+        while r :
+            pinyin_list.append( r.decode( "utf-8" ) )
+            i = i + 1
+            r = backend.getPinyin( i )
+        return pinyin_list
     def set_filter( self, pinyin ) :
         self.page_index = 0
+        #backend.setPinyin( pinyin.encode( "utf-8" ) )
+        backend.setPinyin( pinyin )
         #self.cache.set_filter( pinyin )
     def set_code( self, code ) :
         self.clearCode()
@@ -115,6 +126,7 @@ class Backend() :
                 self.cand_list.append( [ code, pinyin, hanzi ] )
     def clearCode( self ) :
         self.page_index = 0
+        self.set_filter( "" )
         self.invailed_code = ""
         self.vailed_code = ""
         backend.clear()

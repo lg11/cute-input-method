@@ -16,13 +16,13 @@ Node* Seeker::seek( QString path ) {
     return this->current ;
 }
 
-QVector<Node*> Seeker::powerSeek( QString path ) {
+void Seeker::powerSeek( QString path ) {
     this->flag = false ;
     this->result.clear() ;
     Node* node = this->seek( path ) ;
     if ( node ) {
         if ( node->record.count() ) {
-            //qDebug() << "get" ;
+            //qDebug() << "get" << path ;
             this->result.append( node ) ;
             this->flag = true ;
         }
@@ -50,5 +50,5 @@ QVector<Node*> Seeker::powerSeek( QString path ) {
             }
         }
     }
-    return this->result ;
+    //return this->result ;
 }

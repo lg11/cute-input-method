@@ -13,13 +13,15 @@ public :
     QVector<Record*> cand ;
     QVector<QLinkedList<Record*>::iterator> itor ;
     int max ;
+    bool flag ;
+    int focus ;
     //QLinkedList<Record*>::iterator* focus ;
     
-    QueryCache() { this->max = 0; }
+    QueryCache() { this->max = 0 ; this->focus = -1 ; }
     //QueryCache() { this->focus = NULL ; }
-    void set( QVector<Node*> result ) ;
+    void set( bool flag, QVector<Node*> result ) ;
     int gen( int length ) ;
-    //void setFocus( QString pinyin ) ;
+    Record* get( int listIndex, int recordIndex ) ;
 } ;
 
 #endif

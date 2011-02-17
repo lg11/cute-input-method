@@ -15,8 +15,8 @@ public :
     Seeker() { this->flag = false; }
     void setStart( Node* start ) { this->start = start; }
     Node* seek( QString path ) ;
-    QVector<Node*> powerSeek( QString path ) ;
-    QVector<Node*> get() ;
+    void powerSeek( QString path ) ;
+    //QVector<Node*> get() ;
 } ;
 
 #endif

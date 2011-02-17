@@ -10,6 +10,12 @@ while True :
     for c in code :
         backend.append( c )
     i = 0
+    r = backend.getPinyin( i )
+    while r :
+        print r
+        i = i + 1
+        r = backend.getPinyin( i )
+    i = 0
     r = backend.get( i )
     while r and i < 3 :
     #while r :
