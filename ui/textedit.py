@@ -5,12 +5,12 @@ from PySide import QtCore, QtGui
 #QtCore.Signal = QtCore.pyqtSignal
 #QtCore.Slot = QtCore.pyqtSlot
 
-class TextEdit( QtGui.QTextEdit ) :
+class TextEdit( QtGui.QPlainTextEdit ) :
     clicked = QtCore.Signal( int )
     DEFAULT_LONGPRESS_INTERVAL = 350
     DEFAULT_AUTO_REPEAT_INTERVAL = 65
     def __init__( self, keycode, parent = None ) :
-        QtGui.QTextEdit.__init__( self, parent )
+        QtGui.QPlainTextEdit.__init__( self, parent )
         self.setAttribute( QtCore.Qt.WA_InputMethodEnabled, False )
         #self.setCursorWidth( 5 )
         self.keycode = keycode
@@ -21,6 +21,7 @@ class TextEdit( QtGui.QTextEdit ) :
         self.preedit_end_pos = -1
         self.preedit = ""
         self.origin_pos = self.textCursor()
+        self.moveDirection = 0
 
         self.auto_repeat_timer = QtCore.QTimer()
         self.auto_repeat_interval = self.DEFAULT_AUTO_REPEAT_INTERVAL
@@ -30,6 +31,8 @@ class TextEdit( QtGui.QTextEdit ) :
         self.preedit_format = QtGui.QTextCharFormat()
         self.preedit_format.setFontUnderline( True )
         self.check = self.__check
+        desktop = QtGui.QDesktopWidget()
+        self.screenLenght = min( desktop.width(), desktop.height() )
     def __check( self ) :
         return True
     def __clear_preedit( self ) :
@@ -66,14 +69,38 @@ class TextEdit( QtGui.QTextEdit ) :
     def command( self, dx, dy ) :
         #if abs( dx ) > abs( dy ) :
         self.setTextCursor( self.origin_pos )
-        if dx >= 0 :
-            self.__move_end()
-        else :
-            self.__move_start()
+        if self.moveDirection == 0 :
+            if abs( dx ) > abs( dy ) :
+                self.moveDirection = 1
+            else :
+                self.moveDirection = -1
+        if self.moveDirection == 1 :
+            if dx >= 0 :
+                self.__move_end()
+            else :
+                self.__move_start()
+        elif self.moveDirection == -1 :
+            if dy >= 0 :
+                cursor = self.textCursor()
+                cursor.movePosition( cursor.End )
+                self.setTextCursor( cursor )
+            else :
+                cursor = self.textCursor()
+                cursor.movePosition( cursor.Start )
+                self.setTextCursor( cursor )
     @QtCore.Slot( int, int )
     def move( self, dx, dy ) :
-        width = self.width()
-        d = float( dx ) / float( width )
+        if self.moveDirection == 0 :
+            if abs( dx ) > abs( dy ) :
+                self.moveDirection = 1
+            else :
+                self.moveDirection = -1
+        if self.moveDirection == 1 :
+            self.moveH( dx )
+        elif self.moveDirection == -1 :
+            self.moveV( dy )
+    def moveH( self, dx ) :
+        d = float( dx ) / float( self.screenLenght )
         d = 8 * d
         new_pos = self.origin_pos.position() + d
         cursor = self.textCursor()
@@ -85,6 +112,24 @@ class TextEdit( QtGui.QTextEdit ) :
             if new_pos > end_pos :
                 new_pos = end_pos
         cursor.setPosition( new_pos )
+        self.setTextCursor( cursor )
+        self.ensureCursorVisible()
+    def moveV( self, dy ) :
+        d = float( dy ) / float( self.screenLenght )
+        d = 5 * d
+        #print "moveV", d
+        cursor = self.textCursor()
+        cursor.setPosition( self.origin_pos.position() )
+        if d > 0 :
+            d = abs( int( round( d ) ) )
+            #print "moveV", d
+            for i in range( d ) :
+                cursor.movePosition( cursor.Down )
+        elif d < 0 :
+            d = abs( int( round( d ) ) )
+            #print "moveV", d
+            for i in range( d ) :
+                cursor.movePosition( cursor.Up )
         self.setTextCursor( cursor )
         self.ensureCursorVisible()
     def __move_end( self ) :
@@ -149,6 +194,7 @@ class TextEdit( QtGui.QTextEdit ) :
     @QtCore.Slot()
     def stop( self ) :
         self.origin_pos = self.textCursor()
+        self.moveDirection = 0
         if self.timer.isActive() :
             self.timer.stop()
 

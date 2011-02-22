@@ -2,14 +2,15 @@
 
 from PySide import QtGui, QtCore
 
-class Spring( QtCore.QObject ) :
+class Bumper( QtCore.QObject ) :
     changed = QtCore.Signal( int )
+    DEFAULT_BUMP = 4
     def __init__( self ) :
         QtCore.QObject.__init__( self )
-        self.timer = QtCore.QTimer()
-        self.timer.timeout.connect( self.recover )
+        self.timer = QtCore.QBasicTimer()
         self.value = 0
         self.target = 0
+        self.bump = self.DEFAULT_BUMP
     def setTarget( self, target ) :
         self.target = target
         self.check()
@@ -24,29 +25,52 @@ class Spring( QtCore.QObject ) :
             if self.timer.isActive() :
                 pass
             else :
-                self.timer.start( 40 )
-    @QtCore.Slot()
-    def recover( self ) :
+                self.flag = True
+                self.timer.start( 40, self )
+    def timerEvent( self, event ) :
+        #print "timerEvent"
         d = abs( self.target - self.value )
-        step = max( pow( d, 0.8 ), 2 )
-        self.timer.stop()
+        step = max( pow( d * self.bump, 0.5 ), 2 )
         if self.value > self.target :
             self.value = self.value - step
             if self.value <= self.target :
                 self.value = self.target
-            else :
-                self.timer.start( 40 )
+                self.timer.stop()
         elif self.value < self.target :
             self.value = self.value + step
             if self.value >= self.target :
                 self.value = self.target
-            else :
-                self.timer.start( 40 )
+                self.timer.stop()
+        else :
+            self.timer.stop()
         self.changed.emit( self.value )
         #print self.value, self.target
 
+class Leveler :
+    DEFAULT_VALVE = 30
+    def __init__( self ) :
+        self.level = 0
+        self.valve = self.DEFAULT_VALVE
+        self.offset = 0
+        self.bumper = Bumper()
+        self.bumper.changed.connect( self.check )
+        #self.spring = Spring()
+    def setOffset( self, offset ) :
+        self.bumper.setTarget( offset )
+    def setScale( self, scale ) :
+        offset = scale * self.valve
+        self.setOffset( offset )
+    QtCore.Slot( int )
+    def check( self, value ) :
+        self.offset = value
+
+        
+    #def
+
+Spring = Bumper
+
 class TextDisplay( QtGui.QPlainTextEdit ) :
-    cursorHeightChanged = QtCore.Signal( int )
+    cursorHeightChanged = QtCore.Signal( int, int )
     def __init__( self, parent = None ) :
         QtGui.QPlainTextEdit.__init__( self, parent )
         palette = self.palette()
@@ -55,15 +79,16 @@ class TextDisplay( QtGui.QPlainTextEdit ) :
         self.setAttribute( QtCore.Qt.WA_TranslucentBackground, True )
         self.setPalette( palette )
         self.setFrameStyle( QtGui.QFrame.NoFrame)
-        #self.setCursorWidth( 0 )
+        self.setCursorWidth( 0 )
         self.cursorPositionChanged.connect( self.checkCursorPosition )
         self.prevCursorRect = self.cursorRect()
     @QtCore.Slot()
     def checkCursorPosition( self ) :
         cursorRect = self.cursorRect()
         dy = cursorRect.y() - self.prevCursorRect.y()
-        if dy != 0 :
-            self.cursorHeightChanged.emit( dy )
+        dx = cursorRect.x() - self.prevCursorRect.x()
+        if dy != 0 or dx != 0 :
+            self.cursorHeightChanged.emit( dx, dy )
         self.centerCursor()
         cursorRect = self.cursorRect()
         self.prevCursorRect = cursorRect
@@ -87,9 +112,16 @@ class TextShadow( QtGui.QWidget ) :
         palette.setColor( QtGui.QPalette.Base, QtCore.Qt.transparent )
         self.setPalette( palette )
         self.setAttribute( QtCore.Qt.WA_TranslucentBackground, True )
+        self.spring = Spring()
+        self.cursorX = 0
     def paintEvent( self, event ) :
         painter = QtGui.QPainter( self )
-        painter.fillRect( self.rect(), QtGui.QColor( 255, 255, 0, 100 ) )
+        rect = self.rect()
+        painter.fillRect( rect, QtGui.QColor( 255, 255, 0, 100 ) )
+        self.cursorX = self.spring.value
+        rect.setX( self.cursorX )
+        rect.setWidth( 3 )
+        painter.fillRect( rect, QtGui.QColor( 0, 255, 0, 100 ) )
 
 class TextView( QtGui.QWidget ) :
     def __init__( self, parent = None ) :
@@ -97,11 +129,15 @@ class TextView( QtGui.QWidget ) :
         self.display = TextDisplay( self )
         self.shadow = TextShadow( self )
         self.spring = Spring()
+        #self.
         self.spring.changed.connect( self.vSpringChange )
+        self.shadow.spring.changed.connect( self.vSpringChange )
         self.display.cursorHeightChanged.connect( self.cursorChange )
     @QtCore.Slot( int )
-    def cursorChange( self, dy ) :
+    def cursorChange( self, dx, dy ) :
         self.spring.addOffset( dy )
+        cursorRect = self.display.cursorRect()
+        self.shadow.spring.setTarget( cursorRect.x() )
     @QtCore.Slot( int )
     def vSpringChange( self, offset ) :
         self.update()
@@ -124,6 +160,9 @@ class TextView( QtGui.QWidget ) :
     @QtCore.Slot( int, int )
     def scroll( self, dx, dy ) :
         self.spring.setTarget( dy / 3 )
+        cursorRect = self.display.cursorRect()
+        self.shadow.spring.setTarget( cursorRect.x() + dx )
+        #print dx, dy, "scroll"
     @QtCore.Slot( int )
     def vScroll( self, offset ) :
         areaSize = self.size()
@@ -147,9 +186,12 @@ class ControlPanel( QtGui.QWidget ) :
     def __init__( self, parent = None ) :
         QtGui.QWidget.__init__( self, parent )
         self.originPos = QtCore.QPoint()
+        self.moveDirection = 0
     def mousePressEvent( self, event ) :
+        self.moveDirection = 0
         self.originPos = event.pos()
     def mouseReleaseEvent( self, event ) :
+        self.moveDirection = 0
         self.stop.emit( 0, 0 )
     def mouseDoubleClickEvent( self, event ) :
         self.mousePressEvent( event )
@@ -157,7 +199,16 @@ class ControlPanel( QtGui.QWidget ) :
         pos = event.pos()
         dx = pos.x() - self.originPos.x()
         dy = pos.y() - self.originPos.y()
-        self.move.emit( dx, dy )
+        if self.moveDirection == 0 : 
+            if dx * dx >= dy * dy :
+                self.moveDirection = 1
+            else :
+                self.moveDirection = -1
+            #print dx, dy, self.moveDirection
+        if self.moveDirection > 0 :
+            self.move.emit( dx, 0 )
+        else :
+            self.move.emit( 0, dy )
 
 if __name__ == "__main__" :
     import sys
