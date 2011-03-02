@@ -184,7 +184,7 @@ class InputPad( Control ) :
             flag = False
         return flag
     def callback_show( self, string ) :
-        self.textedit.setText( string )
+        self.textedit.setPlainText( string )
         self.textedit.moveCursor( QtGui.QTextCursor.End )
         self.textedit.ensureCursorVisible()
         rect = self.desktop.screenGeometry()

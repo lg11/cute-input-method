@@ -70,7 +70,9 @@ class TextEdit( QtGui.QPlainTextEdit ) :
         #if abs( dx ) > abs( dy ) :
         self.setTextCursor( self.origin_pos )
         if self.moveDirection == 0 :
-            if abs( dx ) > abs( dy ) :
+            #if abs( dx ) > abs( dy ) :
+            #if float( abs( dx ) ) > float( abs( dy ) ) * 1.6 :
+            if abs( dx ) > abs( dy ) * 2 :
                 self.moveDirection = 1
             else :
                 self.moveDirection = -1
@@ -91,7 +93,8 @@ class TextEdit( QtGui.QPlainTextEdit ) :
     @QtCore.Slot( int, int )
     def move( self, dx, dy ) :
         if self.moveDirection == 0 :
-            if abs( dx ) > abs( dy ) :
+            #if float( abs( dx ) ) > float( abs( dy ) ) * 1.6 :
+            if abs( dx ) > abs( dy ) * 2 :
                 self.moveDirection = 1
             else :
                 self.moveDirection = -1
