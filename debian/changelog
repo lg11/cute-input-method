@@ -1,6 +1,5 @@
-mcip (0.1-maemo5) fremantle; urgency=low 
+mcip (0.1-maemo5) fremantle; urgency=low
 
   * Initial release
 
- -- Evan JIANG <firstfan@gmail.com>  Tue,  8 Mar 2011 23:24:50 +0800
-
+ -- Evan JIANG <firstfan@gmail.com>  Tue,  08 Mar 2011 23:24:00 +0800
