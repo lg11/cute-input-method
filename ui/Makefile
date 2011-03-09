@@ -1,5 +1,5 @@
 ALL :
-	python -OO -m py_compile *.py
+	python2.5 -OO -m py_compile *.py
 
 clean :
 	rm *.pyo

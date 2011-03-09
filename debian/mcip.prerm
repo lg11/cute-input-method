@@ -1,0 +1,20 @@
+#!/bin/sh
+set -e
+
+
+case "$1" in
+    remove|upgrade|deconfigure)
+    gconftool --type string -s /apps/osso/inputmethod/default-plugins/finger hildon_western_fkb
+    gconftool --type string -s /apps/osso/inputmethod/default-plugins/hw-keyboard hildon_keyboard_assistant
+	;;
+    failed-upgrade)
+	;;
+    *)
+	echo "prerm called with unknown argument \`$1'" >&2
+	exit 1
+   ;;
+esac
+
+#DEBHELPER#
+
+exit 0

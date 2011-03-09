@@ -1,0 +1,16 @@
+Source: mcip
+Section: user/system
+Priority: optional
+Maintainer: Evan JIANG <firstfan@gmail.com> 
+XSBC-Original-Maintainer: foolegg <sd.foolegg@gmail.com>
+Build-Depends: dpkg-dev (>= 1.13.19), debhelper (>= 4.0.0), dpatch, autotools-dev, pkg-config, libgconf2-dev, libdbus-glib-1-dev, libhildon-im-ui-dev, hildon-input-method-framework-dev, libgtk2.0-dev, libosso-dev, python2.5-dev
+Standards-Version: 3.7.2
+
+Package: mcip
+Architecture: any
+Conflicts: scim, mscim
+Depends:  ${shlibs:Depends}, python2.5-qt4, pyside-qt4-gui
+Description: A Chinese Pinyin input method for Hildon Input Method Framework
+ The author of this greate input method plugin is foolegg <sd.foolegg@gmail.com>
+ This package will install a plugin for Hildon Input Method Framework, and will replace your default virtual keyboard.
+ Please uninstall MSCIM if you already installed that before.
