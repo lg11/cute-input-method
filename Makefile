@@ -21,8 +21,10 @@ install :
 	cp ui/*.py $(DESTDIR)/opt/cim/ui
 	cp ui/*.pyo $(DESTDIR)/opt/cim/ui
 	cp run.sh $(DESTDIR)/opt/cim
-#	hildon-im-recache
-#	su user -c "sh /opt/cim/plugin/gconf.sh"
+	if test "$(DESTDIR)x" == "x"; then \
+		hildon-im-recache; \
+		su user -c "sh /opt/cim/plugin/gconf.sh"; \
+	fi
 
 uninstall :
 	su user -c "sh /opt/cim/plugin/recover.sh"
