@@ -1,9 +1,21 @@
 #include "dict.h"
+#include "trie.h"
 
 #include <QDebug>
 #include <QFile>
 #include <QStringList>
 #include <QTextStream>
+
+QDebug operator<<( QDebug dbg, const WordRecordList& l ) {
+    dbg.nospace() << "{ " ;
+    for ( int i = 0 ; i < l.length() ; i++ ) { 
+        const WordRecord& r = l.list.at(i) ;
+        dbg.nospace() << "( " << r.word << ", " << r.freq << " ) ";
+    }
+    dbg.nospace() << "}" ;
+    return dbg.space();
+}
+
 
 void load( Dict* d, QString file_path ) {
     QFile file( file_path ) ;
@@ -26,12 +38,13 @@ void load( Dict* d, QString file_path ) {
 }
 int main( int argc, char** argv ) {
     Dict d ;
+    //qDebug() << sizeof(TrieNode) ;
     load( &d, argv[1] ) ;
     QTextStream cin( stdin, QIODevice::ReadOnly ) ;
     qDebug() << "loaded" ;
     while( 1 ) {
         QString key ;
         cin >> key ;
-        qDebug() << *(d.find(key)) ;
+        qDebug() << d.find(key) ;
     }
 }

@@ -22,5 +22,5 @@ QT += core
 ;LIBS += -L/usr/lib/python2.5 -lpython2.5
 
 # Input
-HEADERS += dict.h
+HEADERS += dict.h trie.h
 SOURCES += main.cpp
