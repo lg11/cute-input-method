@@ -36,15 +36,30 @@ void load( Dict* d, QString file_path ) {
         }
     }
 }
+
+void build( TrieTree& t, const Dict& d ) {
+    for( QHash<QString, WordRecordList>::const_iterator itor = d.hash.constBegin() ; itor != d.hash.constEnd() ; itor++ ) {
+        //qDebug() << itor.key() ;
+        t.insert( itor.key() ) ;
+    }
+}
+
 int main( int argc, char** argv ) {
     Dict d ;
+    TrieTree t ;
     //qDebug() << sizeof(TrieNode) ;
     load( &d, argv[1] ) ;
-    QTextStream cin( stdin, QIODevice::ReadOnly ) ;
     qDebug() << "loaded" ;
+    build( t, d ) ;
+    qDebug() << "built" ;
+
     while( 1 ) {
-        QString key ;
-        cin >> key ;
-        qDebug() << d.find(key) ;
+        QTextStream cin( stdin, QIODevice::ReadOnly ) ;
+        QString s ;
+        cin >> s ;
+        QVector<QString> keys ;
+        t.goTo(s) ;
+        t.getKeys( keys ) ;
+        qDebug() << keys ;
     }
 }
