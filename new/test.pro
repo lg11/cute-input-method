@@ -23,4 +23,4 @@ QT += core
 
 # Input
 HEADERS += dict.h trie.h lookup.h
-SOURCES += main.cpp lookup.cpp
+SOURCES += main.cpp

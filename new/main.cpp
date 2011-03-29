@@ -1,5 +1,6 @@
 #include "dict.h"
 #include "trie.h"
+#include "lookup.h"
 
 #include <QDebug>
 #include <QFile>
@@ -13,6 +14,13 @@ QDebug operator<<( QDebug dbg, const WordRecordList& l ) {
         dbg.nospace() << "( " << r.word << ", " << r.freq << " ) ";
     }
     dbg.nospace() << "}" ;
+    return dbg.space();
+}
+
+QDebug operator<<( QDebug dbg, const CandidateItem& item ) {
+    dbg.nospace() << "( " ;
+    dbg.nospace() <<  item.key << ", " << item.word.toUtf8() << ", " << item.freq ;
+    dbg.nospace() << " )" ;
     return dbg.space();
 }
 
@@ -45,8 +53,9 @@ void build( TrieTree& t, const Dict& d ) {
 }
 
 int main( int argc, char** argv ) {
-    Dict d ;
-    TrieTree t ;
+    NumberLookup lookup ;
+    Dict& d = lookup.dict;
+    TrieTree& t = lookup.trie ;
     //qDebug() << sizeof(TrieNode) ;
     load( &d, argv[1] ) ;
     qDebug() << "loaded" ;
@@ -57,9 +66,18 @@ int main( int argc, char** argv ) {
         QTextStream cin( stdin, QIODevice::ReadOnly ) ;
         QString s ;
         cin >> s ;
-        QVector<QString> keys ;
-        t.goTo(s) ;
-        t.getKeys( keys ) ;
-        qDebug() << keys ;
+        //QVector<QString> keys ;
+        //t.goTo(s) ;
+        //t.getKeys( keys ) ;
+        //qDebug() << keys ;
+        for ( int i = 0 ; i < s.length() ; i++ ) 
+            lookup.pushCode( s[i] ) ;
+        for ( int i = 0 ; i < 6 ; i++ ) {
+            const CandidateItem* item ;
+            item = lookup.getCandidate( i ) ;
+            if ( item )
+                qDebug() << *item ;
+        }
+        lookup.clear() ;
     }
 }

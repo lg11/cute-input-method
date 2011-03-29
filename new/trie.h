@@ -66,23 +66,19 @@ public :
         return this->children.count() ;
     }
     inline int seekKeys( QVector<QString>& keys ) const {
-        int count = 0 ;
-        count = this->getKeys( keys ) ;
-        //qDebug() << count ;
+        int count = this->getKeys( keys ) ;
         if ( count <= 0 && this->hasChildren() ) {
-            //qDebug() << 1 ;
             QStack<const TrieNode*> current ;
             QStack<const TrieNode*> deeper ;
             this->getChildren( current ) ;
             while( current.count() > 0 && count <= 0 ) {
-                //qDebug() << 2 ;
                 while( current.count() > 0 ) {
-                    //qDebug() << count ;
                     const TrieNode* node = current.pop() ;
                     count += node->getKeys( keys ) ;
                     if ( count <= 0 )
-                        this->getChildren( deeper ) ;
+                        node->getChildren( deeper ) ;
                 }
+                //qDebug() << current << deeper ;
                 current = deeper ;
                 deeper.clear() ;
             }
@@ -149,6 +145,7 @@ public :
     inline void goTo( const QString& path ) {
         this->backRoot() ;
         for ( int i = 0 ; i < path.length() ; i++ ) {
+            //qDebug() << this->stack.top()->tag ;
             if ( !this->goStep( path[i] ) )
                 break ;
         }
@@ -184,7 +181,11 @@ public :
         while( this->removeEnd() ) ;
     }
     inline int getKeys( QVector<QString>& keys ) {
+        //qDebug() << this->stack.top()->tag ;
         return this->stack.top()->seekKeys( keys ) ;
+    }
+    inline bool hasKeys() {
+        return this->stack.top()->hasKeys() ;
     }
 } ;
 
