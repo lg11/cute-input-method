@@ -86,27 +86,44 @@ public :
     Picker picker ;
     QVector<CandidateItem> list ;
     int listLength ;
-    inline CandidateList( LookupCache* cache ) : cache(cache), picker(), list(), listLength(0) {} ;
+    int resultIndex ;
+    inline CandidateList( LookupCache* cache ) : cache(cache), picker(), list(), listLength(0), resultIndex(0) {} ;
     inline void checkSize() {
         if ( this->listLength >= this->list.size() )
-            this->list.resize( this->listLength - this->list.size() + 16 ) ;
+            this->list.resize( this->listLength + 16 ) ;
     }
     inline void clear() {
         this->listLength = 0 ;
+        this->resultIndex = 0 ;
     }
     inline void set( int index ) {
         this->listLength = 0 ;
+        this->resultIndex = index ;
         picker.set( this->cache->cache[index] ) ;
+    }
+    inline bool tryPrevResult() {
+        bool flag = false ;
+        while ( this->resultIndex > 0 && !flag ) {
+            //qDebug() << this->resultIndex ;
+            this->resultIndex-- ;
+            if ( this->cache->cache[this->resultIndex].vaild )
+                flag = true ;
+        }
+        return flag ;
     }
     inline int gen( int requestLength ) {
         if ( this->listLength < requestLength ) {
             for ( int i = this->listLength ; i < requestLength ; i++ ) {
                 this->checkSize() ;
-                picker.pick( this->list[i] ) ;
+                picker.pick( this->list[this->listLength] ) ;
                 if ( picker.flag )
                     this->listLength++ ;
-                else
-                    break ;
+                else {
+                    if ( this->tryPrevResult() )
+                        picker.set( this->cache->cache[this->resultIndex] ) ;
+                    else
+                        break ;
+                }
             }
         }
         return requestLength - this->listLength ;

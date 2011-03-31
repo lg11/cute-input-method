@@ -19,7 +19,8 @@ QDebug operator<<( QDebug dbg, const WordRecordList& l ) {
 
 QDebug operator<<( QDebug dbg, const CandidateItem& item ) {
     dbg.nospace() << "( " ;
-    dbg.nospace() <<  item.key << ", " << item.word.toUtf8() << ", " << item.freq ;
+    //dbg.nospace() <<  item.key << ", " << item.word.toUtf8() << ", " << item.freq ;
+    dbg.nospace() <<  item.key << ", " << item.word << ", " << item.freq ;
     dbg.nospace() << " )" ;
     return dbg.space();
 }
@@ -72,11 +73,11 @@ int main( int argc, char** argv ) {
         //qDebug() << keys ;
         for ( int i = 0 ; i < s.length() ; i++ ) 
             lookup.pushCode( s[i] ) ;
-        for ( int i = 0 ; i < 6 ; i++ ) {
+        for ( int i = 0 ; i < 600 ; i++ ) {
             const CandidateItem* item ;
             item = lookup.getCandidate( i ) ;
             if ( item )
-                qDebug() << *item ;
+                qDebug() << i << *item ;
         }
         lookup.clear() ;
     }
