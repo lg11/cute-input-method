@@ -34,7 +34,7 @@ public :
             }
         }
     }
-    inline int findKey( const QString& key ) {
+    inline int findKey ( const QString& key ) const {
         for ( int i = 0 ; i < this->keys.count() ; i++ ) {
             if ( key == this->keys.at(i) )
                 return i ;
@@ -56,27 +56,27 @@ public :
     inline bool hasKeys() const { return !this->keys.isEmpty() ; }
     inline bool hasChildren() const { return !this->children.isEmpty() ; }
     inline bool useful() const { return this->hasKeys() && this->hasChildren() ; }
-    inline int getKeys( QVector<QString>& keys ) const {
-        keys += this->keys ;
+    inline int getKeys( QVector<QString>* keys ) const {
+        *keys += this->keys ;
         return this->keys.count() ;
     }
-    inline int getChildren( QVector<const TrieNode*>& children ) const {
+    inline int getChildren( QVector<const TrieNode*>* children ) const {
         for ( int i = 0 ; i < this->children.count() ; i++ )
-            children.append( &this->children[i] ) ;
+            children->append( &this->children[i] ) ;
         return this->children.count() ;
     }
-    inline int seekKeys( QVector<QString>& keys ) const {
+    inline int seekKeys( QVector<QString>* keys ) const {
         int count = this->getKeys( keys ) ;
         if ( count <= 0 && this->hasChildren() ) {
             QStack<const TrieNode*> current ;
             QStack<const TrieNode*> deeper ;
-            this->getChildren( current ) ;
+            this->getChildren( &current ) ;
             while( current.count() > 0 && count <= 0 ) {
                 while( current.count() > 0 ) {
                     const TrieNode* node = current.pop() ;
                     count += node->getKeys( keys ) ;
                     if ( count <= 0 )
-                        node->getChildren( deeper ) ;
+                        node->getChildren( &deeper ) ;
                 }
                 //qDebug() << current << deeper ;
                 current = deeper ;
@@ -131,7 +131,7 @@ public :
             return false ;
     }
     inline bool backStep() {
-        if ( this->stack.count() > 0 ) {
+        if ( this->stack.count() > 1 ) {
             this->stack.pop() ;
             return true ;
         }
@@ -160,7 +160,7 @@ public :
             this->buildTag( path[i] ) ;
     }
     inline void attachKey( const QString& key ) { this->stack.top()->appendKey( key ) ; }
-    inline void insert( const QString& key ) {
+    inline void addKey( const QString& key ) {
         this->buildPath( key ) ;
         this->attachKey( key ) ;
     }
@@ -180,11 +180,11 @@ public :
     inline void removeNode() {
         while( this->removeEnd() ) ;
     }
-    inline int getKeys( QVector<QString>& keys ) {
+    inline int getKeys( QVector<QString>* keys ) {
         //qDebug() << this->stack.top()->tag ;
         return this->stack.top()->seekKeys( keys ) ;
     }
-    inline bool hasKeys() {
+    inline bool hasKeys() const {
         return this->stack.top()->hasKeys() ;
     }
 } ;

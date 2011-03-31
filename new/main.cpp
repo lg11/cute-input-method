@@ -46,21 +46,12 @@ void load( Dict* d, QString file_path ) {
     }
 }
 
-void build( TrieTree& t, const Dict& d ) {
-    for( QHash<QString, WordRecordList>::const_iterator itor = d.hash.constBegin() ; itor != d.hash.constEnd() ; itor++ ) {
-        //qDebug() << itor.key() ;
-        t.insert( itor.key() ) ;
-    }
-}
 
 int main( int argc, char** argv ) {
-    NumberLookup lookup ;
-    Dict& d = lookup.dict;
-    TrieTree& t = lookup.trie ;
-    //qDebug() << sizeof(TrieNode) ;
+    Dict d ;
     load( &d, argv[1] ) ;
     qDebug() << "loaded" ;
-    build( t, d ) ;
+    NumberLookup lookup( &d ) ;
     qDebug() << "built" ;
 
     while( 1 ) {

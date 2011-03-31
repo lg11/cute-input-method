@@ -14,23 +14,23 @@ struct CandidateItem {
 struct LookupResult {
     bool vaild ;
     QVector<QString> keys ;
-    QVector<WordRecordList*> wordRecordLists ;
+    QVector<const WordRecordList*> wordRecordLists ;
     inline LookupResult( bool vaild = false ) : vaild(vaild), keys(), wordRecordLists() {}
-    inline LookupResult( bool vaild, const QVector<QString>& keys, const QVector<WordRecordList*>& wordRecordLists ) : vaild(vaild), keys(keys), wordRecordLists(wordRecordLists) {}
+    inline LookupResult( bool vaild, const QVector<QString>& keys, const QVector<const WordRecordList*>& wordRecordLists ) : vaild(vaild), keys(keys), wordRecordLists(wordRecordLists) {}
 } ;
 
 class LookupCache {
 public :
-    QVector<LookupResult> cache ;
+    QVector<LookupResult> vector ;
     //int cacheLength ;
-    inline LookupCache() : cache(){}
+    inline LookupCache() : vector(){}
     inline void checkSize( int size ) {
-        if ( size > this->cache.size() )
-            this->cache.resize( size ) ;
+        if ( size > this->vector.size() )
+            this->vector.resize( size ) ;
     }
     inline LookupResult* request( int i ) {
         this->checkSize( i + 1 ) ;
-        return &this->cache[i] ;
+        return &this->vector[i] ;
     }
 } ;
 
@@ -39,9 +39,9 @@ public :
     int length ;
     bool flag ;
     const QVector<QString>* keys ;
-    QVector<QList<WordRecord>::iterator> itors ;
-    QVector<QList<WordRecord>::iterator> ends ;
-    inline Picker () : length(0), flag(false), keys(), itors(), ends() {} ;
+    QVector<QList<WordRecord>::const_iterator> itors ;
+    QVector<QList<WordRecord>::const_iterator> ends ;
+    inline Picker () : length(0), flag(false), keys(0), itors(), ends() {} ;
     inline void set( const LookupResult& result ) {
         this->length = result.wordRecordLists.count() ;
         this->flag = true ;
@@ -58,7 +58,7 @@ public :
     inline void set( const LookupResult* result ) {
         this->set( *result ) ;
     }
-    inline void pick( CandidateItem& item ) {
+    inline void pick( CandidateItem* item ) {
         int highestIndex = -1 ;
         qreal highestFreq = -1 ;
         for ( int i = 0 ; i < this->length ; i++ ) {
@@ -70,9 +70,9 @@ public :
             }
         }
         if ( highestIndex >= 0 ) {
-            item.key = (*this->keys)[highestIndex] ;
-            item.word = this->itors[highestIndex]->word ;
-            item.freq = highestFreq ;
+            item->key = (*this->keys)[highestIndex] ;
+            item->word = this->itors[highestIndex]->word ;
+            item->freq = highestFreq ;
             this->itors[highestIndex]++ ;
         }
         else
@@ -84,49 +84,50 @@ class CandidateList {
 public :
     LookupCache* cache ;
     Picker picker ;
-    QVector<CandidateItem> list ;
-    int listLength ;
+    QVector<CandidateItem> vector ;
+    int vectorLength ;
     int resultIndex ;
-    inline CandidateList( LookupCache* cache ) : cache(cache), picker(), list(), listLength(0), resultIndex(0) {} ;
+    inline CandidateList( LookupCache* cache ) : cache(cache), picker(), vector(), vectorLength(0), resultIndex(0) {} ;
     inline void checkSize() {
-        if ( this->listLength >= this->list.size() )
-            this->list.resize( this->listLength + 16 ) ;
+        if ( this->vectorLength >= this->vector.size() )
+            this->vector.resize( this->vectorLength + 16 ) ;
     }
     inline void clear() {
-        this->listLength = 0 ;
+        this->vectorLength = 0 ;
         this->resultIndex = 0 ;
     }
-    inline void set( int index ) {
-        this->listLength = 0 ;
-        this->resultIndex = index ;
-        picker.set( this->cache->cache[index] ) ;
+    inline void setResultIndex( int resultIndex ) {
+        this->vectorLength = 0 ;
+        this->resultIndex = resultIndex ;
+        picker.set( this->cache->vector[resultIndex] ) ;
     }
     inline bool tryPrevResult() {
         bool flag = false ;
         while ( this->resultIndex > 0 && !flag ) {
             //qDebug() << this->resultIndex ;
             this->resultIndex-- ;
-            if ( this->cache->cache[this->resultIndex].vaild )
+            if ( this->cache->vector[this->resultIndex].vaild )
                 flag = true ;
         }
         return flag ;
     }
     inline int gen( int requestLength ) {
-        if ( this->listLength < requestLength ) {
-            for ( int i = this->listLength ; i < requestLength ; i++ ) {
+        int prevLength = this->vectorLength ;
+        if ( this->vectorLength < requestLength ) {
+            for ( int i = this->vectorLength ; i < requestLength ; i++ ) {
                 this->checkSize() ;
-                picker.pick( this->list[this->listLength] ) ;
+                picker.pick( &this->vector[this->vectorLength] ) ;
                 if ( picker.flag )
-                    this->listLength++ ;
+                    this->vectorLength++ ;
                 else {
                     if ( this->tryPrevResult() )
-                        picker.set( this->cache->cache[this->resultIndex] ) ;
+                        picker.set( this->cache->vector[this->resultIndex] ) ;
                     else
                         break ;
                 }
             }
         }
-        return requestLength - this->listLength ;
+        return this->vectorLength - prevLength ;
     }
 } ;
 
@@ -146,9 +147,15 @@ public :
     QString code ;
     LookupCache cache ;
     CandidateList candidateList ;
-    Dict dict ;
+    Dict* dict ;
     TrieTree trie ;
-    NumberLookup() : code(), cache(), candidateList(&cache), dict(), trie() {}
+    NumberLookup( Dict* dict ) : code(), cache(), candidateList(&cache), dict(dict), trie() { this->buildTrieTree() ; }
+    void buildTrieTree() {
+        for( QHash<QString, WordRecordList>::const_iterator itor = this->dict->hash.constBegin() ; itor != this->dict->hash.constEnd() ; itor++ ) {
+            //qDebug() << itor.key() ;
+            this->trie.addKey( itor.key() ) ;
+        }
+    }
     inline void pushCode( QChar code ) {
         this->code.append( code ) ;
         this->lookup() ;
@@ -159,10 +166,10 @@ public :
         result->vaild = this->trie.hasKeys() ;
         result->keys.clear() ;
         result->wordRecordLists.clear() ;
-        this->trie.getKeys( result->keys ) ;
+        this->trie.getKeys( &result->keys ) ;
         for( int i = 0 ; i < result->keys.count() ; i++ )
-            result->wordRecordLists.append( &this->dict.find( result->keys[i] ) ) ;
-        this->candidateList.set( this->code.length() ) ;
+            result->wordRecordLists.append( &this->dict->find( result->keys[i] ) ) ;
+        this->candidateList.setResultIndex( this->code.length() ) ;
         //qDebug() << result->keys ;
     }
     inline void popCode() { ;
@@ -178,8 +185,8 @@ public :
     }
     inline const CandidateItem* getCandidate( int index ) {
         this->genCandidate( index + 1 ) ;
-        if ( this->candidateList.listLength > index )
-            return &this->candidateList.list[index] ;
+        if ( this->candidateList.vectorLength > index )
+            return &this->candidateList.vector[index] ;
         else
             return 0 ;
     }
