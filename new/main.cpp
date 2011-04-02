@@ -11,7 +11,12 @@ QDebug operator<<( QDebug dbg, const WordRecordList& l ) {
     dbg.nospace() << "{ " ;
     for ( int i = 0 ; i < l.length() ; i++ ) { 
         const WordRecord& r = l.list.at(i) ;
+#ifdef Q_WS_MAEMO_5
         dbg.nospace() << "( " << r.word << ", " << r.freq << " ) ";
+#else
+        dbg.nospace() << "( " << r.word.toUtf8() << ", " << r.freq << " ) ";
+#endif
+
     }
     dbg.nospace() << "}" ;
     return dbg.space();
@@ -20,7 +25,11 @@ QDebug operator<<( QDebug dbg, const WordRecordList& l ) {
 QDebug operator<<( QDebug dbg, const CandidateItem& item ) {
     dbg.nospace() << "( " ;
     //dbg.nospace() <<  item.key << ", " << item.word.toUtf8() << ", " << item.freq ;
+#ifdef Q_WS_MAEMO_5
     dbg.nospace() <<  item.key << ", " << item.word << ", " << item.freq ;
+#else
+    dbg.nospace() <<  item.key << ", " << item.word.toUtf8() << ", " << item.freq ;
+#endif
     dbg.nospace() << " )" ;
     return dbg.space();
 }
@@ -37,10 +46,10 @@ void load( Dict* d, QString file_path ) {
         while( !in.atEnd() ) {
             QString line = in.readLine() ;
             QStringList list = line.split( " " ) ;
-            QString code = list.at(0) ;
-            QString pinyin = list.at(1) ;
-            QString hanzi = list.at(2) ;
-            qreal freq = list.at(3).toFloat() ;
+            //QString code = list.at(0) ;
+            QString pinyin = list.at(0) ;
+            QString hanzi = list.at(1) ;
+            qreal freq = list.at(2).toFloat() ;
             d->insert( pinyin, hanzi, freq ) ;
         }
     }

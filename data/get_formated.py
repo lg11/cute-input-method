@@ -14,5 +14,6 @@ if __name__ == "__main__" :
         pinyin = "'".join( line[3:] )
         hanzi = line[0]
         freq = line[1]
-        print code, pinyin, hanzi, freq
+        #print code, pinyin, hanzi, freq
+        print pinyin, hanzi, freq
         line = file.readline()
