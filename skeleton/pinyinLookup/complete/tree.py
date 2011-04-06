@@ -18,8 +18,8 @@ def __node_seek_path( node, path ) :
     for code in path :
         node = __node_seek_child( node, code )
         if node == None :
-            break
-    return node
+            return False
+    return True
 
 def __node_add_path( node, path ) :
     """
@@ -30,7 +30,7 @@ def __node_add_path( node, path ) :
     for code in path :
         child = __node_seek_child( node, code )
         if child == None :
-            node[1].append( [ code, [], False ] )
+            node[1].append( [ code, [] ] )
             node = node[1][-1]
         else :
             node = child
@@ -47,7 +47,7 @@ class Tree() :
         1. code - a string
         2. child_node_list - like it's name
         """
-        self.entry = [ "", [], False ]
+        self.entry = [ "", [] ]
 
     def add( self, path ) :
         """
@@ -55,23 +55,16 @@ class Tree() :
         if path existed, do nothing
         return node under path
         """
-        node = node_add_path( self.entry, path )
-        node[2] = True
-        return node
+        return node_add_path( self.entry, path )
 
-    def checkComplete( self, path ) :
-        node = node_seek_path( self.entry, path )
-        if node == None :
-            return False
-        else :
-            return node[2]
-
-    def checkVaild( self, path ) :
-        node = node_seek_path( self.entry, path )
-        if node == None :
-            return False
-        else :
-            return True
+    def check( self, path ) :
+        """
+        seek path
+        path is some code like "944"
+        each code of path is "9", "4", "4"
+        return seeked_path and node
+        """
+        return node_seek_path( self.entry, path )
 
 if __name__ == "__main__" :
     tree = Tree()

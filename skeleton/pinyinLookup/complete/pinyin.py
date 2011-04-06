@@ -437,21 +437,17 @@ class PinyinString () :
         self.string = string
         self.vaild = True
     def append( self, code ) :
-        newPinyinString = None
-        prevString = self.string[-1]
-        newString = self.string[-1] + code
-        if pinyinTree.checkVaild( newString ) :
-            if pinyinTree.checkComplete( prevString ) and code in beginCharSet :
-                newPinyinString = PinyinString( list( self.string ) )
-                newPinyinString.space()
-                newPinyinString.append( code )
-            self.string[-1] = newString
+        lastString = self.string[-1] + code
+        #print "start"
+        #print self.string
+        if pinyinTree.check( lastString ) :
+            self.string[-1] = lastString
+            #print lastString
         else :
             if code in beginCharSet :
                 self.string.append( code )
             else :
                 self.vaild = False
-        return newPinyinString
     def space( self ) :
         self.string.append( "" )
     def length( self ) :
@@ -470,13 +466,21 @@ class AdvSeeker () :
     def append( self, code ) :
         self.code = self.code + code 
         if len( self.stack ) > 0 :
-            newStack = []
+            newString = []
             for s in self.stack :
                 if s.vaild :
-                    newPinyinString = s.append( code )
-                    if newPinyinString != None :
-                        newStack.append( newPinyinString )
-            self.stack.extend( newStack )
+                    if code in beginCharSet :
+                        prevList = list( s.string )
+                        prevLength = s.length()
+                        s.append( code )
+                        if s.length() == prevLength :
+                            pinyinString = PinyinString( prevList )
+                            pinyinString.space()
+                            pinyinString.append( code )
+                            newString.append( pinyinString )
+                    else :
+                        s.append( code )
+            self.stack.extend( newString )
         else :
             pinyinString = PinyinString( [""] )
             #print pinyinString
