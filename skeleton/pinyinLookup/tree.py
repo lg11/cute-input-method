@@ -49,7 +49,7 @@ class Tree() :
         """
         self.entry = [ "", [], False ]
 
-    def add( self, path ) :
+    def addPath( self, path ) :
         """
         add a new node in path
         if path existed, do nothing
@@ -72,6 +72,37 @@ class Tree() :
             return False
         else :
             return True
+
+def __node_find_key( node, key ) :
+    l = node[2]
+    flag = False
+    i = 0
+    while ( not flag ) and i < len( l ) :
+        if key == l[i] :
+            flag = True
+        i = i + 1
+    return flag
+
+node_find_key = __node_find_key
+
+class DictTree( Tree ) :
+    def __init__( self ) :
+        Tree.__init__( self )
+    def addKey( self, key ) :
+        path = key[0]
+        i = key.find( "'" )
+        while i > 0 :
+            path = path + key[ i + 1 ]
+            i = key.find( "'", i + 1 )
+        #print key, path
+        node = node_add_path( self.entry, path )
+        if node[2] :
+            if not node_find_key( node, key ) :
+                node[2].append( key )
+        else :
+            node[2] = [ key ]
+        return node
+
 
 if __name__ == "__main__" :
     tree = Tree()

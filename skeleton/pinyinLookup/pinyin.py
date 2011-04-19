@@ -1,6 +1,6 @@
 import tree
 
-pinyinSet = set( \
+pinyinList = \
     [ \
     "a" , \
     "ai" , \
@@ -419,90 +419,17 @@ pinyinSet = set( \
     "zun" , \
     "zuo" , \
     ] \
-    )
+
 
 beginCharSet = set()
 pinyinTree = tree.Tree()
 
-for pinyin in pinyinSet :
+for pinyin in pinyinList :
     beginCharSet.add( pinyin[0] ) 
-    pinyinTree.add( pinyin )
+    pinyinTree.addPath( pinyin )
 
 #print len( beginCharSet )
 #for beginChar in beginCharSet :
     #print beginChar
 
-class PinyinString () :
-    def __init__( self, string = [ "" ] ) :
-        self.string = string
-        self.vaild = True
-    def append( self, code ) :
-        newPinyinString = None
-        prevString = self.string[-1]
-        newString = self.string[-1] + code
-        if pinyinTree.checkVaild( newString ) :
-            if pinyinTree.checkComplete( prevString ) and code in beginCharSet :
-                newPinyinString = PinyinString( list( self.string ) )
-                newPinyinString.space()
-                newPinyinString.append( code )
-            self.string[-1] = newString
-        else :
-            if code in beginCharSet :
-                self.string.append( code )
-            else :
-                self.vaild = False
-        return newPinyinString
-    def space( self ) :
-        self.string.append( "" )
-    def length( self ) :
-        return len( self.string )
-    def clear( self ) :
-        self.string = [ "" ]
-        self.vaild = True
-    def __str__( self ) :
-        s = "'".join( self.string )
-        return s
-
-class AdvSeeker () :
-    def __init__( self ) :
-        self.code = ""
-        self.stack = []
-    def append( self, code ) :
-        self.code = self.code + code 
-        if len( self.stack ) > 0 :
-            newStack = []
-            for s in self.stack :
-                if s.vaild :
-                    newPinyinString = s.append( code )
-                    if newPinyinString != None :
-                        newStack.append( newPinyinString )
-            self.stack.extend( newStack )
-        else :
-            pinyinString = PinyinString( [""] )
-            #print pinyinString
-            pinyinString.append( code )
-            if pinyinString.vaild :
-                self.stack.append( pinyinString )
-    def clear( self ) :
-        self.code = ""
-        self.stack = []
-    def __str__( self ) :
-        s = "["
-        for string in self.stack :
-            s = s + " \"" + str(string) + "\""
-        s = s + " ]"
-        return s
         
-if __name__ == "__main__" :
-    import sys
-    seeker = AdvSeeker()
-    
-    print "done"
-    while (1) :
-        code = sys.stdin.readline()[:-1]
-        for c in code :
-            seeker.append( c )
-        print seeker
-        print len( seeker.stack )
-        seeker.clear()
-
