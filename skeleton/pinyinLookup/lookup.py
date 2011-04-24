@@ -1,5 +1,6 @@
 from dicttree import DictTree
 from spliter import PinyinSpliter
+from picker import Picker
 
 def insert_word( word_list, word ) :
     i = 0 
@@ -30,6 +31,8 @@ class PinyinLookup() :
         self.dict = dict()
         self.dictTree = DictTree()
         self.spliter = PinyinSpliter()
+        self.picker = Picker( self.dict )
+        self.cache = [ [ [], [] ] ]
     def load( self, filePath ) :
         print "start load"
         load_dict( self.dict, filePath )
@@ -37,8 +40,36 @@ class PinyinLookup() :
         for key in self.dict.keys() :
             self.dictTree.addKey( key )
         print "built"
-    #def append( self, code ) :
-
+    def append( self, code ) :
+        self.spliter.append( code )
+        fullFitList = []
+        partFitList = []
+        for pinyinString in lookup.spliter.stack :
+            hasFullFit, keys = lookup.dictTree.fit( pinyinString.string )
+            if hasFullFit :
+                fullFitList.extend( keys )
+            else :
+                partFitList.extend( keys )
+        if len( fullFitList ) > 0 :
+            self.picker.set( fullFitList )
+        else :
+            self.picker.set( partFitList )
+        cache = [ fullFitList, partFitList ] 
+        self.cache.append( cache )
+    def pop( self ) :
+        if len( self.cache ) > 1 :
+            self.spliter.pop()
+            self.cache = self.cache[:-1]
+            cache = self.cache[-1]
+            fullFitList = cache[0]
+            partFitList = cache[1]
+            if len( fullFitList ) > 0 :
+                self.picker.set( fullFitList )
+            else :
+                self.picker.set( partFitList )
+    def clean( self ) :
+        self.spliter.clean()
+        self.cache = [ [ [], [] ] ]
 
 if __name__ == "__main__" :
     import sys
@@ -46,7 +77,14 @@ if __name__ == "__main__" :
     lookup.load( "../../data/formated" )
     while (1) :
         code = sys.stdin.readline()[:-1]
-        keys = lookup.dictTree.getKeys( code )
-        print keys
-        print len( keys )
+        for c in code :
+            #print lookup.cache[-1]
+            lookup.append( c )
+        #print lookup.cache[-1]
+        #print lookup.picker.list
+        print lookup.picker.pick()
+        for c in code :
+            lookup.pop()
+            #print lookup.cache[-1]
+        #lookup.clean()
 

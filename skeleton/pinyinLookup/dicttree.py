@@ -34,13 +34,49 @@ class DictTree() :
         if node == None :
             return []
         else :
-            return node[2]
+            if node[2] :
+                return node[2]
+            else :
+                return []
     def checkVaild( self, path ) :
         node = node_seek_path( self.entry, path )
         if node == None :
             return False
         else :
             return True
+    def fit( self, pinyinString ) :
+        path = ""
+        for pinyin in pinyinString :
+            path += pinyin[0]
+        keys = self.getKeys( path )
+        results = []
+        hasFullFit = False
+        for key in keys :
+            flag = True
+            fitFlag = True
+            s = key.split( "'" )
+            for i in range( len(s) ) :
+                if s[i] == pinyinString[i] :
+                    pass
+                else :
+                    fitFlag = False
+                    l = len( pinyinString[i] )
+                    if l > len( s[i] ) :
+                        flag = False
+                        break
+                    else :
+                        #print s[i][:l], pinyinString[i][:l]
+                        if s[i][:l] != pinyinString[i][:l] :
+                            flag = False
+                            break
+            if fitFlag :
+                results = []
+                results.append( key )
+                hasFullFit = True
+                break
+            elif flag :
+                results.append( key )
+        return hasFullFit, results
 
 if __name__ == "__main__" :
     tree = DictTree()

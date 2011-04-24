@@ -85,7 +85,7 @@ class PinyinSpliter () :
         for pinyinString in removeList :
             self.stack.remove( pinyinString )
             #pass
-    def clear( self ) :
+    def clean( self ) :
         self.code = ""
         self.stack = []
     def __str__( self ) :
@@ -111,5 +111,5 @@ if __name__ == "__main__" :
         while len( seeker.code ) > 0 :
             seeker.pop()
             print seeker
-        #seeker.clear()
+        #seeker.clean()
 
