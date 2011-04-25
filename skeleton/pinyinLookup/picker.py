@@ -11,7 +11,8 @@ class Picker() :
     def pick( self ) :
         highestFreq = -1
         highestIndex = -1
-        for l in self.list :
+        for i in range( len( self.list ) ) :
+            l = self.list[i]
             key = l[0]
             wordList = l[1]
             index = l[2]
@@ -19,6 +20,21 @@ class Picker() :
                 record = wordList[index]
                 word = record[0]
                 freq = record[1]
-                print key, word, freq
+                if freq > highestFreq :
+                    highestIndex = i
+                    highestFreq = freq
+                #print key, word, freq
+        if highestIndex >= 0 :
+            l = self.list[highestIndex]
+            key = l[0]
+            wordList = l[1]
+            index = l[2]
+            record = wordList[index]
+            word = record[0]
+            freq = record[1]
+            l[2] += 1
+            return key, word, freq
+        else :
+            return None, None, 0
 
 

@@ -50,16 +50,23 @@ class DictTree() :
             path += pinyin[0]
         keys = self.getKeys( path )
         results = []
-        hasFullFit = False
+        #hasFullFit = False
+        fitPoint = -999
+        unfitPos = -999
         for key in keys :
             flag = True
-            fitFlag = True
+            #fitFlag = True
+            currentFitPoint = 0
+            currentUnfitPos = -1
             s = key.split( "'" )
             for i in range( len(s) ) :
+                #print s[i], pinyinString[i]
                 if s[i] == pinyinString[i] :
                     pass
                 else :
-                    fitFlag = False
+                    if currentUnfitPos < 0 :
+                        currentUnfitPos = i
+                    currentFitPoint -= 1
                     l = len( pinyinString[i] )
                     if l > len( s[i] ) :
                         flag = False
@@ -69,14 +76,25 @@ class DictTree() :
                         if s[i][:l] != pinyinString[i][:l] :
                             flag = False
                             break
-            if fitFlag :
-                results = []
-                results.append( key )
-                hasFullFit = True
-                break
-            elif flag :
-                results.append( key )
-        return hasFullFit, results
+            #print currentFitPoint, currentUnfitPos, key, flag
+            if flag :
+                if currentFitPoint >= 0 :
+                    results = [ key ]
+                    fitPoint = 0
+                    #hasFullFit = True
+                    break
+                elif currentFitPoint > fitPoint :
+                    results = [ key ]
+                    fitPoint = currentFitPoint
+                    unfitPos = currentUnfitPos
+                elif currentFitPoint == fitPoint :
+                    if currentUnfitPos > unfitPos :
+                        results = [ key ]
+                        unfitPos = currentUnfitPos
+                    elif currentUnfitPos == unfitPos :
+                        results.append( key )
+        #print "-----end-----"
+        return fitPoint, unfitPos, results
 
 if __name__ == "__main__" :
     tree = DictTree()

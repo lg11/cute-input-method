@@ -32,7 +32,8 @@ class PinyinLookup() :
         self.dictTree = DictTree()
         self.spliter = PinyinSpliter()
         self.picker = Picker( self.dict )
-        self.cache = [ [ [], [] ] ]
+        self.cache = [ [ 0, 0, [] ] ]
+        self.candList = []
     def load( self, filePath ) :
         print "start load"
         load_dict( self.dict, filePath )
@@ -42,34 +43,51 @@ class PinyinLookup() :
         print "built"
     def append( self, code ) :
         self.spliter.append( code )
-        fullFitList = []
-        partFitList = []
+        fitList = []
+        fitPoint = -999
+        unfitPos = -999
         for pinyinString in lookup.spliter.stack :
-            hasFullFit, keys = lookup.dictTree.fit( pinyinString.string )
-            if hasFullFit :
-                fullFitList.extend( keys )
-            else :
-                partFitList.extend( keys )
-        if len( fullFitList ) > 0 :
-            self.picker.set( fullFitList )
-        else :
-            self.picker.set( partFitList )
-        cache = [ fullFitList, partFitList ] 
+            currentFitPoint, currentUnfitPos, keys = lookup.dictTree.fit( pinyinString.string )
+            if currentFitPoint > fitPoint :
+                fitList = []
+                fitList.extend( keys )
+                fitPoint = currentFitPoint
+                unfitPos = currentUnfitPos
+            elif currentFitPoint == fitPoint :
+                if currentUnfitPos > unfitPos :
+                    fitList = []
+                    fitList.extend( keys )
+                    unfitPos = currentUnfitPos
+                elif currentUnfitPos == unfitPos :
+                    fitList.extend( keys )
+        self.picker.set( fitList )
+        cache = [ fitPoint, unfitPos, fitList ] 
         self.cache.append( cache )
+        self.candList = []
     def pop( self ) :
         if len( self.cache ) > 1 :
             self.spliter.pop()
             self.cache = self.cache[:-1]
             cache = self.cache[-1]
-            fullFitList = cache[0]
-            partFitList = cache[1]
-            if len( fullFitList ) > 0 :
-                self.picker.set( fullFitList )
+            fitList = cache[2]
+            self.picker.set( fitList )
+            self.candList = []
+    def getCand( self, index ) :
+        flag = True
+        while flag and len( self.candList ) <= index :
+            key, word, freq = lookup.picker.pick()
+            if key :
+                self.candList.append( [ key, word, freq ] )
             else :
-                self.picker.set( partFitList )
+                flag = False
+        if flag :
+            return self.candList[index]
+        else :
+            return None
     def clean( self ) :
         self.spliter.clean()
-        self.cache = [ [ [], [] ] ]
+        self.cache = [ [ 0, 0, [] ] ]
+        self.candList = []
 
 if __name__ == "__main__" :
     import sys
@@ -81,8 +99,11 @@ if __name__ == "__main__" :
             #print lookup.cache[-1]
             lookup.append( c )
         #print lookup.cache[-1]
-        #print lookup.picker.list
-        print lookup.picker.pick()
+        for i in range( 6 ) :
+            cand = lookup.getCand( i )
+            if cand :
+                key, word, freq = cand
+                print key, word, freq
         for c in code :
             lookup.pop()
             #print lookup.cache[-1]
