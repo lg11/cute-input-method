@@ -1,20 +1,8 @@
 from tree import node_add_path, node_seek_path
 
-def __node_find_key( node, key ) :
-    l = node[2]
-    flag = False
-    i = 0
-    while ( not flag ) and i < len( l ) :
-        if key == l[i] :
-            flag = True
-        i = i + 1
-    return flag
-
-node_find_key = __node_find_key
-
 class DictTree() :
     def __init__( self ) :
-        self.entry = [ "", [], [] ]
+        self.entry = [ "", [], False ]
     def addKey( self, key ) :
         path = key[0]
         i = key.find( "'" )
@@ -24,10 +12,9 @@ class DictTree() :
         #print key, path
         node = node_add_path( self.entry, path )
         if node[2] :
-            if not node_find_key( node, key ) :
-                node[2].append( key )
+            node[2].add( key )
         else :
-            node[2] = [ key ]
+            node[2] = set( [ key ] ) 
         return node
     def getKeys( self, path ) :
         node = node_seek_path( self.entry, path )
@@ -35,7 +22,7 @@ class DictTree() :
             return []
         else :
             if node[2] :
-                return node[2]
+                return list( node[2] )
             else :
                 return []
     def checkVaild( self, path ) :
