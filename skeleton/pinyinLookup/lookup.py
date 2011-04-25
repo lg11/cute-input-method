@@ -32,7 +32,7 @@ class PinyinLookup() :
         self.dictTree = DictTree()
         self.spliter = PinyinSpliter()
         self.picker = Picker( self.dict )
-        self.cache = [ [ 0, 0, [] ] ]
+        self.cache = [ [ 0, [] ] ]
         self.candList = []
     def load( self, filePath ) :
         print "start load"
@@ -45,23 +45,16 @@ class PinyinLookup() :
         self.spliter.append( code )
         fitList = []
         fitPoint = -999
-        unfitPos = -999
         for pinyinString in lookup.spliter.stack :
-            currentFitPoint, currentUnfitPos, keys = lookup.dictTree.fit( pinyinString.string )
+            currentFitPoint, keys = lookup.dictTree.fit( pinyinString.string )
             if currentFitPoint > fitPoint :
                 fitList = []
                 fitList.extend( keys )
                 fitPoint = currentFitPoint
-                unfitPos = currentUnfitPos
             elif currentFitPoint == fitPoint :
-                if currentUnfitPos > unfitPos :
-                    fitList = []
-                    fitList.extend( keys )
-                    unfitPos = currentUnfitPos
-                elif currentUnfitPos == unfitPos :
-                    fitList.extend( keys )
+                fitList.extend( keys )
         self.picker.set( fitList )
-        cache = [ fitPoint, unfitPos, fitList ] 
+        cache = [ fitPoint, fitList ] 
         self.cache.append( cache )
         self.candList = []
     def pop( self ) :
@@ -69,7 +62,7 @@ class PinyinLookup() :
             self.spliter.pop()
             self.cache = self.cache[:-1]
             cache = self.cache[-1]
-            fitList = cache[2]
+            fitList = cache[1]
             self.picker.set( fitList )
             self.candList = []
     def getCand( self, index ) :
@@ -86,7 +79,7 @@ class PinyinLookup() :
             return None
     def clean( self ) :
         self.spliter.clean()
-        self.cache = [ [ 0, 0, [] ] ]
+        self.cache = [ [ 0, [] ] ]
         self.candList = []
 
 if __name__ == "__main__" :

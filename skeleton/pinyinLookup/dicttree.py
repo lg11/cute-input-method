@@ -1,4 +1,5 @@
 from tree import node_add_path, node_seek_path
+from pinyin import pinyinTree
 
 class DictTree() :
     def __init__( self ) :
@@ -39,23 +40,22 @@ class DictTree() :
         results = []
         #hasFullFit = False
         fitPoint = -999
-        unfitPos = -999
         for key in keys :
             flag = True
             #fitFlag = True
             currentFitPoint = 0
-            currentUnfitPos = -1
             s = key.split( "'" )
             for i in range( len(s) ) :
                 #print s[i], pinyinString[i]
                 if s[i] == pinyinString[i] :
                     pass
                 else :
-                    if currentUnfitPos < 0 :
-                        currentUnfitPos = i
                     currentFitPoint -= 1
                     l = len( pinyinString[i] )
                     if l > len( s[i] ) :
+                        flag = False
+                        break
+                    elif pinyinTree.checkComplete( pinyinString[i])  and i < len(s) - 1 :
                         flag = False
                         break
                     else :
@@ -63,7 +63,7 @@ class DictTree() :
                         if s[i][:l] != pinyinString[i][:l] :
                             flag = False
                             break
-            #print currentFitPoint, currentUnfitPos, key, flag
+            #print currentFitPoint, key, flag
             if flag :
                 if currentFitPoint >= 0 :
                     results = [ key ]
@@ -73,15 +73,10 @@ class DictTree() :
                 elif currentFitPoint > fitPoint :
                     results = [ key ]
                     fitPoint = currentFitPoint
-                    unfitPos = currentUnfitPos
                 elif currentFitPoint == fitPoint :
-                    if currentUnfitPos > unfitPos :
-                        results = [ key ]
-                        unfitPos = currentUnfitPos
-                    elif currentUnfitPos == unfitPos :
-                        results.append( key )
+                    results.append( key )
         #print "-----end-----"
-        return fitPoint, unfitPos, results
+        return fitPoint, results
 
 if __name__ == "__main__" :
     tree = DictTree()

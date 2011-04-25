@@ -5,6 +5,7 @@ class Picker() :
         self.list = []
     def set( self, keys ) :
         self.list = []
+        #print keys
         for key in keys :
             wordList = self.dict[key]
             self.list.append( [ key, wordList, 0 ] )
