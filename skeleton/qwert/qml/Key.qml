@@ -13,8 +13,10 @@ Rectangle {
     Rectangle {
         id : plat
         anchors.centerIn: parent
-        width : parent.width * 0.985
-        height : parent.height - parent.width + width
+        /*width : parent.width * 0.985*/
+        /*height : parent.height - parent.width + width*/
+        width : parent.width - 1
+        height : parent.height - 1
         color : "#FF444444"
 
         Text {
@@ -31,7 +33,7 @@ Rectangle {
         focus : false
         anchors.fill : parent
         hoverEnabled : false
-        onPressed : {}
+        onPressed : { qmlInterface.keyEvent( 1 ) }
         onReleased : {}
     }
 
