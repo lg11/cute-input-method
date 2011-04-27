@@ -45,8 +45,8 @@ class PinyinLookup() :
         self.spliter.append( code )
         fitList = []
         fitPoint = -999
-        for pinyinString in lookup.spliter.stack :
-            currentFitPoint, keys = lookup.dictTree.fit( pinyinString.string )
+        for pinyinString in self.spliter.stack :
+            currentFitPoint, keys = self.dictTree.fit( pinyinString.string )
             if currentFitPoint > fitPoint :
                 fitList = []
                 fitList.extend( keys )
@@ -68,7 +68,7 @@ class PinyinLookup() :
     def getCand( self, index ) :
         flag = True
         while flag and len( self.candList ) <= index :
-            key, word, freq = lookup.picker.pick()
+            key, word, freq = self.picker.pick()
             if key :
                 self.candList.append( [ key, word, freq ] )
             else :

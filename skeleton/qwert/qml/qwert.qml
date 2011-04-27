@@ -8,7 +8,7 @@ Rectangle {
     Keyboard {
         width : parent.width * 1.15
         height : width * 0.7
-        x : -20
+        x : -25
         y : 75
     }
 }

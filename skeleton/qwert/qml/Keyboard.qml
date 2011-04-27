@@ -131,6 +131,7 @@ Rectangle {
         /*console.log( "pressed" )*/
     }
     function keyRelease( keycode ) {
+        imEngine.keyEvent( keycode )
         /*console.log( "released" )*/
     }
 
@@ -150,7 +151,7 @@ Rectangle {
             Key { id : key_backspace ; keycode : keycode_backspace ; keysym : keysym_backspace ; width : keyWidth ; height : keyHeight ; mask : 0 }
         }
         Row {
-            Rectangle { width : keyWidth * 0.2 ; height : keyHeight }
+            Rectangle { width : keyWidth * 0.25 ; height : keyHeight }
             Key { id : key_q ; keycode : keycode_q ; keysym : keysym_q ; width : keyWidth ; height : keyHeight }
             Key { id : key_w ; keycode : keycode_w ; keysym : keysym_w ; width : keyWidth ; height : keyHeight }
             Key { id : key_e ; keycode : keycode_e ; keysym : keysym_e ; width : keyWidth ; height : keyHeight }
@@ -163,7 +164,7 @@ Rectangle {
             Key { id : key_p ; keycode : keycode_p ; keysym : keysym_p ; width : keyWidth ; height : keyHeight }
         }
         Row {
-            Rectangle { width : keyWidth * 0.4 ; height : keyHeight }
+            Rectangle { width : keyWidth * 0.5 ; height : keyHeight }
             Key { id : key_a ; keycode : keycode_a ; keysym : keysym_a ; width : keyWidth ; height : keyHeight }
             Key { id : key_s ; keycode : keycode_s ; keysym : keysym_s ; width : keyWidth ; height : keyHeight }
             Key { id : key_d ; keycode : keycode_d ; keysym : keysym_d ; width : keyWidth ; height : keyHeight }

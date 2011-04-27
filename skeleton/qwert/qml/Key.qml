@@ -61,26 +61,27 @@ Rectangle {
         } 
     }
 
-    transform {
-        Rotation {
-            id : flip
-            origin.x : width / 2
-            origin.y : height / 2
-            axis.x : 0 ; axis.y : 1 ; axis.z : 0
-            angle : 0
-        }
-    }
-    Behavior on mask {
-        SequentialAnimation {
-            ParallelAnimation {
-                NumberAnimation { target: flip ; property: "angle" ; to: 180 ; duration: 100 }
-                NumberAnimation { target: key ; property: "scale" ; to: 0.7 ; duration: 100 }
-            }
-            ParallelAnimation {
-                NumberAnimation { target: flip ; property: "angle" ; to: 360 ; duration: 100 }
-                NumberAnimation { target: key ; property: "scale" ; to: 1.0 ; duration: 100 }
-            }
-            NumberAnimation { target: flip ; property: "angle" ; to: 0 ; duration: 0 }
-        }
-    }
+    /*transform {*/
+        /*Rotation {*/
+            /*id : flip*/
+            /*origin.x : width / 2*/
+            /*origin.y : height / 2*/
+            /*axis.x : 0 ; axis.y : 1 ; axis.z : 0*/
+            /*angle : 0*/
+        /*}*/
+    /*}*/
+
+    /*Behavior on mask {*/
+        /*SequentialAnimation {*/
+            /*ParallelAnimation {*/
+                /*NumberAnimation { target: flip ; property: "angle" ; to: 180 ; duration: 100 }*/
+                /*NumberAnimation { target: key ; property: "scale" ; to: 0.7 ; duration: 100 }*/
+            /*}*/
+            /*ParallelAnimation {*/
+                /*NumberAnimation { target: flip ; property: "angle" ; to: 360 ; duration: 100 }*/
+                /*NumberAnimation { target: key ; property: "scale" ; to: 1.0 ; duration: 100 }*/
+            /*}*/
+            /*NumberAnimation { target: flip ; property: "angle" ; to: 0 ; duration: 0 }*/
+        /*}*/
+    /*}*/
 }

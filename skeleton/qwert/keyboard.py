@@ -1,11 +1,5 @@
 from QtImport import QtGui, QtCore, QtDeclarative
-
-class QMLInterface( QtCore.QObject ) :
-    def __init__( self, parent = None ) :
-        QtCore.QObject.__init__( self, parent )
-    @QtCore.Slot( int )
-    def keyEvent( self, keycode ) :
-        print keycode
+from engine import IMEngine
 
 if __name__ == "__main__" :
     import sys
@@ -14,9 +8,10 @@ if __name__ == "__main__" :
     view = QtDeclarative.QDeclarativeView()
     view.setSource( QtCore.QUrl("./qml/qwert.qml") ) ;
 
-    qmlInterface = QMLInterface()
+    imEngine = IMEngine()
+    imEngine.load( "../../data/formated" )
     context = view.rootContext()
-    context.setContextProperty( "qmlInterface", qmlInterface )
+    context.setContextProperty( "imEngine", imEngine )
 
     view.show()
 
