@@ -54,16 +54,16 @@ Rectangle {
     property int keycode_ctrl : 203
     property int keycode_alt : 204
 
-    property variant keysym_0 : [ "0", "0", "0", "0" ]
-    property variant keysym_1 : [ "1", "1", "1", "1" ]
-    property variant keysym_2 : [ "2", "2", "2", "2" ]
-    property variant keysym_3 : [ "3", "3", "3", "3" ]
-    property variant keysym_4 : [ "4", "4", "4", "4" ]
-    property variant keysym_5 : [ "5", "5", "5", "5" ]
-    property variant keysym_6 : [ "6", "6", "6", "6" ]
-    property variant keysym_7 : [ "7", "7", "7", "7" ]
-    property variant keysym_8 : [ "8", "8", "8", "8" ]
-    property variant keysym_9 : [ "9", "9", "9", "9" ]
+    property variant keysym_0 : [ "0", "?", "0", "0" ]
+    property variant keysym_1 : [ "1", "!", "1", "1" ]
+    property variant keysym_2 : [ "2", "&", "2", "2" ]
+    property variant keysym_3 : [ "3", ")", "3", "3" ]
+    property variant keysym_4 : [ "4", "(", "4", "4" ]
+    property variant keysym_5 : [ "5", "_", "5", "5" ]
+    property variant keysym_6 : [ "6", "-", "6", "6" ]
+    property variant keysym_7 : [ "7", "#", "7", "7" ]
+    property variant keysym_8 : [ "8", "+", "8", "8" ]
+    property variant keysym_9 : [ "9", "*", "9", "9" ]
     
     property variant keysym_a : [ "a", "A", "a", "a" ]
     property variant keysym_b : [ "b", "B", "b", "b" ]
@@ -132,22 +132,27 @@ Rectangle {
     }
     function keyRelease( keycode ) {
         imEngine.keyEvent( keycode )
-        /*console.log( "released" )*/
+        imEngine.updateCandString( 0 )
+        key_1_2.candString = imEngine.candString
+        imEngine.updateCandString( 1 )
+        key_3_4.candString = imEngine.candString
+        imEngine.updateCandString( 2 )
+        key_5_6.candString = imEngine.candString
+        imEngine.updateCandString( 3 )
+        key_7_8.candString = imEngine.candString
+        imEngine.updateCandString( 4 )
+        key_9_0.candString = imEngine.candString
+        /*console.log( word )*/
     }
 
     Column {
         anchors.fill : parent
         Row {
-            Key { id : key_1 ; keycode : keycode_1 ; keysym : keysym_1 ; width : keyWidth ; height : keyHeight }
-            Key { id : key_2 ; keycode : keycode_2 ; keysym : keysym_2 ; width : keyWidth ; height : keyHeight }
-            Key { id : key_3 ; keycode : keycode_3 ; keysym : keysym_3 ; width : keyWidth ; height : keyHeight }
-            Key { id : key_4 ; keycode : keycode_4 ; keysym : keysym_4 ; width : keyWidth ; height : keyHeight }
-            Key { id : key_5 ; keycode : keycode_5 ; keysym : keysym_5 ; width : keyWidth ; height : keyHeight }
-            Key { id : key_6 ; keycode : keycode_6 ; keysym : keysym_6 ; width : keyWidth ; height : keyHeight }
-            Key { id : key_7 ; keycode : keycode_7 ; keysym : keysym_7 ; width : keyWidth ; height : keyHeight }
-            Key { id : key_8 ; keycode : keycode_8 ; keysym : keysym_8 ; width : keyWidth ; height : keyHeight }
-            Key { id : key_9 ; keycode : keycode_9 ; keysym : keysym_9 ; width : keyWidth ; height : keyHeight }
-            Key { id : key_0 ; keycode : keycode_0 ; keysym : keysym_0 ; width : keyWidth ; height : keyHeight }
+            CandKey { id : key_1_2 ; keycode_l : keycode_1 ; keysym_l : keysym_1 ; keycode_r : keycode_2 ; keysym_r : keysym_2 ; width : keyWidth * 2.0 ; height : keyHeight }
+            CandKey { id : key_3_4 ; keycode_l : keycode_3 ; keysym_l : keysym_3 ; keycode_r : keycode_4 ; keysym_r : keysym_4 ; width : keyWidth * 2.0 ; height : keyHeight }
+            CandKey { id : key_5_6 ; keycode_l : keycode_5 ; keysym_l : keysym_5 ; keycode_r : keycode_6 ; keysym_r : keysym_6 ; width : keyWidth * 2.0 ; height : keyHeight }
+            CandKey { id : key_7_8 ; keycode_l : keycode_7 ; keysym_l : keysym_7 ; keycode_r : keycode_8 ; keysym_r : keysym_8 ; width : keyWidth * 2.0 ; height : keyHeight }
+            CandKey { id : key_9_0 ; keycode_l : keycode_9 ; keysym_l : keysym_9 ; keycode_r : keycode_0 ; keysym_r : keysym_0 ; width : keyWidth * 2.0 ; height : keyHeight }
             Key { id : key_backspace ; keycode : keycode_backspace ; keysym : keysym_backspace ; width : keyWidth ; height : keyHeight ; mask : 0 }
         }
         Row {

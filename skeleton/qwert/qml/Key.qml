@@ -30,6 +30,8 @@ Rectangle {
         }
     }
 
+    property color platColor : plat.color
+
     MouseArea {
         id : mouseArea
         focus : false
@@ -38,6 +40,8 @@ Rectangle {
         onPressed : { keyboard.keyPress( keycode ) }
         onReleased : { keyboard.keyRelease( keycode ) }
     }
+
+    property bool isPressed : mouseArea.pressed
 
     states {
         State {

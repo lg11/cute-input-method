@@ -32,18 +32,42 @@ class IMEngine( QtCore.QObject ) :
     keysym[120] = "x"
     keysym[121] = "y"
     keysym[122] = "z"
+
+    keycode_backspace = 201
+
+    def readCandString( self ) :
+        return self.candString_value
+    def writeCandString( self, value ) :
+        self.candString_value = value
+    candStringChanged = QtCore.Signal()
+    candString = QtCore.Property( str, readCandString, writeCandString, notify = candStringChanged )
+
     def __init__( self, parent = None ) :
         QtCore.QObject.__init__( self, parent )
         self.pinyinLookup = PinyinLookup()
         self.load = self.pinyinLookup.load
+        self.candString_value = [ "" ] * 5
+    def printCand( self ) :
+        for i in range( 5 ) :
+            cand = self.pinyinLookup.getCand( i )
+            if cand :
+                key, word, freq = cand
+                print key, word, freq
+    @QtCore.Slot( int )
+    def updateCandString( self, index ) :
+        word = ""
+        cand = self.pinyinLookup.getCand( index )
+        if cand :
+            word = cand[1].decode( "utf-8" )
+        #word = "abc"
+        self.candString = word
     @QtCore.Slot( int )
     def keyEvent( self, keycode ) :
-        if keycode >= 97 and keycode <= 122 :
+        if keycode == self.keycode_backspace :
+            self.pinyinLookup.pop()
+            #self.printCand()
+        elif keycode >= 97 and keycode <= 122 :
             code = self.keysym[keycode]
             self.pinyinLookup.append( code )
-            for i in range( 5 ) :
-                cand = self.pinyinLookup.getCand( i )
-                if cand :
-                    key, word, freq = cand
-                    print key, word, freq
+            #self.printCand()
         
