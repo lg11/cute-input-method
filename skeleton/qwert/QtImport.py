@@ -5,6 +5,7 @@ except ImportError :
         from PyQt4 import QtGui, QtCore, QtDeclarative
         QtCore.Signal = QtCore.pyqtSignal
         QtCore.Slot = QtCore.pyqtSlot
+        QtCore.Property = QtCore.pyqtProperty
     except ImportError :
         pass
     
