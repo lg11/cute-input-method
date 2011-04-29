@@ -8,6 +8,8 @@ Flickable {
     contentWidth : edit.paintedWidth
     contentHeight : edit.paintedHeight
     clip : true
+    boundsBehavior : Flickable.StopAtBounds
+    /*property string text*/
 
     function ensureVisible( r )
     {
@@ -27,7 +29,10 @@ Flickable {
         height : flick.height
         focus : true
         activeFocusOnPress : false
-        /*wrapMode : TextEdit.Wrap*/
+        wrapMode : TextEdit.Wrap
         onCursorRectangleChanged : flick.ensureVisible(cursorRectangle)
+        text : document.text
+        cursorPosition : document.cursorPosition
+        onCursorPositionChanged : document.setCursorPosition( cursorPosition )
     }
 }

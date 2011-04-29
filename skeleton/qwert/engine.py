@@ -63,6 +63,7 @@ class IMEngine( QtCore.QObject ) :
         self.candString = word
     @QtCore.Slot( int )
     def keyEvent( self, keycode ) :
+        self.candStringChanged.emit()
         if keycode == self.keycode_backspace :
             self.pinyinLookup.pop()
             #self.printCand()

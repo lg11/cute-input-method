@@ -115,6 +115,58 @@ Rectangle {
 
     property int mask : 0
 
+    function getKeysym( keycode ) {
+        var keysym = new Array(256)
+        keysym[keycode_0] = keysym_0
+        keysym[keycode_1] = keysym_1
+        keysym[keycode_2] = keysym_2
+        keysym[keycode_3] = keysym_3
+        keysym[keycode_4] = keysym_4
+        keysym[keycode_5] = keysym_5
+        keysym[keycode_6] = keysym_6
+        keysym[keycode_7] = keysym_7
+        keysym[keycode_8] = keysym_8
+        keysym[keycode_9] = keysym_9
+        
+        keysym[keycode_a] = keysym_a
+        keysym[keycode_b] = keysym_b
+        keysym[keycode_c] = keysym_c
+        keysym[keycode_d] = keysym_d
+        keysym[keycode_e] = keysym_e
+        keysym[keycode_f] = keysym_f
+        keysym[keycode_g] = keysym_g
+        keysym[keycode_h] = keysym_h
+        keysym[keycode_i] = keysym_i
+        keysym[keycode_j] = keysym_j
+        keysym[keycode_k] = keysym_k
+        keysym[keycode_l] = keysym_l
+        keysym[keycode_m] = keysym_m
+        keysym[keycode_n] = keysym_n
+        keysym[keycode_o] = keysym_o
+        keysym[keycode_p] = keysym_p
+        keysym[keycode_q] = keysym_q
+        keysym[keycode_r] = keysym_r
+        keysym[keycode_s] = keysym_s
+        keysym[keycode_t] = keysym_t
+        keysym[keycode_u] = keysym_u
+        keysym[keycode_v] = keysym_v
+        keysym[keycode_w] = keysym_w
+        keysym[keycode_x] = keysym_x
+        keysym[keycode_y] = keysym_y
+        keysym[keycode_z] = keysym_z
+
+        keysym[keycode_comma] = keysym_comma
+        keysym[keycode_dot] = keysym_dot
+
+        keysym[keycode_enter] = keysym_enter
+        keysym[keycode_space] = keysym_space
+        keysym[keycode_backspace] = keysym_backspace
+        keysym[keycode_shift] = keysym_shift
+        keysym[keycode_ctrl] = keysym_ctrl
+        keysym[keycode_alt] = keysym_alt
+
+        return keysym[keycode]
+    }
     function keyPress( keycode ) {
         if ( keycode == keycode_shift ) {
             if ( mask == mask_shift ) {
@@ -131,17 +183,24 @@ Rectangle {
         /*console.log( "pressed" )*/
     }
     function keyRelease( keycode ) {
-        imEngine.keyEvent( keycode )
-        imEngine.updateCandString( 0 )
-        key_1_2.candString = imEngine.candString
-        imEngine.updateCandString( 1 )
-        key_3_4.candString = imEngine.candString
-        imEngine.updateCandString( 2 )
-        key_5_6.candString = imEngine.candString
-        imEngine.updateCandString( 3 )
-        key_7_8.candString = imEngine.candString
-        imEngine.updateCandString( 4 )
-        key_9_0.candString = imEngine.candString
+        var keysym
+        if ( keycode >= keycode_a && keycode <= keycode_z &&  mask == mask_null ) {
+            imEngine.keyEvent( keycode )
+            imEngine.updateCandString( 0 )
+            key_1_2.candString = imEngine.candString
+            imEngine.updateCandString( 1 )
+            key_3_4.candString = imEngine.candString
+            imEngine.updateCandString( 2 )
+            key_5_6.candString = imEngine.candString
+            imEngine.updateCandString( 3 )
+            key_7_8.candString = imEngine.candString
+            imEngine.updateCandString( 4 )
+            key_9_0.candString = imEngine.candString
+        }
+        else if ( keycode != keycode_shift && keycode != keycode_ctrl && keycode != keycode_alt ) {
+            keysym = getKeysym( keycode )
+            document.insert( keysym[mask] )
+        }
         /*console.log( word )*/
     }
 
