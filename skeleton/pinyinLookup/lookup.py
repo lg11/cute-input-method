@@ -16,7 +16,7 @@ def load_dict( d, file_path ) :
     while line :
         buffer = line[:-1].split()
         pinyin = buffer[0]
-        word = buffer[1]
+        word = buffer[1].decode( "utf-8" )
         freq = float( buffer[2] )
         if pinyin in d :
             word_list = d[pinyin]
@@ -32,7 +32,7 @@ class PinyinLookup() :
         self.dictTree = DictTree()
         self.spliter = PinyinSpliter()
         self.picker = Picker( self.dict )
-        self.cache = [ [ 0, [] ] ]
+        self.cache = [ [ 0, [], "" ] ]
         self.candList = []
     def load( self, filePath ) :
         print "start load"
@@ -43,6 +43,7 @@ class PinyinLookup() :
         print "built"
     def append( self, code ) :
         self.spliter.append( code )
+        preedit = ""
         fitList = []
         fitPoint = -999
         for pinyinString in self.spliter.stack :
@@ -51,10 +52,11 @@ class PinyinLookup() :
                 fitList = []
                 fitList.extend( keys )
                 fitPoint = currentFitPoint
+                preedit = str( pinyinString )
             elif currentFitPoint == fitPoint :
                 fitList.extend( keys )
         self.picker.set( fitList )
-        cache = [ fitPoint, fitList ] 
+        cache = [ fitPoint, fitList, preedit ] 
         self.cache.append( cache )
         self.candList = []
     def pop( self ) :
@@ -79,7 +81,7 @@ class PinyinLookup() :
             return None
     def clean( self ) :
         self.spliter.clean()
-        self.cache = [ [ 0, [] ] ]
+        self.cache = [ [ 0, [], "" ] ]
         self.candList = []
 
 if __name__ == "__main__" :

@@ -12,6 +12,12 @@ Rectangle {
         x : 40
         y : 0
     }
+    Preedit {
+        id : preedit
+        y : 15
+        anchors.horizontalCenter : parent.horizontalCenter
+        /*preeditString : imEngine.preeditString*/
+    }
     Keyboard {
         width : parent.width * 1.15
         height : width * 0.7

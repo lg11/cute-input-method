@@ -16,12 +16,10 @@ if __name__ == "__main__" :
     view = QtDeclarative.QDeclarativeView()
     view.setSource( QtCore.QUrl("./qml/qwert.qml") ) ;
 
-    clipboard = Clipboard()
     imEngine = IMEngine()
-    #imEngine.load( "../../data/formated" )
+    imEngine.load( "../../data/formated" )
     context = view.rootContext()
     context.setContextProperty( "imEngine", imEngine )
-    context.setContextProperty( "clipboard", clipboard )
 
     view.show()
 

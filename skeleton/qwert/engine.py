@@ -5,48 +5,30 @@ sys.path.append( "../pinyinLookup" )
 from lookup import PinyinLookup
 
 class IMEngine( QtCore.QObject ) :
-    keysym = [ "" ] * 256
-    keysym[97] = "a"
-    keysym[98] = "b"
-    keysym[99] = "c"
-    keysym[100] = "d"
-    keysym[101] = "e"
-    keysym[102] = "f"
-    keysym[103] = "g"
-    keysym[104] = "h"
-    keysym[105] = "i"
-    keysym[106] = "j"
-    keysym[107] = "k"
-    keysym[108] = "l"
-    keysym[109] = "m"
-    keysym[110] = "n"
-    keysym[111] = "o"
-    keysym[112] = "p"
-    keysym[113] = "q"
-    keysym[114] = "r"
-    keysym[115] = "s"
-    keysym[116] = "t"
-    keysym[117] = "u"
-    keysym[118] = "v"
-    keysym[119] = "w"
-    keysym[120] = "x"
-    keysym[121] = "y"
-    keysym[122] = "z"
+    preeditStringChanged = QtCore.Signal( str )
+    @QtCore.Slot()
+    def readPreeditString( self ) :
+        return self.preeditString_value
+    def writePreeditString( self, value ) :
+        self.preeditString_value = value
+    preeditString = QtCore.Property( str, readPreeditString, writePreeditString, notify = preeditStringChanged )
 
-    keycode_backspace = 201
-
+    candStringChanged = QtCore.Signal( str )
+    @QtCore.Slot()
     def readCandString( self ) :
         return self.candString_value
+    @QtCore.Slot( str )
     def writeCandString( self, value ) :
         self.candString_value = value
-    candStringChanged = QtCore.Signal()
+        #self.candStringChanged.emit( self.candString_value )
     candString = QtCore.Property( str, readCandString, writeCandString, notify = candStringChanged )
 
     def __init__( self, parent = None ) :
         QtCore.QObject.__init__( self, parent )
         self.pinyinLookup = PinyinLookup()
         self.load = self.pinyinLookup.load
-        self.candString_value = [ "" ] * 5
+        self.candString_value = ""
+        self.preeditString_value = ""
     def printCand( self ) :
         for i in range( 5 ) :
             cand = self.pinyinLookup.getCand( i )
@@ -58,17 +40,16 @@ class IMEngine( QtCore.QObject ) :
         word = ""
         cand = self.pinyinLookup.getCand( index )
         if cand :
-            word = cand[1].decode( "utf-8" )
+            word = cand[1]
         #word = "abc"
         self.candString = word
-    @QtCore.Slot( int )
-    def keyEvent( self, keycode ) :
-        self.candStringChanged.emit()
-        if keycode == self.keycode_backspace :
-            self.pinyinLookup.pop()
-            #self.printCand()
-        elif keycode >= 97 and keycode <= 122 :
-            code = self.keysym[keycode]
-            self.pinyinLookup.append( code )
-            #self.printCand()
+        #self.candStringChanged.emit( self.candString_value )
+    @QtCore.Slot( str )
+    def appendCode( self, code ) :
+        self.pinyinLookup.append( code )
+        self.preeditString = self.pinyinLookup.cache[-1][2]
+    @QtCore.Slot()
+    def backspace( self ) :
+        self.pinyinLookup.pop()
+        self.preeditString = self.pinyinLookup.cache[-1][2]
         
