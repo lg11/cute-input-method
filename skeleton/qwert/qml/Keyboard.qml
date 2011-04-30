@@ -1,4 +1,5 @@
 import Qt 4.7
+import "utils.js" as Utils
 
 Rectangle {
     id : keyboard
@@ -6,185 +7,31 @@ Rectangle {
     height : 480
     color : "#00FF0000"
 
-    property int keycode_0 : 48
-    property int keycode_1 : 49
-    property int keycode_2 : 50
-    property int keycode_3 : 51
-    property int keycode_4 : 52
-    property int keycode_5 : 52
-    property int keycode_6 : 54
-    property int keycode_7 : 55
-    property int keycode_8 : 56
-    property int keycode_9 : 57
-
-    property int keycode_a : 97
-    property int keycode_b : 98
-    property int keycode_c : 99
-    property int keycode_d : 100
-    property int keycode_e : 101
-    property int keycode_f : 102
-    property int keycode_g : 103
-    property int keycode_h : 104
-    property int keycode_i : 105
-    property int keycode_j : 106
-    property int keycode_k : 107
-    property int keycode_l : 108
-    property int keycode_m : 109
-    property int keycode_n : 110
-    property int keycode_o : 111
-    property int keycode_p : 112
-    property int keycode_q : 113
-    property int keycode_r : 114
-    property int keycode_s : 115
-    property int keycode_t : 116
-    property int keycode_u : 117
-    property int keycode_v : 118
-    property int keycode_w : 119
-    property int keycode_x : 120
-    property int keycode_y : 121
-    property int keycode_z : 122
-
-    property int keycode_comma : 44
-    property int keycode_dot : 46
-
-    property int keycode_enter : 10
-    property int keycode_space : 32
-    property int keycode_backspace : 201
-    property int keycode_shift : 202
-    property int keycode_ctrl : 203
-    property int keycode_alt : 204
-
-    property variant keysym_0 : [ "0", "?", "0", "0" ]
-    property variant keysym_1 : [ "1", "!", "1", "1" ]
-    property variant keysym_2 : [ "2", "&", "2", "2" ]
-    property variant keysym_3 : [ "3", ")", "3", "3" ]
-    property variant keysym_4 : [ "4", "(", "4", "4" ]
-    property variant keysym_5 : [ "5", "_", "5", "5" ]
-    property variant keysym_6 : [ "6", "-", "6", "6" ]
-    property variant keysym_7 : [ "7", "#", "7", "7" ]
-    property variant keysym_8 : [ "8", "+", "8", "8" ]
-    property variant keysym_9 : [ "9", "*", "9", "9" ]
-    
-    property variant keysym_a : [ "a", "A", "a", "a" ]
-    property variant keysym_b : [ "b", "B", "b", "b" ]
-    property variant keysym_c : [ "c", "C", "c", "c" ]
-    property variant keysym_d : [ "d", "D", "d", "d" ]
-    property variant keysym_e : [ "e", "E", "e", "e" ]
-    property variant keysym_f : [ "f", "F", "f", "f" ]
-    property variant keysym_g : [ "g", "G", "g", "g" ]
-    property variant keysym_h : [ "h", "H", "h", "h" ]
-    property variant keysym_i : [ "i", "I", "i", "i" ]
-    property variant keysym_j : [ "j", "J", "j", "j" ]
-    property variant keysym_k : [ "k", "K", "k", "k" ]
-    property variant keysym_l : [ "l", "L", "l", "l" ]
-    property variant keysym_m : [ "m", "M", "m", "m" ]
-    property variant keysym_n : [ "n", "N", "n", "n" ]
-    property variant keysym_o : [ "o", "O", "o", "o" ]
-    property variant keysym_p : [ "p", "P", "p", "p" ]
-    property variant keysym_q : [ "q", "Q", "q", "q" ]
-    property variant keysym_r : [ "r", "R", "r", "r" ]
-    property variant keysym_s : [ "s", "S", "s", "s" ]
-    property variant keysym_t : [ "t", "T", "t", "t" ]
-    property variant keysym_u : [ "u", "U", "u", "u" ]
-    property variant keysym_v : [ "v", "V", "v", "v" ]
-    property variant keysym_w : [ "w", "W", "w", "w" ]
-    property variant keysym_x : [ "x", "X", "x", "x" ]
-    property variant keysym_y : [ "y", "Y", "y", "y" ]
-    property variant keysym_z : [ "z", "Z", "z", "z" ]
-
-    property variant keysym_comma : [ ",", ",", ",", "," ]
-    property variant keysym_dot : [ ".", ".", ".", "." ]
-
-    property variant keysym_enter : [ "◄", "◄", "◄", "◄" ]
-    property variant keysym_space : [ " ", " ", " ", " " ]
-    property variant keysym_backspace : [ "◄", "◄", "◄", "◄" ]
-    property variant keysym_shift : [ "▲", "▲", "▲", "▲" ]
-    property variant keysym_ctrl : [ "", "", "", "" ]
-    property variant keysym_alt : [ "", "", "", "" ]
-
     property int keyWidth
     property int keyHeight
 
     keyWidth : 800 / 10 * 0.975
     keyHeight : keyWidth
 
-    property int mask_null : 0
-    property int mask_shift : 1
-    property int mask_ctrl : 2
-    property int mask_alt : 3
-
     property int mask : 0
 
-    function getKeysym( keycode ) {
-        var keysym = new Array(256)
-        keysym[keycode_0] = keysym_0
-        keysym[keycode_1] = keysym_1
-        keysym[keycode_2] = keysym_2
-        keysym[keycode_3] = keysym_3
-        keysym[keycode_4] = keysym_4
-        keysym[keycode_5] = keysym_5
-        keysym[keycode_6] = keysym_6
-        keysym[keycode_7] = keysym_7
-        keysym[keycode_8] = keysym_8
-        keysym[keycode_9] = keysym_9
-        
-        keysym[keycode_a] = keysym_a
-        keysym[keycode_b] = keysym_b
-        keysym[keycode_c] = keysym_c
-        keysym[keycode_d] = keysym_d
-        keysym[keycode_e] = keysym_e
-        keysym[keycode_f] = keysym_f
-        keysym[keycode_g] = keysym_g
-        keysym[keycode_h] = keysym_h
-        keysym[keycode_i] = keysym_i
-        keysym[keycode_j] = keysym_j
-        keysym[keycode_k] = keysym_k
-        keysym[keycode_l] = keysym_l
-        keysym[keycode_m] = keysym_m
-        keysym[keycode_n] = keysym_n
-        keysym[keycode_o] = keysym_o
-        keysym[keycode_p] = keysym_p
-        keysym[keycode_q] = keysym_q
-        keysym[keycode_r] = keysym_r
-        keysym[keycode_s] = keysym_s
-        keysym[keycode_t] = keysym_t
-        keysym[keycode_u] = keysym_u
-        keysym[keycode_v] = keysym_v
-        keysym[keycode_w] = keysym_w
-        keysym[keycode_x] = keysym_x
-        keysym[keycode_y] = keysym_y
-        keysym[keycode_z] = keysym_z
-
-        keysym[keycode_comma] = keysym_comma
-        keysym[keycode_dot] = keysym_dot
-
-        keysym[keycode_enter] = keysym_enter
-        keysym[keycode_space] = keysym_space
-        keysym[keycode_backspace] = keysym_backspace
-        keysym[keycode_shift] = keysym_shift
-        keysym[keycode_ctrl] = keysym_ctrl
-        keysym[keycode_alt] = keysym_alt
-
-        return keysym[keycode]
-    }
     function keyPress( keycode ) {
-        if ( keycode == keycode_shift ) {
-            if ( mask == mask_shift ) {
-                mask = mask_null
+        if ( keycode == Utils.keycode_shift ) {
+            if ( mask == Utils.keymask_shift ) {
+                mask = Utils.keymask_null
                 key_shift_l.isDown = false
                 key_shift_r.isDown = false
             }
             else {
-                mask = mask_shift
+                mask = Utils.keymask_shift
                 key_shift_l.isDown = true
                 key_shift_r.isDown = true
             }
         }
-        /*console.log( "pressed" )*/
     }
     function keyRelease( keycode ) {
         var keysym
-        if ( keycode >= keycode_a && keycode <= keycode_z &&  mask == mask_null ) {
+        if ( keycode >= Utils.keycode_a && keycode <= Utils.keycode_z && mask == Utils.keymask_null ) {
             imEngine.keyEvent( keycode )
             imEngine.updateCandString( 0 )
             key_1_2.candString = imEngine.candString
@@ -197,67 +44,66 @@ Rectangle {
             imEngine.updateCandString( 4 )
             key_9_0.candString = imEngine.candString
         }
-        else if ( keycode != keycode_shift && keycode != keycode_ctrl && keycode != keycode_alt ) {
-            keysym = getKeysym( keycode )
-            document.insert( keysym[mask] )
+        else if ( keycode != Utils.keycode_shift && keycode != Utils.keycode_ctrl && keycode != Utils.keycode_alt && keycode != Utils.keycode_backspace && keycode != Utils.keycode_enter ) {
+            keysym = Utils.keysym[keycode]
+            textview.insert( keysym[mask] )
         }
-        /*console.log( word )*/
     }
 
     Column {
         anchors.fill : parent
         Row {
-            CandKey { id : key_1_2 ; keycode_l : keycode_1 ; keysym_l : keysym_1 ; keycode_r : keycode_2 ; keysym_r : keysym_2 ; width : keyWidth * 2.0 ; height : keyHeight }
-            CandKey { id : key_3_4 ; keycode_l : keycode_3 ; keysym_l : keysym_3 ; keycode_r : keycode_4 ; keysym_r : keysym_4 ; width : keyWidth * 2.0 ; height : keyHeight }
-            CandKey { id : key_5_6 ; keycode_l : keycode_5 ; keysym_l : keysym_5 ; keycode_r : keycode_6 ; keysym_r : keysym_6 ; width : keyWidth * 2.0 ; height : keyHeight }
-            CandKey { id : key_7_8 ; keycode_l : keycode_7 ; keysym_l : keysym_7 ; keycode_r : keycode_8 ; keysym_r : keysym_8 ; width : keyWidth * 2.0 ; height : keyHeight }
-            CandKey { id : key_9_0 ; keycode_l : keycode_9 ; keysym_l : keysym_9 ; keycode_r : keycode_0 ; keysym_r : keysym_0 ; width : keyWidth * 2.0 ; height : keyHeight }
-            Key { id : key_backspace ; keycode : keycode_backspace ; keysym : keysym_backspace ; width : keyWidth ; height : keyHeight ; mask : 0 }
+            CandKey { id : key_1_2 ; keycode_l : Utils.keycode_1 ; keysym_l : Utils.keysym[Utils.keycode_1] ; keycode_r : Utils.keycode_2 ; keysym_r : Utils.keysym[Utils.keycode_2] ; width : keyWidth * 2.0 ; height : keyHeight }
+            CandKey { id : key_3_4 ; keycode_l : Utils.keycode_3 ; keysym_l : Utils.keysym[Utils.keycode_3] ; keycode_r : Utils.keycode_4 ; keysym_r : Utils.keysym[Utils.keycode_4] ; width : keyWidth * 2.0 ; height : keyHeight }
+            CandKey { id : key_5_6 ; keycode_l : Utils.keycode_5 ; keysym_l : Utils.keysym[Utils.keycode_5] ; keycode_r : Utils.keycode_6 ; keysym_r : Utils.keysym[Utils.keycode_6] ; width : keyWidth * 2.0 ; height : keyHeight }
+            CandKey { id : key_7_8 ; keycode_l : Utils.keycode_7 ; keysym_l : Utils.keysym[Utils.keycode_7] ; keycode_r : Utils.keycode_8 ; keysym_r : Utils.keysym[Utils.keycode_8] ; width : keyWidth * 2.0 ; height : keyHeight }
+            CandKey { id : key_9_0 ; keycode_l : Utils.keycode_9 ; keysym_l : Utils.keysym[Utils.keycode_9] ; keycode_r : Utils.keycode_0 ; keysym_r : Utils.keysym[Utils.keycode_0] ; width : keyWidth * 2.0 ; height : keyHeight }
+            Key { id : key_backspace ; keycode : Utils.keycode_backspace ; keysym : Utils.keysym[Utils.keycode_backspace] ; width : keyWidth ; height : keyHeight ; mask : 0 }
         }
         Row {
             Rectangle { width : keyWidth * 0.25 ; height : keyHeight }
-            Key { id : key_q ; keycode : keycode_q ; keysym : keysym_q ; width : keyWidth ; height : keyHeight }
-            Key { id : key_w ; keycode : keycode_w ; keysym : keysym_w ; width : keyWidth ; height : keyHeight }
-            Key { id : key_e ; keycode : keycode_e ; keysym : keysym_e ; width : keyWidth ; height : keyHeight }
-            Key { id : key_r ; keycode : keycode_r ; keysym : keysym_r ; width : keyWidth ; height : keyHeight }
-            Key { id : key_t ; keycode : keycode_t ; keysym : keysym_t ; width : keyWidth ; height : keyHeight }
-            Key { id : key_y ; keycode : keycode_y ; keysym : keysym_y ; width : keyWidth ; height : keyHeight }
-            Key { id : key_u ; keycode : keycode_u ; keysym : keysym_u ; width : keyWidth ; height : keyHeight }
-            Key { id : key_i ; keycode : keycode_i ; keysym : keysym_i ; width : keyWidth ; height : keyHeight }
-            Key { id : key_o ; keycode : keycode_o ; keysym : keysym_o ; width : keyWidth ; height : keyHeight }
-            Key { id : key_p ; keycode : keycode_p ; keysym : keysym_p ; width : keyWidth ; height : keyHeight }
+            Key { id : key_q ; keycode : Utils.keycode_q ; keysym : Utils.keysym[Utils.keycode_q] ; width : keyWidth ; height : keyHeight }
+            Key { id : key_w ; keycode : Utils.keycode_w ; keysym : Utils.keysym[Utils.keycode_w] ; width : keyWidth ; height : keyHeight }
+            Key { id : key_e ; keycode : Utils.keycode_e ; keysym : Utils.keysym[Utils.keycode_e] ; width : keyWidth ; height : keyHeight }
+            Key { id : key_r ; keycode : Utils.keycode_r ; keysym : Utils.keysym[Utils.keycode_r] ; width : keyWidth ; height : keyHeight }
+            Key { id : key_t ; keycode : Utils.keycode_t ; keysym : Utils.keysym[Utils.keycode_t] ; width : keyWidth ; height : keyHeight }
+            Key { id : key_y ; keycode : Utils.keycode_y ; keysym : Utils.keysym[Utils.keycode_y] ; width : keyWidth ; height : keyHeight }
+            Key { id : key_u ; keycode : Utils.keycode_u ; keysym : Utils.keysym[Utils.keycode_u] ; width : keyWidth ; height : keyHeight }
+            Key { id : key_i ; keycode : Utils.keycode_i ; keysym : Utils.keysym[Utils.keycode_i] ; width : keyWidth ; height : keyHeight }
+            Key { id : key_o ; keycode : Utils.keycode_o ; keysym : Utils.keysym[Utils.keycode_o] ; width : keyWidth ; height : keyHeight }
+            Key { id : key_p ; keycode : Utils.keycode_p ; keysym : Utils.keysym[Utils.keycode_p] ; width : keyWidth ; height : keyHeight }
         }
         Row {
             Rectangle { width : keyWidth * 0.5 ; height : keyHeight }
-            Key { id : key_a ; keycode : keycode_a ; keysym : keysym_a ; width : keyWidth ; height : keyHeight }
-            Key { id : key_s ; keycode : keycode_s ; keysym : keysym_s ; width : keyWidth ; height : keyHeight }
-            Key { id : key_d ; keycode : keycode_d ; keysym : keysym_d ; width : keyWidth ; height : keyHeight }
-            Key { id : key_f ; keycode : keycode_f ; keysym : keysym_f ; width : keyWidth ; height : keyHeight }
-            Key { id : key_g ; keycode : keycode_g ; keysym : keysym_g ; width : keyWidth ; height : keyHeight }
-            Key { id : key_h ; keycode : keycode_h ; keysym : keysym_h ; width : keyWidth ; height : keyHeight }
-            Key { id : key_j ; keycode : keycode_j ; keysym : keysym_j ; width : keyWidth ; height : keyHeight }
-            Key { id : key_k ; keycode : keycode_k ; keysym : keysym_k ; width : keyWidth ; height : keyHeight }
-            Key { id : key_l ; keycode : keycode_l ; keysym : keysym_l ; width : keyWidth ; height : keyHeight }
-            Key { id : key_enter ; keycode : keycode_enter ; keysym : keysym_enter ; width : keyWidth * 2.0 ; height : keyHeight ; mask : 0 }
+            Key { id : key_a ; keycode : Utils.keycode_a ; keysym : Utils.keysym[Utils.keycode_a] ; width : keyWidth ; height : keyHeight }
+            Key { id : key_s ; keycode : Utils.keycode_s ; keysym : Utils.keysym[Utils.keycode_s] ; width : keyWidth ; height : keyHeight }
+            Key { id : key_d ; keycode : Utils.keycode_d ; keysym : Utils.keysym[Utils.keycode_d] ; width : keyWidth ; height : keyHeight }
+            Key { id : key_f ; keycode : Utils.keycode_f ; keysym : Utils.keysym[Utils.keycode_f] ; width : keyWidth ; height : keyHeight }
+            Key { id : key_g ; keycode : Utils.keycode_g ; keysym : Utils.keysym[Utils.keycode_g] ; width : keyWidth ; height : keyHeight }
+            Key { id : key_h ; keycode : Utils.keycode_h ; keysym : Utils.keysym[Utils.keycode_h] ; width : keyWidth ; height : keyHeight }
+            Key { id : key_j ; keycode : Utils.keycode_j ; keysym : Utils.keysym[Utils.keycode_j] ; width : keyWidth ; height : keyHeight }
+            Key { id : key_k ; keycode : Utils.keycode_k ; keysym : Utils.keysym[Utils.keycode_k] ; width : keyWidth ; height : keyHeight }
+            Key { id : key_l ; keycode : Utils.keycode_l ; keysym : Utils.keysym[Utils.keycode_l] ; width : keyWidth ; height : keyHeight }
+            Key { id : key_enter ; keycode : Utils.keycode_enter ; keysym : Utils.keysym[Utils.keycode_enter] ; width : keyWidth * 2.0 ; height : keyHeight ; mask : 0 }
         }
         Row {
             Rectangle { width : keyWidth * 1.0 ; height : keyHeight }
-            Key { id : key_z ; keycode : keycode_z ; keysym : keysym_z ; width : keyWidth ; height : keyHeight }
-            Key { id : key_x ; keycode : keycode_x ; keysym : keysym_x ; width : keyWidth ; height : keyHeight }
-            Key { id : key_c ; keycode : keycode_c ; keysym : keysym_c ; width : keyWidth ; height : keyHeight }
-            Key { id : key_v ; keycode : keycode_v ; keysym : keysym_v ; width : keyWidth ; height : keyHeight }
-            Key { id : key_b ; keycode : keycode_b ; keysym : keysym_b ; width : keyWidth ; height : keyHeight }
-            Key { id : key_n ; keycode : keycode_n ; keysym : keysym_n ; width : keyWidth ; height : keyHeight }
-            Key { id : key_m ; keycode : keycode_m ; keysym : keysym_m ; width : keyWidth ; height : keyHeight }
-            Key { id : key_comma ; keycode : keycode_comma ; keysym : keysym_comma ; width : keyWidth ; height : keyHeight }
-            Key { id : key_dot ; keycode : keycode_dot ; keysym : keysym_dot ; width : keyWidth ; height : keyHeight }
+            Key { id : key_z ; keycode : Utils.keycode_z ; keysym : Utils.keysym[Utils.keycode_z] ; width : keyWidth ; height : keyHeight }
+            Key { id : key_x ; keycode : Utils.keycode_x ; keysym : Utils.keysym[Utils.keycode_x] ; width : keyWidth ; height : keyHeight }
+            Key { id : key_c ; keycode : Utils.keycode_c ; keysym : Utils.keysym[Utils.keycode_c] ; width : keyWidth ; height : keyHeight }
+            Key { id : key_v ; keycode : Utils.keycode_v ; keysym : Utils.keysym[Utils.keycode_v] ; width : keyWidth ; height : keyHeight }
+            Key { id : key_b ; keycode : Utils.keycode_b ; keysym : Utils.keysym[Utils.keycode_b] ; width : keyWidth ; height : keyHeight }
+            Key { id : key_n ; keycode : Utils.keycode_n ; keysym : Utils.keysym[Utils.keycode_n] ; width : keyWidth ; height : keyHeight }
+            Key { id : key_m ; keycode : Utils.keycode_m ; keysym : Utils.keysym[Utils.keycode_m] ; width : keyWidth ; height : keyHeight }
+            Key { id : key_comma ; keycode : Utils.keycode_comma ; keysym : Utils.keysym[Utils.keycode_comma] ; width : keyWidth ; height : keyHeight }
+            Key { id : key_dot ; keycode : Utils.keycode_dot ; keysym : Utils.keysym[Utils.keycode_dot] ; width : keyWidth ; height : keyHeight }
         }
         Row {
-            Key { id : key_shift_l ; keycode : keycode_shift ; keysym : keysym_shift ; width : keyWidth * 2.0 ; height : keyHeight * 0.8 ; mask : 0 }
+            Key { id : key_shift_l ; keycode : Utils.keycode_shift ; keysym : Utils.keysym[Utils.keycode_shift] ; width : keyWidth * 2.0 ; height : keyHeight * 0.8 ; mask : 0 }
             Rectangle { width : keyWidth * 1.0 ; height : keyHeight * 0.8 }
-            Key { id : key_space ; keycode : keycode_space ; keysym : keysym_space ; width : keyWidth * 4.0 ; height : keyHeight * 0.8 ; mask : 0 }
+            Key { id : key_space ; keycode : Utils.keycode_space ; keysym : Utils.keysym[Utils.keycode_space] ; width : keyWidth * 4.0 ; height : keyHeight * 0.8 ; mask : 0 }
             Rectangle { width : keyWidth * 2.0 ; height : keyHeight * 0.8 }
-            Key { id : key_shift_r ; keycode : keycode_shift ; keysym : keysym_shift ; width : keyWidth * 2.0 ; height : keyHeight * 0.8 ; mask : 0 }
+            Key { id : key_shift_r ; keycode : Utils.keycode_shift ; keysym : Utils.keysym[Utils.keycode_shift] ; width : keyWidth * 2.0 ; height : keyHeight * 0.8 ; mask : 0 }
         }
     }
 }

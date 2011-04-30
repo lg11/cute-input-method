@@ -6,6 +6,7 @@ Rectangle {
     color : "#FFFFFFFF"
 
     TextView {
+        id : textview
         width : 720
         height : 75
         x : 40

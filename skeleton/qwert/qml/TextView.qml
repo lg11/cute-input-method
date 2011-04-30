@@ -1,7 +1,7 @@
 import Qt 4.7
 
 Flickable {
-    id : flick
+    id : view
 
     width : 300
     height : 200
@@ -11,8 +11,7 @@ Flickable {
     boundsBehavior : Flickable.StopAtBounds
     /*property string text*/
 
-    function ensureVisible( r )
-    {
+    function ensureVisible( r ) {
         if ( contentX >= r.x )
             contentX = r.x ;
         else if ( contentX+width <= r.x + r.width )
@@ -22,17 +21,21 @@ Flickable {
         else if ( contentY+height <= r.y + r.height )
             contentY = r.y + r.height - height ;
     }
+    function insert( s ) {
+        var head = edit.text.slice( 0, edit.cursorPosition )
+        var tail = edit.text.slice( edit.cursorPosition )
+        var pos = edit.cursorPosition
+        edit.text = head.concat( s, tail )
+        edit.cursorPosition = pos + s.length
+    }
 
     TextEdit {
         id : edit
-        width : flick.width
-        height : flick.height
+        width : view.width
+        height : view.height
         focus : true
         activeFocusOnPress : false
         wrapMode : TextEdit.Wrap
-        onCursorRectangleChanged : flick.ensureVisible(cursorRectangle)
-        text : document.text
-        cursorPosition : document.cursorPosition
-        onCursorPositionChanged : document.setCursorPosition( cursorPosition )
+        onCursorRectangleChanged : ensureVisible(cursorRectangle)
     }
 }
