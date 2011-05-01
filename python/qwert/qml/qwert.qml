@@ -144,6 +144,7 @@ Item {
         else if ( t9Mode == true ) {
             if ( rotateFlag == 1 ) {
                 imEngine.setMode( 1 )
+                t9Keyboard.selectMode = false
                 t9Keyboard.updateCandString()
                 if ( t9Keyboard.puncMode ) {
                     t9Keyboard.puncMode = false
@@ -163,6 +164,7 @@ Item {
         else if ( rotateFlag == 1 ) {
             if ( t9Mode == true ) {
                 imEngine.setMode( 1 )
+                t9Keyboard.selectMode = false
                 t9Keyboard.updateCandString()
                 if ( t9Keyboard.puncMode ) {
                     t9Keyboard.puncMode = false
