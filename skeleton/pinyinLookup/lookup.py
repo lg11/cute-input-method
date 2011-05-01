@@ -1,64 +1,37 @@
-from dicttree import DictTree
 from spliter import PinyinSpliter
 from picker import Picker
-
-def insert_word( word_list, word ) :
-    i = 0 
-    while i < len( word_list ) :
-        if word[1] > word_list[i][1] :
-            break
-        i = i + 1
-    word_list.insert( i, word )
-        
-def load_dict( d, file_path ) :
-    file = open( file_path )
-    line = file.readline()
-    while line :
-        buffer = line[:-1].split()
-        pinyin = buffer[0]
-        word = buffer[1].decode( "utf-8" )
-        freq = float( buffer[2] )
-        if pinyin in d :
-            word_list = d[pinyin]
-            insert_word( word_list, [ word, freq ] )
-        else :
-            d[pinyin] = [ [ word, freq ] ]
-        #print pinyin, word, freq
-        line = file.readline()
+from dictionary import Dictionary
 
 class PinyinLookup() :
     def __init__( self ) :
-        self.dict = dict()
-        self.dictTree = DictTree()
+        self.dict = Dictionary()
         self.spliter = PinyinSpliter()
         self.picker = Picker( self.dict )
         self.cache = [ [ 0, [], "" ] ]
+        self.candCacheIndex = 0
         self.candList = []
-    def load( self, filePath ) :
-        print "start load"
-        load_dict( self.dict, filePath )
-        print "loaded"
-        for key in self.dict.keys() :
-            self.dictTree.addKey( key )
-        print "built"
+        self.load = self.dict.load
     def append( self, code ) :
         self.spliter.append( code )
         preedit = ""
         fitList = []
         fitPoint = -999
         for pinyinString in self.spliter.stack :
-            currentFitPoint, keys = self.dictTree.fit( pinyinString.string )
+            currentFitPoint, keys = self.dict.fit( pinyinString.string )
+            #print currentFitPoint, keys
             if currentFitPoint > fitPoint :
                 fitList = []
                 fitList.extend( keys )
                 fitPoint = currentFitPoint
                 preedit = str( pinyinString )
+                #print preedit, pinyinString.string
             elif currentFitPoint == fitPoint :
                 fitList.extend( keys )
         self.picker.set( fitList )
         cache = [ fitPoint, fitList, preedit ] 
         self.cache.append( cache )
         self.candList = []
+        self.candCacheIndex = len( self.cache ) - 1
     def pop( self ) :
         if len( self.cache ) > 1 :
             self.spliter.pop()
@@ -67,6 +40,33 @@ class PinyinLookup() :
             fitList = cache[1]
             self.picker.set( fitList )
             self.candList = []
+            self.candCacheIndex = len( self.cache ) - 1
+    def getPreeditString( self ) :
+        #print self.candCacheIndex
+        cache = self.cache[self.candCacheIndex]
+        s = cache[2]
+        count = len( s ) - s.count( "'" )
+        invaildCode = self.spliter.code[count:]
+        #print self.spliter.code, s, invaildCode
+        return s, invaildCode
+    def checkCache( self ) :
+        fitList = []
+        while self.candCacheIndex >= 1 :
+            self.candCacheIndex -= 1
+            cache = self.cache[self.candCacheIndex]
+            fitPoint = cache[0]
+            fitList = cache[1]
+            #print self.candCacheIndex, fitList
+            if len( fitList ) >= 0 :
+                if len( self.candList ) <= 0 :
+                    break 
+                elif fitPoint >= 0 :
+                    break
+        if self.candCacheIndex >= 1 :
+            self.picker.set( fitList )
+            return True
+        else :
+            return False
     def getCand( self, index ) :
         flag = True
         while flag and len( self.candList ) <= index :
@@ -74,7 +74,7 @@ class PinyinLookup() :
             if key :
                 self.candList.append( [ key, word, freq ] )
             else :
-                flag = False
+                flag = self.checkCache()
         if flag :
             return self.candList[index]
         else :
@@ -83,6 +83,7 @@ class PinyinLookup() :
         self.spliter.clean()
         self.cache = [ [ 0, [], "" ] ]
         self.candList = []
+        self.candCacheIndex -= 0
 
 if __name__ == "__main__" :
     import sys

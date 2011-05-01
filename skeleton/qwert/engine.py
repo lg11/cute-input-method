@@ -13,6 +13,14 @@ class IMEngine( QtCore.QObject ) :
         self.preeditString_value = value
     preeditString = QtCore.Property( str, readPreeditString, writePreeditString, notify = preeditStringChanged )
 
+    invaildCodeChanged = QtCore.Signal( str )
+    @QtCore.Slot()
+    def readInvaildCode( self ) :
+        return self.invaildCode_value
+    def writeInvaildCode( self, value ) :
+        self.invaildCode_value = value
+    invaildCode = QtCore.Property( str, readInvaildCode, writeInvaildCode, notify = invaildCodeChanged )
+
     candStringChanged = QtCore.Signal( str )
     @QtCore.Slot()
     def readCandString( self ) :
@@ -29,6 +37,7 @@ class IMEngine( QtCore.QObject ) :
         self.load = self.pinyinLookup.load
         self.candString_value = ""
         self.preeditString_value = ""
+        self.invaildCode_value = ""
     def printCand( self ) :
         for i in range( 5 ) :
             cand = self.pinyinLookup.getCand( i )
@@ -41,15 +50,16 @@ class IMEngine( QtCore.QObject ) :
         cand = self.pinyinLookup.getCand( index )
         if cand :
             word = cand[1]
-        #word = "abc"
         self.candString = word
+    @QtCore.Slot()
+    def updatePreeditString( self ) :
+        self.preeditString, self.invaildCode = self.pinyinLookup.getPreeditString()
+        #print self.preeditString, invaildCode
         #self.candStringChanged.emit( self.candString_value )
     @QtCore.Slot( str )
     def appendCode( self, code ) :
         self.pinyinLookup.append( code )
-        self.preeditString = self.pinyinLookup.cache[-1][2]
     @QtCore.Slot()
     def backspace( self ) :
         self.pinyinLookup.pop()
-        self.preeditString = self.pinyinLookup.cache[-1][2]
         

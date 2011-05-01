@@ -32,6 +32,11 @@ Rectangle {
     function updateCandString() {
         imEngine.updateCandString( 0 )
         key_1_2.candString = imEngine.candString
+
+        imEngine.updatePreeditString()
+        preedit.preeditString = imEngine.preeditString
+        preedit.invaildCode = imEngine.invaildCode
+
         imEngine.updateCandString( 1 )
         key_3_4.candString = imEngine.candString
         imEngine.updateCandString( 2 )
@@ -40,7 +45,6 @@ Rectangle {
         key_7_8.candString = imEngine.candString
         imEngine.updateCandString( 4 )
         key_9_0.candString = imEngine.candString
-        preedit.preeditString = imEngine.preeditString
     }
     function keyRelease( keycode ) {
         var keysym = Utils.keysym[keycode]

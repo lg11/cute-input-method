@@ -1,6 +1,30 @@
 from tree import node_add_path, node_seek_path
 from pinyin import pinyinTree
 
+def insert_word( word_list, word ) :
+    i = 0 
+    while i < len( word_list ) :
+        if word[1] > word_list[i][1] :
+            break
+        i = i + 1
+    word_list.insert( i, word )
+        
+def load_dict( d, file_path ) :
+    file = open( file_path )
+    line = file.readline()
+    while line :
+        buffer = line[:-1].split()
+        pinyin = buffer[0]
+        word = buffer[1].decode( "utf-8" )
+        freq = float( buffer[2] )
+        if pinyin in d :
+            word_list = d[pinyin]
+            insert_word( word_list, [ word, freq ] )
+        else :
+            d[pinyin] = [ [ word, freq ] ]
+        #print pinyin, word, freq
+        line = file.readline()
+
 class DictTree() :
     def __init__( self ) :
         self.entry = [ "", [], False ]
@@ -77,6 +101,22 @@ class DictTree() :
                     results.append( key )
         #print "-----end-----"
         return fitPoint, results
+
+class Dictionary() :
+    def __init__( self ) :
+        self.dict = dict()
+        self.dictTree = DictTree()
+        self.fit = self.dictTree.fit
+        self.__getitem__ = self.dict.__getitem__
+    def load( self, filePath ) :
+        print "start load"
+        load_dict( self.dict, filePath )
+        print "loaded"
+        for key in self.dict.keys() :
+            self.dictTree.addKey( key )
+        print "built"
+    def update( self, key, word, freq ) :
+        pass
 
 if __name__ == "__main__" :
     tree = DictTree()
