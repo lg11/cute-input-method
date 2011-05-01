@@ -1,8 +1,7 @@
-from pinyin import pinyinList, beginCharSet, pinyinTree
 
 class PinyinString () :
-    def __init__( self, parent = None ) :
-        #self.parent = parent
+    def __init__( self, spliter, parent = None ) :
+        self.spliter = spliter
         if parent :
             self.string = list( parent.string )
             self.length = parent.length
@@ -19,17 +18,16 @@ class PinyinString () :
         newPinyinString = None
         prevStringTail = self.string[-1]
         newStringTail = self.string[-1] + code
-        if pinyinTree.checkVaild( newStringTail ) :
-            completeFlag = pinyinTree.checkComplete( prevStringTail )
-            if completeFlag and code in beginCharSet :
-                #newPinyinString = PinyinString( self.string, self.completeFlag )
-                newPinyinString = PinyinString( self )
+        if self.spliter.pinyinTree.checkVaild( newStringTail ) :
+            completeFlag = self.spliter.pinyinTree.checkComplete( prevStringTail )
+            if completeFlag and code in self.spliter.beginCharSet :
+                newPinyinString = PinyinString( self.spliter, self )
                 newPinyinString.space()
                 newPinyinString.append( code )
             self.string[-1] = newStringTail
             self.length += 1
         else :
-            if code in beginCharSet :
+            if code in self.spliter.beginCharSet :
                 #self.completeFlag = self.completeFlag and pinyinTree.checkComplete( prevStringTail )
                 self.string.append( code )
                 self.length += 1
@@ -56,9 +54,12 @@ class PinyinString () :
         return s
 
 class PinyinSpliter () :
-    def __init__( self ) :
+    def __init__( self, d ) :
         self.code = ""
         self.stack = []
+        self.dict = d
+        self.pinyinTree = self.dict.pinyinTree
+        self.beginCharSet = self.dict.beginCharSet
     def append( self, code ) :
         self.code += code 
         if len( self.stack ) > 0 :
@@ -70,7 +71,7 @@ class PinyinSpliter () :
                         newStack.append( newPinyinString )
             self.stack.extend( newStack )
         else :
-            pinyinString = PinyinString()
+            pinyinString = PinyinString( self )
             #print pinyinString
             pinyinString.append( code )
             if pinyinString.vaild :

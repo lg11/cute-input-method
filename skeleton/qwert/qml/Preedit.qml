@@ -4,7 +4,7 @@ Rectangle {
     id : plat
     width : 0
     height : preeditStringText.paintedHeight
-    color : "#00444444"
+    color : "#FF444444"
 
     property string preeditString : ""
     property string invaildCode : ""
@@ -34,7 +34,7 @@ Rectangle {
     states {
         State {
             name : "ACTIVE" ; when : preeditString.length > 0 || invaildCode.length > 0
-            PropertyChanges { target : plat ; color : "#EE333333" ; width : preeditStringText.paintedWidth + invaildCodeText.paintedWidth + 20 }
+            PropertyChanges { target : plat ; width : preeditStringText.paintedWidth + invaildCodeText.paintedWidth + 20 }
         } 
     }
 }

@@ -5,7 +5,7 @@ from dictionary import Dictionary
 class PinyinLookup() :
     def __init__( self ) :
         self.dict = Dictionary()
-        self.spliter = PinyinSpliter()
+        self.spliter = PinyinSpliter( self.dict )
         self.picker = Picker( self.dict )
         self.cache = [ [ 0, [], "" ] ]
         self.candCacheIndex = 0
