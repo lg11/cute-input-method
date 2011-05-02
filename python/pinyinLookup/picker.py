@@ -18,6 +18,8 @@ class Picker() :
             else :
                 self.usedKeySet.add( key )
                 preeditString = preeditList[i]
+                #print key, preeditString
+                #print type( key ), type( preeditString )
                 wordList = self.dict[key]
                 self.list.append( [ key, wordList, 0, preeditString ] )
     def pick( self ) :

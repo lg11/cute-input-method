@@ -6,6 +6,7 @@ Item {
     id : keyboard
     width : 800
     height : 480
+    clip : true
     /*color : "#00FF0000"*/
 
     property int keyWidth

@@ -4,6 +4,7 @@ import sys
 sys.path.append( "../pinyinLookup" )
 
 from lookup import PinyinLookup
+from t9lookup import T9PinyinLookup
 
 class IMEngine( QtCore.QObject ) :
     needCommitChanged = QtCore.Signal( bool )
@@ -22,14 +23,14 @@ class IMEngine( QtCore.QObject ) :
     hasCodeChanged = QtCore.Signal( bool )
     @QtCore.Slot()
     def readHasCode( self ) :
-        return len( self.pinyinLookup.spliter.code ) > 0
+        return len( self.lookup[self.mode].spliter.code ) > 0
         #self.preeditString_value = value
     hasCode = QtCore.Property( bool, readHasCode, notify = hasCodeChanged )
 
     codeChanged = QtCore.Signal( str )
     @QtCore.Slot()
     def readCode( self ) :
-        return self.pinyinLookup.spliter.code
+        return self.lookup[self.mode].spliter.code
     code = QtCore.Property( str, readCode, notify = codeChanged )
 
     #contextTextChanged = QtCore.Signal( str )
@@ -79,8 +80,9 @@ class IMEngine( QtCore.QObject ) :
 
     def __init__( self, parent = None ) :
         QtCore.QObject.__init__( self, parent )
-        self.pinyinLookup = PinyinLookup()
-        self.load = self.pinyinLookup.load
+        pinyinLookup = PinyinLookup()
+        t9Lookup = T9PinyinLookup()
+        self.lookup = [ pinyinLookup, t9Lookup ]
         self.candString_value = ""
         #self.contextText_value = ""
         self.selectedWord_value = ""
@@ -89,9 +91,22 @@ class IMEngine( QtCore.QObject ) :
         self.pageIndex = 0
         #self.selected = [ [], "", [], [] ]
         self.selected = []
+        self.mode = 0
+        self.pageLength = 5
+    @QtCore.Slot( int )
+    def setMode( self, mode ) :
+        if mode == 0 :
+            self.pageLength = 5
+        elif mode == 1 :
+            self.pageLength = 6
+        self.mode = mode
+        self.clear()
+    def load( self, path ) :
+        self.lookup[0].load( path )
+        self.lookup[1].setParent( self.lookup[0] )
     def printCand( self ) :
-        for i in range( 5 ) :
-            cand = self.pinyinLookup.getCand( i )
+        for i in range( self.pageLength ) :
+            cand = self.lookup[self.mode].getCand( i )
             if cand :
                 key, word, freq = cand
                 print key, word, freq
@@ -102,20 +117,20 @@ class IMEngine( QtCore.QObject ) :
     @QtCore.Slot()
     def nextPage( self ) :
         pageIndex = self.pageIndex + 1
-        cand = self.pinyinLookup.getCand( pageIndex * 5 )
+        cand = self.lookup[self.mode].getCand( pageIndex * self.pageLength )
         if cand :
             self.pageIndex = pageIndex
     @QtCore.Slot( int )
     def updateCandString( self, index ) :
         word = ""
-        cand = self.pinyinLookup.getCand( self.pageIndex * 5 + index )
+        cand = self.lookup[self.mode].getCand( self.pageIndex * self.pageLength + index )
         if cand :
             word = cand[1]
         self.candString = word
     @QtCore.Slot( int )
     def getPreeditString( self, index ) :
         preeditString = ""
-        cand = self.pinyinLookup.getCand( self.pageIndex * 5 + index )
+        cand = self.lookup[self.mode].getCand( self.pageIndex * self.pageLength + index )
         if cand :
             preeditString = cand[3]
         #print preeditString
@@ -123,13 +138,13 @@ class IMEngine( QtCore.QObject ) :
     @QtCore.Slot( int )
     def getInvaildCode( self, index ) :
         invaildCode = ""
-        cand = self.pinyinLookup.getCand( self.pageIndex * 5 + index )
+        cand = self.lookup[self.mode].getCand( self.pageIndex * self.pageLength + index )
         if cand :
             preeditString = cand[3]
             count = len( preeditString ) - preeditString.count( "'" )
         else :
             count = 0
-        invaildCode = self.pinyinLookup.spliter.code[count:]
+        invaildCode = self.lookup[self.mode].spliter.code[count:]
         #print invaildCode
         return invaildCode
     @QtCore.Slot( int )
@@ -138,8 +153,8 @@ class IMEngine( QtCore.QObject ) :
         self.invaildCode = self.getInvaildCode( index )
     @QtCore.Slot( int )
     def select( self, index ) :
-        candIndex = self.pageIndex * 5 + index
-        cand = self.pinyinLookup.getCand( candIndex )
+        candIndex = self.pageIndex * self.pageLength + index
+        cand = self.lookup[self.mode].getCand( candIndex )
         invaildCode = self.getInvaildCode( index )
         if cand :
             #print candIndex
@@ -148,7 +163,7 @@ class IMEngine( QtCore.QObject ) :
             freqArg = -1
             if len( self.selected ) <= 0 :
                 halfIndex = ( candStartIndex + candIndex ) / 2
-                halfCand = self.pinyinLookup.getCand( halfIndex )
+                halfCand = self.lookup[self.mode].getCand( halfIndex )
                 halfKey, halfWord, halfFreq, halfPreeditString, halfCandStartIndex = halfCand
                 #print halfKey, halfWord, halfFreq, halfPreeditString, halfCandStartIndex
                 freqArg = halfFreq + 1
@@ -159,27 +174,28 @@ class IMEngine( QtCore.QObject ) :
             self.selectedWord += word
             self.selected[-1][2] = freqArg
             #print self.selected
-            self.pinyinLookup.clear()
+            self.lookup[self.mode].clear()
             self.pageIndex = 0
             if len( invaildCode ) > 0 :
                 for c in invaildCode :
-                    self.pinyinLookup.append( c )
+                    self.lookup[self.mode].append( c )
         else :
             pass
     @QtCore.Slot()
     def cancel( self ) :
         if len( self.selected ) > 0 :
             item = self.selected[-1]
-            code = item[3] + self.pinyinLookup.spliter.code
-            self.pinyinLookup.clear()
+            code = item[3] + self.lokup[self.mode].spliter.code
+            self.lookup[self.mode].clear()
             self.pageIndex = 0
             for c in code :
-                self.pinyinLookup.append( c )
+                self.lookup[self.mode].append( c )
             self.selected.pop()
             self.selectedWord = self.selectedWord[:-1]
     @QtCore.Slot()
     def clear( self ) :
-        self.pinyinLookup.clear()
+        self.lookup[0].clear()
+        self.lookup[1].clear()
         self.pageIndex = 0
         self.selectedWord = ""
         self.preeditString = ""
@@ -187,11 +203,11 @@ class IMEngine( QtCore.QObject ) :
         self.selected = []
     @QtCore.Slot( str )
     def appendCode( self, code ) :
-        self.pinyinLookup.append( code )
+        self.lookup[self.mode].append( code )
         self.pageIndex = 0
     @QtCore.Slot()
     def backspace( self ) :
-        self.pinyinLookup.pop()
+        self.lookup[self.mode].pop()
         self.pageIndex = 0
     @QtCore.Slot()
     def commit( self ) :
@@ -202,7 +218,7 @@ class IMEngine( QtCore.QObject ) :
             for selected in self.selected :
                 key.append( selected[0] )
             key = "'".join( key )
-            self.pinyinLookup.update( key, word, freq )
+            self.lookup[self.mode].update( key, word, freq )
             #print key, word, freq
         self.clear()
         

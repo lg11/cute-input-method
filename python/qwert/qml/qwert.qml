@@ -13,8 +13,11 @@ Item {
     property alias keyHeight : keyboard.keyHeight
     property alias numKeyWidth : keyboard.numKeyWidth
     property alias numKeyHeight : keyboard.numKeyHeight
+    property alias t9KeyWidth : t9Keyboard.keyWidth
+    property alias t9KeyHeight : t9Keyboard.keyHeight
     property alias useIKey_l : keyboard.useIKey_l
     property alias textview : textViewPart.view
+    property bool t9Mode : true
 
     Palette { id : palette }
     Config { id : config }
@@ -49,6 +52,11 @@ Item {
             width : keyWidth * 11
             height : numKeyHeight + keyHeight * 4
             x : keyboardOffset
+            y : textviewPartHeight
+        }
+        T9Keyboard {
+            id : t9Keyboard
+            x : 20
             y : textviewPartHeight
         }
         ControlPadPart {
@@ -92,6 +100,16 @@ Item {
         rotateFlag = flag
     }
 
+    onRotateFlagChanged : {
+        if ( rotateFlag == 0 ) {
+            t9Mode = false
+            imEngine.setMode( 0 )
+        }
+        else if ( rotateFlag == 1 ) {
+            t9Mode = true
+            imEngine.setMode( 1 )
+        }
+    }
     states {
         State {
             name : "LAND" ; when : rotateFlag == 0
@@ -107,10 +125,12 @@ Item {
                 numKeyWidth : keyWidth
                 numKeyHeight : numKeyWidth * 0.925
                 useIKey_l : true
+                t9KeyWidth : 0
+                t9KeyHeight : 0
             }
         } 
         State {
-            name : "PORT" ; when : rotateFlag == 1
+            name : "PORT_FULL" ; when : rotateFlag == 1 && t9Mode == false
             PropertyChanges {
                 target : root
                 width : 480
@@ -123,6 +143,26 @@ Item {
                 numKeyWidth : keyWidth 
                 numKeyHeight : numKeyWidth * 1.75
                 useIKey_l : false
+                t9KeyWidth : 0
+                t9KeyHeight : 0
+            }
+        } 
+        State {
+            name : "PORT_T9" ; when : rotateFlag == 1 && t9Mode == true
+            PropertyChanges {
+                target : root
+                width : 480
+                height : 700
+                keyboardOffset : -18
+                textviewPartHeight : 160
+                sideSpacing : 50
+                keyWidth : 0
+                keyHeight : 0
+                numKeyWidth : keyWidth 
+                numKeyHeight : numKeyWidth * 1.75
+                useIKey_l : false
+                t9KeyWidth : 138
+                t9KeyHeight : 97
             }
         } 
     }

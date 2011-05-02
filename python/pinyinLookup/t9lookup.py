@@ -76,9 +76,17 @@ class T9PinyinLookup( PinyinLookup ) :
         self.trans = string.maketrans( chars, nums )
         self.spliter = T9Spliter()
         self.fitter = T9Fitter()
+    def setParent( self, parent ) :
+        self.fitter = T9Fitter()
+        self.dict = parent.dict
+        self.picker = parent.picker
+        print "start build t9 index"
+        for key in self.dict.keys() :
+            self.fitter.dictTree.addKey( key )
+        print "built"
     def load( self, filePath ) :
         newKeys = self.dict.load( filePath )
-        print "start build index"
+        print "start build t9 index"
         for key in newKeys :
             self.fitter.dictTree.addKey( key )
         print "built"
