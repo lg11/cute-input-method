@@ -46,28 +46,41 @@ class IMEngine( QtCore.QObject ) :
         self.candString_value = ""
         self.preeditString_value = ""
         self.invaildCode_value = ""
+        self.pageIndex = 0
     def printCand( self ) :
         for i in range( 5 ) :
             cand = self.pinyinLookup.getCand( i )
             if cand :
                 key, word, freq = cand
                 print key, word, freq
+    @QtCore.Slot()
+    def prevPage( self ) :
+        if self.pageIndex > 0 :
+            self.pageIndex -= 1
+    @QtCore.Slot()
+    def nextPage( self ) :
+        pageIndex = self.pageIndex + 1
+        cand = self.pinyinLookup.getCand( pageIndex * 5 )
+        if cand :
+            self.pageIndex = pageIndex
     @QtCore.Slot( int )
     def updateCandString( self, index ) :
         word = ""
-        cand = self.pinyinLookup.getCand( index )
+        cand = self.pinyinLookup.getCand( self.pageIndex * 5 + index )
         if cand :
             word = cand[1]
         self.candString = word
-    @QtCore.Slot()
-    def updatePreeditString( self ) :
-        self.preeditString, self.invaildCode = self.pinyinLookup.getPreeditString()
+    @QtCore.Slot( int )
+    def updatePreeditString( self, index ) :
+        self.preeditString, self.invaildCode = self.pinyinLookup.getPreeditString( self.pageIndex * 5 + index )
         #print self.preeditString, invaildCode
         #self.candStringChanged.emit( self.candString_value )
     @QtCore.Slot( str )
     def appendCode( self, code ) :
         self.pinyinLookup.append( code )
+        self.pageIndex = 0
     @QtCore.Slot()
     def backspace( self ) :
         self.pinyinLookup.pop()
+        self.pageIndex = 0
         

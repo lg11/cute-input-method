@@ -15,25 +15,11 @@ Rectangle {
 
     property int mask : 0
 
-    function keyPress( keycode ) {
-        if ( keycode == Utils.keycode_shift ) {
-            if ( mask == Utils.keymask_shift ) {
-                mask = Utils.keymask_null
-                key_shift_l.isDown = false
-                key_shift_r.isDown = false
-            }
-            else {
-                mask = Utils.keymask_shift
-                key_shift_l.isDown = true
-                key_shift_r.isDown = true
-            }
-        }
-    }
     function updateCandString() {
         imEngine.updateCandString( 0 )
         key_1_2.candString = imEngine.candString
 
-        imEngine.updatePreeditString()
+        imEngine.updatePreeditString( 0 )
         preedit.preeditString = imEngine.preeditString
         preedit.invaildCode = imEngine.invaildCode
 
@@ -45,6 +31,22 @@ Rectangle {
         key_7_8.candString = imEngine.candString
         imEngine.updateCandString( 4 )
         key_9_0.candString = imEngine.candString
+    }
+    function keyPress( keycode ) {
+        if ( keycode == Utils.keycode_shift_l || keycode == Utils.keycode_shift_r ) {
+            if ( mask == Utils.keymask_shift ) {
+                mask = Utils.keymask_null
+                key_shift_l.isDown = false
+                key_shift_r.isDown = false
+            }
+            else {
+                if ( !imEngine.hasCode ) {
+                    mask = Utils.keymask_shift
+                    key_shift_l.isDown = true
+                    key_shift_r.isDown = true
+                }
+            }
+        }
     }
     function keyRelease( keycode ) {
         var keysym = Utils.keysym[keycode]
@@ -61,7 +63,19 @@ Rectangle {
                 textview.backspace()
             }
         }
-        else if ( keycode != Utils.keycode_shift && keycode != Utils.keycode_ctrl && keycode != Utils.keycode_alt && keycode != Utils.keycode_backspace && keycode != Utils.keycode_enter ) {
+        else if ( keycode == Utils.keycode_shift_l ) {
+            if ( imEngine.hasCode ) {
+                imEngine.prevPage()
+                updateCandString()
+            }
+        }
+        else if ( keycode == Utils.keycode_shift_r ) {
+            if ( imEngine.hasCode ) {
+                imEngine.nextPage()
+                updateCandString()
+            }
+        }
+        else if ( keycode != Utils.keycode_ctrl && keycode != Utils.keycode_alt && keycode != Utils.keycode_backspace && keycode != Utils.keycode_enter ) {
             textview.insert( keysym[mask] )
             /*preedit.preeditString = keysym[mask]*/
         }
@@ -116,11 +130,11 @@ Rectangle {
             Key { id : key_dot ; keycode : Utils.keycode_dot ; keysym : Utils.keysym[Utils.keycode_dot] ; width : keyWidth ; height : keyHeight }
         }
         Row {
-            Key { id : key_shift_l ; keycode : Utils.keycode_shift ; keysym : Utils.keysym[Utils.keycode_shift] ; width : keyWidth * 2.0 ; height : keyHeight * 0.8 ; mask : 0 }
+            Key { id : key_shift_l ; keycode : Utils.keycode_shift_l ; keysym : Utils.keysym[Utils.keycode_shift_l] ; width : keyWidth * 2.0 ; height : keyHeight * 0.8 ; mask : 0 }
             Rectangle { width : keyWidth * 1.0 ; height : keyHeight * 0.8 }
             Key { id : key_space ; keycode : Utils.keycode_space ; keysym : Utils.keysym[Utils.keycode_space] ; width : keyWidth * 4.0 ; height : keyHeight * 0.8 ; mask : 0 }
             Rectangle { width : keyWidth * 2.0 ; height : keyHeight * 0.8 }
-            Key { id : key_shift_r ; keycode : Utils.keycode_shift ; keysym : Utils.keysym[Utils.keycode_shift] ; width : keyWidth * 2.0 ; height : keyHeight * 0.8 ; mask : 0 }
+            Key { id : key_shift_r ; keycode : Utils.keycode_shift_r ; keysym : Utils.keysym[Utils.keycode_shift_r] ; width : keyWidth * 2.0 ; height : keyHeight * 0.8 ; mask : 0 }
         }
     }
 }

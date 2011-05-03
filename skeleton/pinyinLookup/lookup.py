@@ -13,8 +13,8 @@ class PinyinLookup() :
         self.load = self.dict.load
     def append( self, code ) :
         self.spliter.append( code )
-        preedit = ""
         fitList = []
+        preeditList = []
         fitPoint = -999
         for pinyinString in self.spliter.stack :
             currentFitPoint, keys = self.dict.fit( pinyinString.string )
@@ -23,12 +23,12 @@ class PinyinLookup() :
                 fitList = []
                 fitList.extend( keys )
                 fitPoint = currentFitPoint
-                preedit = str( pinyinString )
-                #print preedit, pinyinString.string
+                preeditList = []
+                preeditList.extend( [ str( pinyinString ) ] * len( keys ) )
             elif currentFitPoint == fitPoint :
                 fitList.extend( keys )
-        self.picker.set( fitList )
-        cache = [ fitPoint, fitList, preedit ] 
+        self.picker.set( fitList, preeditList )
+        cache = [ fitPoint, fitList, preeditList ] 
         self.cache.append( cache )
         self.candList = []
         self.candCacheIndex = len( self.cache ) - 1
@@ -38,17 +38,19 @@ class PinyinLookup() :
             self.cache = self.cache[:-1]
             cache = self.cache[-1]
             fitList = cache[1]
-            self.picker.set( fitList )
+            preeditList = cache[2]
+            self.picker.set( fitList, preeditList )
             self.candList = []
             self.candCacheIndex = len( self.cache ) - 1
-    def getPreeditString( self ) :
-        #print self.candCacheIndex
-        cache = self.cache[self.candCacheIndex]
-        s = cache[2]
-        count = len( s ) - s.count( "'" )
-        invaildCode = self.spliter.code[count:]
-        #print self.spliter.code, s, invaildCode
-        return s, invaildCode
+    def getPreeditString( self, index ) :
+        cand = self.getCand( index )
+        if cand :
+            preeditString = cand[3]
+            count = len( preeditString ) - preeditString.count( "'" )
+            invaildCode = self.spliter.code[count:]
+            return preeditString, invaildCode
+        else :
+            return "", ""
     def checkCache( self ) :
         fitList = []
         while self.candCacheIndex >= 1 :
@@ -56,6 +58,7 @@ class PinyinLookup() :
             cache = self.cache[self.candCacheIndex]
             fitPoint = cache[0]
             fitList = cache[1]
+            preeditList = cache[2]
             #print self.candCacheIndex, fitList
             if len( fitList ) >= 0 :
                 if len( self.candList ) <= 0 :
@@ -63,16 +66,16 @@ class PinyinLookup() :
                 elif fitPoint >= 0 :
                     break
         if self.candCacheIndex >= 1 :
-            self.picker.set( fitList )
+            self.picker.set( fitList, preeditList )
             return True
         else :
             return False
     def getCand( self, index ) :
         flag = True
         while flag and len( self.candList ) <= index :
-            key, word, freq = self.picker.pick()
+            key, word, freq, preeditString = self.picker.pick()
             if key :
-                self.candList.append( [ key, word, freq ] )
+                self.candList.append( [ key, word, freq, preeditString ] )
             else :
                 flag = self.checkCache()
         if flag :
