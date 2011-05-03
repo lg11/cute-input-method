@@ -28,6 +28,22 @@ Flickable {
         edit.text = head.concat( s, tail )
         edit.cursorPosition = pos + s.length
     }
+    function backspace() {
+        if ( edit.text.length > 0 ) { 
+            var head = edit.text.slice( 0, edit.cursorPosition )
+            var tail = edit.text.slice( edit.cursorPosition )
+            var pos = edit.cursorPosition
+            if ( head.length > 0 ) {
+                head = head.slice( 0, head.length - 1 )
+                pos--
+            }
+            else {
+                tail = tail.slice( 1, tail.length )
+            }
+            edit.text = head.concat( tail )
+            edit.cursorPosition = pos
+        }
+    }
 
     TextEdit {
         id : edit

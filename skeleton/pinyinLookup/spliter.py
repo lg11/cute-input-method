@@ -6,13 +6,13 @@ class PinyinString () :
             self.string = list( parent.string )
             self.length = parent.length
             self.start = parent.length
-            self.vaild = True
+            #self.vaild = True
             #self.completeFlag = parent.completeFlag
         else :
             self.string = [ "" ]
             self.length = 0
             self.start = 0
-            self.vaild = True
+            #self.vaild = True
             #self.completeFlag = True
     def append( self, code ) :
         newPinyinString = None
@@ -32,7 +32,8 @@ class PinyinString () :
                 self.string.append( code )
                 self.length += 1
             else :
-                self.vaild = False
+                #self.vaild = False
+                pass
         return newPinyinString
     def pop( self ) :
         if self.length > 0 :
@@ -47,7 +48,7 @@ class PinyinString () :
         return len( self.string )
     def clear( self ) :
         self.string = [ "" ]
-        self.vaild = True
+        #self.vaild = True
         #self.completeFlag = True
     def __str__( self ) :
         s = "'".join( self.string )
@@ -65,7 +66,8 @@ class PinyinSpliter () :
         if len( self.stack ) > 0 :
             newStack = []
             for s in self.stack :
-                if s.vaild :
+                #if s.vaild :
+                if s.length >= len( self.code ) - 1 :
                     newPinyinString = s.append( code )
                     if newPinyinString != None :
                         newStack.append( newPinyinString )
@@ -74,15 +76,17 @@ class PinyinSpliter () :
             pinyinString = PinyinString( self )
             #print pinyinString
             pinyinString.append( code )
-            if pinyinString.vaild :
+            #if pinyinString.vaild :
+            if pinyinString.length >= len( self.code ) :
                 self.stack.append( pinyinString )
     def pop( self ) :
         self.code = self.code[:-1]
         removeList = []
         for pinyinString in self.stack :
-            pinyinString.pop()
-            if pinyinString.length <= pinyinString.start :
-                removeList.append( pinyinString )
+            if pinyinString.length > len( self.code ) :
+                pinyinString.pop()
+                if pinyinString.length <= pinyinString.start :
+                    removeList.append( pinyinString )
         for pinyinString in removeList :
             self.stack.remove( pinyinString )
             #pass

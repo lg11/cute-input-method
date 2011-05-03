@@ -5,12 +5,9 @@ Rectangle {
     height : 480
     color : "#FFFFFFFF"
 
-    /*Item {*/
-        /*id : config*/
-        /*property color keyBackgroundColor : "#FF444444"*/
-        /*property color keyDownColor : "#FF2299FF"*/
-        /*property color keyTextColor : "#FFFFFFFF"*/
-    /*}*/
+    Config {
+        id : config
+    }
 
     TextView {
         id : textview

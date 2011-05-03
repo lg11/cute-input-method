@@ -53,8 +53,13 @@ Rectangle {
             updateCandString()
         }
         else if ( keycode == Utils.keycode_backspace ) {
-            imEngine.backspace()
-            updateCandString()
+            if ( imEngine.hasCode ) {
+                imEngine.backspace()
+                updateCandString()
+            }
+            else {
+                textview.backspace()
+            }
         }
         else if ( keycode != Utils.keycode_shift && keycode != Utils.keycode_ctrl && keycode != Utils.keycode_alt && keycode != Utils.keycode_backspace && keycode != Utils.keycode_enter ) {
             textview.insert( keysym[mask] )

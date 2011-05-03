@@ -5,6 +5,14 @@ sys.path.append( "../pinyinLookup" )
 from lookup import PinyinLookup
 
 class IMEngine( QtCore.QObject ) :
+    hasCodeChanged = QtCore.Signal( bool )
+    @QtCore.Slot()
+    def readHasCode( self ) :
+        return len( self.pinyinLookup.spliter.code ) > 0
+    #def writePreeditString( self, value ) :
+        #self.preeditString_value = value
+    hasCode = QtCore.Property( bool, readHasCode, notify = hasCodeChanged )
+
     preeditStringChanged = QtCore.Signal( str )
     @QtCore.Slot()
     def readPreeditString( self ) :

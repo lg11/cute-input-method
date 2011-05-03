@@ -4,7 +4,7 @@ Rectangle {
     id : plat
     width : 0
     height : preeditStringText.paintedHeight
-    color : "#FF444444"
+    color : config.preeditBackgroundColor
 
     property string preeditString : ""
     property string invaildCode : ""
@@ -15,13 +15,13 @@ Rectangle {
         Text {
             id : preeditStringText
             font.pointSize : 30; font.bold: false
-            color : "#FFFFFFFF"
+            color : config.preeditStringColor
             text : preeditString
         }
         Text {
             id : invaildCodeText
             font.pointSize : 30; font.bold: false
-            color : "#FFFF0000"
+            color : config.invaildCodeColor
             text : invaildCode
         }
     }

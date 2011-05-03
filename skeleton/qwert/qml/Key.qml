@@ -10,7 +10,7 @@ Rectangle {
     property variant keysym : [ "", "", "", "" ]
     property int mask : keyboard.mask
     property bool isDown : false
-    property bool isToggle : false
+    /*property bool isToggle : false*/
 
     Rectangle {
         id : plat
@@ -19,13 +19,13 @@ Rectangle {
         /*height : parent.height - parent.width + width*/
         width : parent.width - 1
         height : parent.height - 1
-        color : "#FF444444"
+        color : config.keyNormalColor
 
         Text {
             id : titleText
             text : keysym[mask]
             anchors.centerIn : parent
-            color : "#FFFFFFFF"
+            color : config.keyTextColor
             font.pointSize: 30; font.bold: true
         }
     }
@@ -46,7 +46,7 @@ Rectangle {
     states {
         State {
             name : "DOWN" ; when : ( mouseArea.pressed == true && mouseArea.containsMouse == true ) || isDown == true
-            PropertyChanges { target : plat ; color : "#FF2299FF" }
+            PropertyChanges { target : plat ; color : config.keyDownColor }
         } 
     }
 
@@ -70,20 +70,26 @@ Rectangle {
             /*id : flip*/
             /*origin.x : width / 2*/
             /*origin.y : height / 2*/
-            /*axis.x : 0 ; axis.y : 1 ; axis.z : 0*/
+            /*axis.x : 0 ; axis.y : 0 ; axis.z : 1*/
             /*angle : 0*/
         /*}*/
+    /*}*/
+
+    /*property int rDuration : 0*/
+    
+    /*onMaskChanged : {*/
+        /*rDuration = 200 + Math.random() * 200*/
     /*}*/
 
     /*Behavior on mask {*/
         /*SequentialAnimation {*/
             /*ParallelAnimation {*/
-                /*NumberAnimation { target: flip ; property: "angle" ; to: 180 ; duration: 100 }*/
-                /*NumberAnimation { target: key ; property: "scale" ; to: 0.7 ; duration: 100 }*/
+                /*NumberAnimation { target: flip ; property: "angle" ; to: 180 ; duration: rDuration }*/
+                /*NumberAnimation { target: key ; property: "scale" ; to: 0.7 ; duration: rDuration }*/
             /*}*/
             /*ParallelAnimation {*/
-                /*NumberAnimation { target: flip ; property: "angle" ; to: 360 ; duration: 100 }*/
-                /*NumberAnimation { target: key ; property: "scale" ; to: 1.0 ; duration: 100 }*/
+                /*NumberAnimation { target: flip ; property: "angle" ; to: 360 ; duration: rDuration }*/
+                /*NumberAnimation { target: key ; property: "scale" ; to: 1.0 ; duration: rDuration }*/
             /*}*/
             /*NumberAnimation { target: flip ; property: "angle" ; to: 0 ; duration: 0 }*/
         /*}*/
