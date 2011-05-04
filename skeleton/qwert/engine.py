@@ -47,6 +47,8 @@ class IMEngine( QtCore.QObject ) :
         self.preeditString_value = ""
         self.invaildCode_value = ""
         self.pageIndex = 0
+        #self.selected = [ [], "", [], [] ]
+        self.selected = []
     def printCand( self ) :
         for i in range( 5 ) :
             cand = self.pinyinLookup.getCand( i )
@@ -71,10 +73,43 @@ class IMEngine( QtCore.QObject ) :
             word = cand[1]
         self.candString = word
     @QtCore.Slot( int )
+    def getPreeditString( self, index ) :
+        preeditString = ""
+        cand = self.pinyinLookup.getCand( self.pageIndex * 5 + index )
+        if cand :
+            preeditString = cand[3]
+        return preeditString
+    @QtCore.Slot( int )
+    def getInvaildCode( self, index ) :
+        invaildCode = ""
+        cand = self.pinyinLookup.getCand( self.pageIndex * 5 + index )
+        if cand :
+            preeditString = cand[3]
+            count = len( preeditString ) - preeditString.count( "'" )
+            invaildCode = self.pinyinLookup.spliter.code[count:]
+        return invaildCode
+    @QtCore.Slot( int )
     def updatePreeditString( self, index ) :
-        self.preeditString, self.invaildCode = self.pinyinLookup.getPreeditString( self.pageIndex * 5 + index )
-        #print self.preeditString, invaildCode
-        #self.candStringChanged.emit( self.candString_value )
+        self.preeditString = self.getPreeditString( index )
+        self.invaildCode = self.getInvaildCode( index )
+    @QtCore.Slot( int )
+    def select( self, index ) :
+        candIndex = self.pageIndex * 5 + index
+        cand = self.pinyinLookup.getCand( candIndex )
+        if cand :
+            key, word, freq, preeditString = cand 
+            print key, word, freq, preeditString
+            if len( self.selected ) <= 0 :
+                i = 0
+                flag = True
+                while i < candIndex and flag :
+                    prevCand = self.pinyinLookup.getCand( i )
+                    prevPreeditString = prevCand[3] 
+                    prevFreq = prevCand[2]
+                    if prevPreeditString == preeditString :
+                        flag = False
+                    i += 1
+                print prevCand
     @QtCore.Slot( str )
     def appendCode( self, code ) :
         self.pinyinLookup.append( code )

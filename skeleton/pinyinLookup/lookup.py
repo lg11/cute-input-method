@@ -27,6 +27,7 @@ class PinyinLookup() :
                 preeditList.extend( [ str( pinyinString ) ] * len( keys ) )
             elif currentFitPoint == fitPoint :
                 fitList.extend( keys )
+                preeditList.extend( [ str( pinyinString ) ] * len( keys ) )
         self.picker.set( fitList, preeditList )
         cache = [ fitPoint, fitList, preeditList ] 
         self.cache.append( cache )
@@ -42,15 +43,6 @@ class PinyinLookup() :
             self.picker.set( fitList, preeditList )
             self.candList = []
             self.candCacheIndex = len( self.cache ) - 1
-    def getPreeditString( self, index ) :
-        cand = self.getCand( index )
-        if cand :
-            preeditString = cand[3]
-            count = len( preeditString ) - preeditString.count( "'" )
-            invaildCode = self.spliter.code[count:]
-            return preeditString, invaildCode
-        else :
-            return "", ""
     def checkCache( self ) :
         fitList = []
         while self.candCacheIndex >= 1 :

@@ -6,6 +6,7 @@ class Picker() :
         #self.preeditList = []
     def set( self, keys, preeditList ) :
         self.list = []
+        print keys, preeditList
         #print keys
         for i in range( len( keys ) ) :
             key = keys[i]

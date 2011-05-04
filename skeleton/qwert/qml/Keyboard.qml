@@ -75,6 +75,16 @@ Rectangle {
                 updateCandString()
             }
         }
+        else if ( keycode >= Utils.keycode_0 && keycode <= Utils.keycode_9 ) {
+            if ( imEngine.hasCode ) {
+                var index = keycode - Utils.keycode_0
+                index = Utils.candIndex[index]
+                imEngine.select( index )
+            }
+            else {
+                textview.insert( keysym[mask] )
+            }
+        }
         else if ( keycode != Utils.keycode_ctrl && keycode != Utils.keycode_alt && keycode != Utils.keycode_backspace && keycode != Utils.keycode_enter ) {
             textview.insert( keysym[mask] )
             /*preedit.preeditString = keysym[mask]*/
