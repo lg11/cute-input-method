@@ -102,9 +102,15 @@ class DictTree() :
                     if l > len( s[i] ) :
                         flag = False
                         break
-                    elif self.pinyinTree.checkComplete( pinyinString[i])  and i < len(s) - 1 :
-                        flag = False
-                        break
+                    elif self.pinyinTree.checkComplete( pinyinString[i] ) and i < len(s) - 1 :
+                        extraSet = set( [ "m", "n", "a", "o", "e" ] )
+                        if pinyinString[i] in extraSet :
+                            if s[i][:l] != pinyinString[i][:l] :
+                                flag = False
+                                break
+                        else :
+                            flag = False
+                            break
                     else :
                         #print s[i][:l], pinyinString[i][:l]
                         if s[i][:l] != pinyinString[i][:l] :

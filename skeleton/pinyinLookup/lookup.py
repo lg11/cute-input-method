@@ -49,6 +49,8 @@ class PinyinLookup() :
             self.candStartIndex = 0
     def checkCache( self ) :
         fitList = []
+        cache = self.cache[self.candCacheIndex]
+        currentFitPoint = cache[0]
         while self.candCacheIndex >= 1 :
             self.candCacheIndex -= 1
             cache = self.cache[self.candCacheIndex]
@@ -59,7 +61,7 @@ class PinyinLookup() :
             if len( fitList ) >= 0 :
                 if len( self.candList ) <= 0 :
                     break 
-                elif fitPoint >= 0 :
+                elif fitPoint >= currentFitPoint :
                     break
         if self.candCacheIndex >= 1 :
             self.picker.set( fitList, preeditList )
