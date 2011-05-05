@@ -3,9 +3,10 @@ import Qt 4.7
 Rectangle {
     id : plat
     width : 0
-    height : preeditStringText.paintedHeight
+    height : preeditStringText.paintedHeight + 10
     color : config.preeditBackgroundColor
 
+    property string selectedWord : ""
     property string preeditString : ""
     property string invaildCode : ""
 
@@ -13,14 +14,20 @@ Rectangle {
         anchors.centerIn : parent
         spacing : 5
         Text {
+            id : selectedWordText
+            font.pointSize : 28; font.bold: false
+            color : config.selectedWordColor
+            text : selectedWord
+        }
+        Text {
             id : preeditStringText
-            font.pointSize : 30; font.bold: false
+            font.pointSize : 28; font.bold: false
             color : config.preeditStringColor
             text : preeditString
         }
         Text {
             id : invaildCodeText
-            font.pointSize : 30; font.bold: false
+            font.pointSize : 28; font.bold: false
             color : config.invaildCodeColor
             text : invaildCode
         }
@@ -33,8 +40,8 @@ Rectangle {
 
     states {
         State {
-            name : "ACTIVE" ; when : preeditString.length > 0 || invaildCode.length > 0
-            PropertyChanges { target : plat ; width : preeditStringText.paintedWidth + invaildCodeText.paintedWidth + 20 }
+            name : "ACTIVE" ; when : selectedWord.length > 0 || preeditString.length > 0 || invaildCode.length > 0
+            PropertyChanges { target : plat ; width : selectedWordText.paintedWidth + preeditStringText.paintedWidth + invaildCodeText.paintedWidth + 30 }
         } 
     }
 }

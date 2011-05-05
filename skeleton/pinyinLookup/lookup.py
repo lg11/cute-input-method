@@ -7,8 +7,10 @@ class PinyinLookup() :
         self.dict = Dictionary()
         self.spliter = PinyinSpliter( self.dict )
         self.picker = Picker( self.dict )
+        #self.picker.set( [], [] )
         self.cache = [ [ 0, [], "" ] ]
         self.candCacheIndex = 0
+        self.candStartIndex = 0
         self.candList = []
         self.load = self.dict.load
     def append( self, code ) :
@@ -33,6 +35,7 @@ class PinyinLookup() :
         self.cache.append( cache )
         self.candList = []
         self.candCacheIndex = len( self.cache ) - 1
+        self.candStartIndex = 0
     def pop( self ) :
         if len( self.cache ) > 1 :
             self.spliter.pop()
@@ -43,6 +46,7 @@ class PinyinLookup() :
             self.picker.set( fitList, preeditList )
             self.candList = []
             self.candCacheIndex = len( self.cache ) - 1
+            self.candStartIndex = 0
     def checkCache( self ) :
         fitList = []
         while self.candCacheIndex >= 1 :
@@ -67,18 +71,22 @@ class PinyinLookup() :
         while flag and len( self.candList ) <= index :
             key, word, freq, preeditString = self.picker.pick()
             if key :
-                self.candList.append( [ key, word, freq, preeditString ] )
+                self.candList.append( [ key, word, freq, preeditString, self.candStartIndex ] )
             else :
                 flag = self.checkCache()
+                self.candStartIndex = len( self.candList )
         if flag :
             return self.candList[index]
         else :
             return None
+        #print candList
     def clean( self ) :
         self.spliter.clean()
+        self.picker.set( [], [] )
         self.cache = [ [ 0, [], "" ] ]
         self.candList = []
-        self.candCacheIndex -= 0
+        self.candCacheIndex = 0
+        self.candStartIndex = 0
 
 if __name__ == "__main__" :
     import sys

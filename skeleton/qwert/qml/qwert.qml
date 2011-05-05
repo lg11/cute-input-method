@@ -18,7 +18,7 @@ Rectangle {
     }
     Preedit {
         id : preedit
-        y : 15
+        y : 10
         anchors.horizontalCenter : parent.horizontalCenter
         /*preeditString : imEngine.preeditString*/
     }

@@ -22,6 +22,7 @@ Rectangle {
         imEngine.updatePreeditString( 0 )
         preedit.preeditString = imEngine.preeditString
         preedit.invaildCode = imEngine.invaildCode
+        preedit.selectedWord = imEngine.selectedWord
 
         imEngine.updateCandString( 1 )
         key_3_4.candString = imEngine.candString
@@ -55,7 +56,11 @@ Rectangle {
             updateCandString()
         }
         else if ( keycode == Utils.keycode_backspace ) {
-            if ( imEngine.hasCode ) {
+            if ( imEngine.hasSelected ) {
+                imEngine.cancel()
+                updateCandString()
+            }
+            else if ( imEngine.hasCode ) {
                 imEngine.backspace()
                 updateCandString()
             }
@@ -80,6 +85,7 @@ Rectangle {
                 var index = keycode - Utils.keycode_0
                 index = Utils.candIndex[index]
                 imEngine.select( index )
+                updateCandString()
             }
             else {
                 textview.insert( keysym[mask] )
