@@ -1,7 +1,7 @@
 
 class Picker() :
-    def __init__( self, d ) :
-        self.dict = d
+    def __init__( self, dict ) :
+        self.dict = dict
         self.list = []
         self.usedKeySet = set()
         #self.preeditList = []

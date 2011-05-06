@@ -1,10 +1,15 @@
 #!/usr/bin/python
 #-!- coding=utf-8 -!-
 
+import sys
+sys.path.append( "./pinyinLookup" )
+sys.path.append( "./qwert" )
+sys.path.append( "./ui" )
+sys.path.append( "./utils" )
+
 from interface import Interface
 from inputpad import InputPad
-
-import sys
+from pinyinKeyboard import PinyinKeyboard
 
 import dbus
 import dbus.service
@@ -15,7 +20,7 @@ from PySide import QtCore, QtGui
 #QtCore.Signal = QtCore.pyqtSignal
 #QtCore.Slot = QtCore.pyqtSlot
 
-class checker() :
+class Checker() :
     def __init__( self, num, qwert ) :
         self.numInput = num
         self.qwertInput = qwert
@@ -34,10 +39,16 @@ if __name__ == "__main__" :
     session_bus = dbus.SessionBus()
     name = dbus.service.BusName( "me.maemo.input.chinese", session_bus )
     pad = InputPad( True )
+    qwert = PinyinKeyboard()
     iface = Interface( session_bus, pad )
-    #iface.active = check(
+    
+    checker = Checker( pad, qwert )
+    iface.active = checker.active
+
     pad.request_commit.connect( iface.commit )
 
     print "done"
+    
+    qwert.show()
 
     sys.exit( app.exec_() )

@@ -1,5 +1,3 @@
-from tree import PinyinTree, DictTree
-
 def insert_word( word_list, word ) :
     i = 0 
     while i < len( word_list ) :
@@ -11,7 +9,9 @@ def insert_word( word_list, word ) :
 def load_dict( d, file_path ) :
     file = open( file_path )
     line = file.readline()
+    new_keys = set()
     while line :
+        #print line
         buffer = line[:-1].split()
         pinyin = buffer[0]
         word = buffer[1].decode( "utf-8" )
@@ -21,8 +21,10 @@ def load_dict( d, file_path ) :
             insert_word( word_list, [ word, freq ] )
         else :
             d[pinyin] = [ [ word, freq ] ]
+            new_keys.add( pinyin )
         #print pinyin, word, freq
         line = file.readline()
+    return new_keys
 
 class Dictionary() :
     def __init__( self ) :
@@ -30,24 +32,17 @@ class Dictionary() :
 
         self.pinyinSet = set()
         self.beginCharSet = set()
-        self.pinyinTree = PinyinTree()
+        #self.pinyinTree = PinyinTree()
 
-        self.dictTree = DictTree( self.pinyinTree )
-        self.fit = self.dictTree.fit
-
+        #self.dictTree = DictTree( self.pinyinTree )
+        #self.fit = self.dictTree.fit
         self.__getitem__ = self.dict.__getitem__
+        self.keys = self.dict.keys
     def load( self, filePath ) :
         print "start load"
-        load_dict( self.dict, filePath )
+        newKeys = load_dict( self.dict, filePath )
         print "loaded"
-        for key in self.dict.keys() :
-            if key.count( "'" ) <= 0 :
-                self.pinyinSet.add( key )
-            self.dictTree.addKey( key )
-        for pinyin in self.pinyinSet :
-            self.beginCharSet.add( pinyin[0] ) 
-            self.pinyinTree.addPath( pinyin )
-        print "built"
+        return newKeys
     def update( self, key, word, freq ) :
         pass
 

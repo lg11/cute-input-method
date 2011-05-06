@@ -11,6 +11,7 @@ class Clipboard( QtCore.QObject ) :
         self.clipboard.setText( text )
 
 class Keyboard( QtDeclarative.QDeclarativeView ) :
+    signal_setText = QtCore.Signal( str )
     def __init__( self, parent = None ) :
         QtDeclarative.QDeclarativeView.__init__( self, parent )
         self.daemonFlag = False
@@ -24,15 +25,15 @@ class Keyboard( QtDeclarative.QDeclarativeView ) :
         self.imEngine = IMEngine()
         context = self.rootContext()
         context.setContextProperty( "imEngine", self.imEngine )
+        root = self.rootObject()
+        self.signal_setText.connect( root.setText )
 
         self.load = self.imEngine.load
     @QtCore.Slot( str )
-    def come( self, text ) :
-        #self.en
-        pass
+    def setText( self, text ) :
+        self.signal_setText.emit( text )
 
-
-
+PinyinKeyboard = Keyboard
 
 if __name__ == "__main__" :
     import sys
@@ -43,6 +44,7 @@ if __name__ == "__main__" :
     path = config.check_path( config.sysdict_path )
     print "load sysdict from :", path
     view.load( path )
+    view.setText( "282" )
 
 
     view.show()

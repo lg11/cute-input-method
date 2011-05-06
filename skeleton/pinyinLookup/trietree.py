@@ -48,9 +48,9 @@ class PinyinTree() :
             return True
 
 class DictTree() :
-    def __init__( self, pinyinTree ) :
+    def __init__( self ) :
         self.entry = [ "", [], False ]
-        self.pinyinTree = pinyinTree
+        #self.pinyinTree = pinyinTree
     def addKey( self, key ) :
         path = key[0]
         i = key.find( "'" )
@@ -79,57 +79,6 @@ class DictTree() :
             return False
         else :
             return True
-    def fit( self, pinyinString ) :
-        path = ""
-        for pinyin in pinyinString :
-            path += pinyin[0]
-        keys = self.getKeys( path )
-        results = []
-        #hasFullFit = False
-        fitPoint = -999
-        for key in keys :
-            flag = True
-            #fitFlag = True
-            currentFitPoint = 0
-            s = key.split( "'" )
-            for i in range( len(s) ) :
-                #print s[i], pinyinString[i]
-                if s[i] == pinyinString[i] :
-                    pass
-                else :
-                    currentFitPoint -= 1
-                    l = len( pinyinString[i] )
-                    if l > len( s[i] ) :
-                        flag = False
-                        break
-                    elif self.pinyinTree.checkComplete( pinyinString[i] ) and i < len(s) - 1 :
-                        extraSet = set( [ "m", "n", "a", "o", "e" ] )
-                        if pinyinString[i] in extraSet :
-                            if s[i][:l] != pinyinString[i][:l] :
-                                flag = False
-                                break
-                        else :
-                            flag = False
-                            break
-                    else :
-                        #print s[i][:l], pinyinString[i][:l]
-                        if s[i][:l] != pinyinString[i][:l] :
-                            flag = False
-                            break
-            #print currentFitPoint, key, flag
-            if flag :
-                if currentFitPoint >= 0 :
-                    results = [ key ]
-                    fitPoint = 0
-                    #hasFullFit = True
-                    break
-                elif currentFitPoint > fitPoint :
-                    results = [ key ]
-                    fitPoint = currentFitPoint
-                elif currentFitPoint == fitPoint :
-                    results.append( key )
-        #print "-----end-----"
-        return fitPoint, results
 
 if __name__ == "__main__" :
     tree = Tree()

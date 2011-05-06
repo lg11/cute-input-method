@@ -28,4 +28,7 @@ Rectangle {
         x : -25
         y : 75
     }
+    function setText( text ) {
+        textview.set( text )
+    }
 }

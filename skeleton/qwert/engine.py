@@ -2,6 +2,7 @@ from QtImport import QtGui, QtCore, QtDeclarative
 
 import sys
 sys.path.append( "../pinyinLookup" )
+
 from lookup import PinyinLookup
 
 class IMEngine( QtCore.QObject ) :
@@ -25,13 +26,13 @@ class IMEngine( QtCore.QObject ) :
         #self.preeditString_value = value
     hasCode = QtCore.Property( bool, readHasCode, notify = hasCodeChanged )
 
-    #commitStringChanged = QtCore.Signal( str )
+    #contextTextChanged = QtCore.Signal( str )
     #@QtCore.Slot()
-    #def readCommitString( self ) :
-        #return self.commitString_value
-    #def writeCommitString( self, value ) :
-        #self.commitString_value = value
-    #commitString = QtCore.Property( str, readCommitString, writeCommitString, notify = commitStringChanged )
+    #def readContextText( self ) :
+        #return self.contextText_value
+    #def writeContextText( self, value ) :
+        #self.contextText_value = value
+    #contextText = QtCore.Property( str, readContextText, writeContextText, notify = contextTextChanged )
 
     selectedWordChanged = QtCore.Signal( str )
     @QtCore.Slot()
@@ -72,7 +73,7 @@ class IMEngine( QtCore.QObject ) :
         self.pinyinLookup = PinyinLookup()
         self.load = self.pinyinLookup.load
         self.candString_value = ""
-        #self.commitString_value = ""
+        #self.contextText_value = ""
         self.selectedWord_value = ""
         self.preeditString_value = ""
         self.invaildCode_value = ""

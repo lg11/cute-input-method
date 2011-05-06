@@ -1,25 +1,39 @@
-from spliter import PinyinSpliter
-from picker import Picker
 from dictionary import Dictionary
+from spliter import PinyinSpliter
+from fitter import Fitter
+from picker import Picker
 
 class PinyinLookup() :
     def __init__( self ) :
         self.dict = Dictionary()
-        self.spliter = PinyinSpliter( self.dict )
+        self.spliter = PinyinSpliter()
+        self.fitter = Fitter()
         self.picker = Picker( self.dict )
         #self.picker.set( [], [], True )
+
         self.cache = [ [ 0, [], "" ] ]
         self.candCacheIndex = 0
         self.candStartIndex = 0
         self.candList = []
-        self.load = self.dict.load
+    def load( self, filePath ) :
+        newKeys = self.dict.load( filePath )
+        newPinyinSet = set()
+        for key in newKeys :
+            if key.count( "'" ) <= 0 :
+                self.fitter.pinyinSet.add( key )
+                newPinyinSet.add( key )
+            self.fitter.dictTree.addKey( key )
+        for pinyin in newPinyinSet :
+            self.spliter.beginCharSet.add( pinyin[0] ) 
+            self.spliter.pinyinTree.addPath( pinyin )
+        print "built"
     def append( self, code ) :
         self.spliter.append( code )
         fitList = []
         preeditList = []
         fitPoint = -999
         for pinyinString in self.spliter.stack :
-            currentFitPoint, keys = self.dict.fit( pinyinString.string )
+            currentFitPoint, keys = self.fitter.fit( pinyinString.string )
             #print currentFitPoint, keys
             if currentFitPoint > fitPoint :
                 fitList = []
@@ -93,7 +107,7 @@ class PinyinLookup() :
 if __name__ == "__main__" :
     import sys
     lookup = PinyinLookup()
-    lookup.load( "../../data/formated" )
+    lookup.load( "../../data/new_formated" )
     while (1) :
         code = sys.stdin.readline()[:-1]
         for c in code :
@@ -103,7 +117,7 @@ if __name__ == "__main__" :
         for i in range( 6 ) :
             cand = lookup.getCand( i )
             if cand :
-                key, word, freq = cand
+                key, word, freq, i, j = cand
                 print key, word, freq
         for c in code :
             lookup.pop()

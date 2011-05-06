@@ -1,3 +1,4 @@
+from trietree import PinyinTree
 
 class PinyinString () :
     def __init__( self, spliter, parent = None ) :
@@ -55,12 +56,11 @@ class PinyinString () :
         return s
 
 class PinyinSpliter () :
-    def __init__( self, d ) :
+    def __init__( self ) :
         self.code = ""
         self.stack = []
-        self.dict = d
-        self.pinyinTree = self.dict.pinyinTree
-        self.beginCharSet = self.dict.beginCharSet
+        self.pinyinTree = PinyinTree()
+        self.beginCharSet = set()
     def append( self, code ) :
         self.code += code 
         if len( self.stack ) > 0 :
