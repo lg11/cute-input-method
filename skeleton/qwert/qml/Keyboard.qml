@@ -33,6 +33,12 @@ Rectangle {
         imEngine.updateCandString( 4 )
         key_9_0.candString = imEngine.candString
     }
+    function commit() {
+        if ( imEngine.hasSelected ) {
+            textview.insert( imEngine.selectedWord )
+            imEngine.clear()
+        }
+    }
     function keyPress( keycode ) {
         if ( keycode == Utils.keycode_shift_l || keycode == Utils.keycode_shift_r ) {
             if ( mask == Utils.keymask_shift ) {
@@ -86,6 +92,10 @@ Rectangle {
                 index = Utils.candIndex[index]
                 imEngine.select( index )
                 updateCandString()
+                if ( imEngine.needCommit ) {
+                    commit()
+                    updateCandString()
+                }
             }
             else {
                 textview.insert( keysym[mask] )

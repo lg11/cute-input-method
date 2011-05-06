@@ -3,16 +3,23 @@ class Picker() :
     def __init__( self, d ) :
         self.dict = d
         self.list = []
+        self.usedKeySet = set()
         #self.preeditList = []
-    def set( self, keys, preeditList ) :
+    def set( self, keys, preeditList, clearUsedKeySet = True ) :
         self.list = []
+        if clearUsedKeySet :
+            self.usedKeySet.clear()
         #print keys, preeditList
         #print keys
         for i in range( len( keys ) ) :
             key = keys[i]
-            preeditString = preeditList[i]
-            wordList = self.dict[key]
-            self.list.append( [ key, wordList, 0, preeditString ] )
+            if key in self.usedKeySet :
+                pass
+            else :
+                self.usedKeySet.add( key )
+                preeditString = preeditList[i]
+                wordList = self.dict[key]
+                self.list.append( [ key, wordList, 0, preeditString ] )
     def pick( self ) :
         highestFreq = -1
         highestIndex = -1

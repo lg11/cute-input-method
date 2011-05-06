@@ -7,7 +7,7 @@ class PinyinLookup() :
         self.dict = Dictionary()
         self.spliter = PinyinSpliter( self.dict )
         self.picker = Picker( self.dict )
-        #self.picker.set( [], [] )
+        #self.picker.set( [], [], True )
         self.cache = [ [ 0, [], "" ] ]
         self.candCacheIndex = 0
         self.candStartIndex = 0
@@ -30,7 +30,7 @@ class PinyinLookup() :
             elif currentFitPoint == fitPoint :
                 fitList.extend( keys )
                 preeditList.extend( [ str( pinyinString ) ] * len( keys ) )
-        self.picker.set( fitList, preeditList )
+        self.picker.set( fitList, preeditList, True )
         cache = [ fitPoint, fitList, preeditList ] 
         self.cache.append( cache )
         self.candList = []
@@ -43,7 +43,7 @@ class PinyinLookup() :
             cache = self.cache[-1]
             fitList = cache[1]
             preeditList = cache[2]
-            self.picker.set( fitList, preeditList )
+            self.picker.set( fitList, preeditList, True )
             self.candList = []
             self.candCacheIndex = len( self.cache ) - 1
             self.candStartIndex = 0
@@ -64,7 +64,7 @@ class PinyinLookup() :
                 elif fitPoint >= currentFitPoint :
                     break
         if self.candCacheIndex >= 1 :
-            self.picker.set( fitList, preeditList )
+            self.picker.set( fitList, preeditList, False )
             return True
         else :
             return False
@@ -82,9 +82,9 @@ class PinyinLookup() :
         else :
             return None
         #print candList
-    def clean( self ) :
-        self.spliter.clean()
-        self.picker.set( [], [] )
+    def clear( self ) :
+        self.spliter.clear()
+        self.picker.set( [], [], True )
         self.cache = [ [ 0, [], "" ] ]
         self.candList = []
         self.candCacheIndex = 0
@@ -108,5 +108,5 @@ if __name__ == "__main__" :
         for c in code :
             lookup.pop()
             #print lookup.cache[-1]
-        #lookup.clean()
+        #lookup.clear()
 

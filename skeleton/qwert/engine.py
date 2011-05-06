@@ -5,6 +5,12 @@ sys.path.append( "../pinyinLookup" )
 from lookup import PinyinLookup
 
 class IMEngine( QtCore.QObject ) :
+    needCommitChanged = QtCore.Signal( bool )
+    @QtCore.Slot()
+    def readNeedCommit( self ) :
+        return len( self.selected ) > 0 and len( self.preeditString ) <= 0 and len( self.invaildCode ) <= 0
+    needCommit = QtCore.Property( bool, readNeedCommit, notify = needCommitChanged )
+
     hasSelectedChanged = QtCore.Signal( bool )
     @QtCore.Slot()
     def readHasSelected( self ) :
@@ -18,6 +24,14 @@ class IMEngine( QtCore.QObject ) :
         return len( self.pinyinLookup.spliter.code ) > 0
         #self.preeditString_value = value
     hasCode = QtCore.Property( bool, readHasCode, notify = hasCodeChanged )
+
+    #commitStringChanged = QtCore.Signal( str )
+    #@QtCore.Slot()
+    #def readCommitString( self ) :
+        #return self.commitString_value
+    #def writeCommitString( self, value ) :
+        #self.commitString_value = value
+    #commitString = QtCore.Property( str, readCommitString, writeCommitString, notify = commitStringChanged )
 
     selectedWordChanged = QtCore.Signal( str )
     @QtCore.Slot()
@@ -58,6 +72,7 @@ class IMEngine( QtCore.QObject ) :
         self.pinyinLookup = PinyinLookup()
         self.load = self.pinyinLookup.load
         self.candString_value = ""
+        #self.commitString_value = ""
         self.selectedWord_value = ""
         self.preeditString_value = ""
         self.invaildCode_value = ""
@@ -132,7 +147,7 @@ class IMEngine( QtCore.QObject ) :
             self.selectedWord += word
             self.selected[-1][2] = freqArg
             #print self.selected
-            self.pinyinLookup.clean()
+            self.pinyinLookup.clear()
             self.pageIndex = 0
             if len( invaildCode ) > 0 :
                 for c in invaildCode :
@@ -144,12 +159,20 @@ class IMEngine( QtCore.QObject ) :
         if len( self.selected ) > 0 :
             item = self.selected[-1]
             code = item[3] + self.pinyinLookup.spliter.code
-            self.pinyinLookup.clean()
+            self.pinyinLookup.clear()
             self.pageIndex = 0
             for c in code :
                 self.pinyinLookup.append( c )
             self.selected.pop()
             self.selectedWord = self.selectedWord[:-1]
+    @QtCore.Slot()
+    def clear( self ) :
+        self.pinyinLookup.clear()
+        self.pageIndex = 0
+        self.selectedWord = ""
+        self.preeditString = ""
+        self.invaildCode = ""
+        self.selected = []
     @QtCore.Slot( str )
     def appendCode( self, code ) :
         self.pinyinLookup.append( code )
