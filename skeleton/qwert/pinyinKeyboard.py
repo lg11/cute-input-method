@@ -11,7 +11,7 @@ class Clipboard( QtCore.QObject ) :
         self.clipboard.setText( text )
 
 class Keyboard( QtDeclarative.QDeclarativeView ) :
-    signal_setText = QtCore.Signal( str )
+    commit = QtCore.Signal( str )
     def __init__( self, parent = None ) :
         QtDeclarative.QDeclarativeView.__init__( self, parent )
         self.daemonFlag = False
@@ -26,12 +26,17 @@ class Keyboard( QtDeclarative.QDeclarativeView ) :
         context = self.rootContext()
         context.setContextProperty( "imEngine", self.imEngine )
         root = self.rootObject()
-        self.signal_setText.connect( root.setText )
+        self.setText = root.setText
+        self.getText = root.getText
 
         self.load = self.imEngine.load
-    @QtCore.Slot( str )
-    def setText( self, text ) :
-        self.signal_setText.emit( text )
+    def closeEvent( self, event ) :
+        if self.daemonFlag :
+            self.hide()
+            text = self.getText()
+            print text
+            self.commit.emit( text )
+            event.ignore()
 
 PinyinKeyboard = Keyboard
 

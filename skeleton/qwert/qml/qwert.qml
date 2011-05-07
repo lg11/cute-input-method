@@ -31,4 +31,7 @@ Rectangle {
     function setText( text ) {
         textview.set( text )
     }
+    function getText() {
+        return textview.get()
+    }
 }

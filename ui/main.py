@@ -26,9 +26,11 @@ class Checker() :
         self.qwertInput = qwert
         self.desktop = QtGui.QDesktopWidget()
     def active( self, text ) :
+        #print "act"
         rect = self.desktop.screenGeometry()
         if rect.height() < rect.width() :
-            self.qwertInput.come( text )
+            self.qwertInput.setText( text )
+            self.qwertInput.show()
         else :
             self.numInput.callback_show( text )
 
@@ -40,15 +42,17 @@ if __name__ == "__main__" :
     name = dbus.service.BusName( "me.maemo.input.chinese", session_bus )
     pad = InputPad( True )
     qwert = PinyinKeyboard()
+    qwert.load( "../data/new_formated" )
     iface = Interface( session_bus, pad )
     
     checker = Checker( pad, qwert )
     iface.active = checker.active
 
     pad.request_commit.connect( iface.commit )
+    qwert.commit.connect( iface.commit )
 
     print "done"
     
-    qwert.show()
+    #qwert.show()
 
     sys.exit( app.exec_() )

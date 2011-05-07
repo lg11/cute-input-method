@@ -11,12 +11,13 @@ class Interface( dbus.service.Object ):
     def commit( self, text ) :
         #text = str( text.toUtf8() )
         text = str( text.encode( "utf-8" ) )
+        #print type( text )
+        #print "commit", text
         #bus = dbus.SessionBus()
         bus = self.session_bus
         plugin = bus.get_object('me.maemo.input.chinese.plugin.dbus_conn', '/')
         method = plugin.get_dbus_method( 'request_commit', 'me.maemo.input.chinese.plugin.dbus_conn' )
         method( text )
-        pass
     @dbus.service.method( "me.maemo.input.chinese.inputpad", in_signature='s', out_signature='' )
     def show( self, text ):
         if self.widget :

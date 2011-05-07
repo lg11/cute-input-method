@@ -48,6 +48,9 @@ Flickable {
         edit.text = text
         edit.cursorPosition = text.length
     }
+    function get() {
+        return edit.text
+    }
 
     TextEdit {
         id : edit
