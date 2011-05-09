@@ -137,7 +137,7 @@ RootMouseArea {
             Key { id : key_i ; keycode : Utils.keycode_i ; keysym : Utils.keysym[Utils.keycode_i] ; width : keyWidth ; height : keyHeight }
             Key { id : key_o ; keycode : Utils.keycode_o ; keysym : Utils.keysym[Utils.keycode_o] ; width : keyWidth ; height : keyHeight }
             Key { id : key_p ; keycode : Utils.keycode_p ; keysym : Utils.keysym[Utils.keycode_p] ; width : keyWidth ; height : keyHeight }
-            InvisibleKey { id : ikey_backspace ; width : keyWidth * 0.25 ; height : keyHeight }
+            ProxyMouseArea { id : ikey_backspace ; width : keyWidth ; height : keyHeight }
         }
         Row {
             Rectangle { width : keyWidth * 0.5 ; height : keyHeight }
@@ -174,7 +174,6 @@ RootMouseArea {
     }
 
     Component.onCompleted : {
-        /*ikey_backspace.press.connect( key_backspace.onPressed )*/
-        /*ikey_backspace.release.connect( key_backspace.onReleased )*/
+        ikey_backspace.target = key_backspace
     }
 }

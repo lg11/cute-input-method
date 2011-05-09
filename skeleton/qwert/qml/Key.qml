@@ -1,15 +1,11 @@
 import Qt 4.7
 /*import Qt.labs.gestures 1.0*/
 
-Rectangle {
+FakeMouseArea {
     id : key
-    width : 80
-    height : 80
-    color : "#00000000"
     property int keycode : 0
     property variant keysym : [ "", "", "", "" ]
     property int mask : keyboard.mask
-    property alias down : mouseArea.down
     property bool keepDown : false 
 
     Rectangle {
@@ -21,7 +17,7 @@ Rectangle {
         color : config.keyNormalColor
 
         Text {
-            id : titleText
+            id : title
             text : keysym[mask]
             anchors.centerIn : parent
             color : config.keyTextColor
@@ -29,16 +25,10 @@ Rectangle {
         }
     }
 
-    property alias platColor : plat.color
+    property alias color : plat.color
 
-    FakeMouseArea {
-        id : mouseArea
-        anchors.fill : parent
-        onMousePressed : { keyboard.keyPress( keycode ) }
-        onMouseReleased : { keyboard.keyRelease( keycode ) }
-    }
-
-    /*property alias isPressed : mouseArea.pressed*/
+    onMousePressed : { keyboard.keyPress( keycode ) }
+    onMouseReleased : { keyboard.keyRelease( keycode ) }
 
     states {
         State {

@@ -28,7 +28,8 @@ Rectangle {
 
     Rectangle {
         id : plat
-        anchors.centerIn: parent
+        x : 1
+        y : 1
         width : parent.width - 1
         height : parent.height - 1
         color : "#00000000"
@@ -41,11 +42,23 @@ Rectangle {
         }
     }
 
+    Row {
+        ProxyMouseArea {
+            target : key_l
+            width : key.width / 2
+            height : key.height
+        }
+        ProxyMouseArea {
+            target : key_r
+            width : key.width / 2
+            height : key.height
+        }
+    }
 
     states {
         State {
             name : "CAND" ; when : candString != ""
-            PropertyChanges { target : plat ; color : key_r.platColor }
+            PropertyChanges { target : plat ; color : key_r.color }
             PropertyChanges { target : key ; isActive : true }
         } 
     }
