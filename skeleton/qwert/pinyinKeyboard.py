@@ -34,9 +34,9 @@ class Keyboard( QtDeclarative.QDeclarativeView ) :
         if self.daemonFlag :
             self.hide()
             text = self.getText()
-            print text
+            #print text
             self.commit.emit( text )
-            event.ignore()
+            #event.ignore()
 
 PinyinKeyboard = Keyboard
 
@@ -48,9 +48,7 @@ if __name__ == "__main__" :
 
     path = config.check_path( config.sysdict_path )
     print "load sysdict from :", path
-    view.load( path )
-    view.setText( "282" )
-
+    #view.load( path )
 
     view.show()
 

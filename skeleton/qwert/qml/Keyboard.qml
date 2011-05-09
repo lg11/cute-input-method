@@ -1,23 +1,31 @@
 import Qt 4.7
 import "utils.js" as Utils
 
-Rectangle {
+RootMouseArea {
     id : keyboard
     width : 800
     height : 480
-    color : "#00FF0000"
+    /*color : "#00FF0000"*/
 
     property int keyWidth
     property int keyHeight
+    property int numKeyWidth
+    property int numKeyHeight
 
     keyWidth : 800 / 10 * 0.975
     keyHeight : keyWidth
+
+    numKeyWidth : keyWidth
+    numKeyHeight : numKeyWidth
+
+    /*keyWidth : 800 / 10 * 1.010*/
+    /*keyHeight : keyWidth * 0.975*/
 
     property int mask : 0
 
     function updateCandString() {
         imEngine.updateCandString( 0 )
-        key_1_2.candString = imEngine.candString
+        key_5_6.candString = imEngine.candString
 
         imEngine.updatePreeditString( 0 )
         preedit.preeditString = imEngine.preeditString
@@ -25,13 +33,13 @@ Rectangle {
         preedit.selectedWord = imEngine.selectedWord
 
         imEngine.updateCandString( 1 )
-        key_3_4.candString = imEngine.candString
-        imEngine.updateCandString( 2 )
-        key_5_6.candString = imEngine.candString
-        imEngine.updateCandString( 3 )
         key_7_8.candString = imEngine.candString
-        imEngine.updateCandString( 4 )
+        imEngine.updateCandString( 2 )
+        key_3_4.candString = imEngine.candString
+        imEngine.updateCandString( 3 )
         key_9_0.candString = imEngine.candString
+        imEngine.updateCandString( 4 )
+        key_1_2.candString = imEngine.candString
     }
     function commit() {
         if ( imEngine.hasSelected ) {
@@ -43,14 +51,14 @@ Rectangle {
         if ( keycode == Utils.keycode_shift_l || keycode == Utils.keycode_shift_r ) {
             if ( mask == Utils.keymask_shift ) {
                 mask = Utils.keymask_null
-                key_shift_l.isDown = false
-                key_shift_r.isDown = false
+                key_shift_l.keepDown = false
+                key_shift_r.keepDown = false
             }
             else {
                 if ( !imEngine.hasCode ) {
                     mask = Utils.keymask_shift
-                    key_shift_l.isDown = true
-                    key_shift_r.isDown = true
+                    key_shift_l.keepDown = true
+                    key_shift_r.keepDown = true
                 }
             }
         }
@@ -110,12 +118,12 @@ Rectangle {
     Column {
         anchors.fill : parent
         Row {
-            CandKey { id : key_1_2 ; keycode_l : Utils.keycode_1 ; keysym_l : Utils.keysym[Utils.keycode_1] ; keycode_r : Utils.keycode_2 ; keysym_r : Utils.keysym[Utils.keycode_2] ; width : keyWidth * 2.0 ; height : keyHeight }
-            CandKey { id : key_3_4 ; keycode_l : Utils.keycode_3 ; keysym_l : Utils.keysym[Utils.keycode_3] ; keycode_r : Utils.keycode_4 ; keysym_r : Utils.keysym[Utils.keycode_4] ; width : keyWidth * 2.0 ; height : keyHeight }
-            CandKey { id : key_5_6 ; keycode_l : Utils.keycode_5 ; keysym_l : Utils.keysym[Utils.keycode_5] ; keycode_r : Utils.keycode_6 ; keysym_r : Utils.keysym[Utils.keycode_6] ; width : keyWidth * 2.0 ; height : keyHeight }
-            CandKey { id : key_7_8 ; keycode_l : Utils.keycode_7 ; keysym_l : Utils.keysym[Utils.keycode_7] ; keycode_r : Utils.keycode_8 ; keysym_r : Utils.keysym[Utils.keycode_8] ; width : keyWidth * 2.0 ; height : keyHeight }
-            CandKey { id : key_9_0 ; keycode_l : Utils.keycode_9 ; keysym_l : Utils.keysym[Utils.keycode_9] ; keycode_r : Utils.keycode_0 ; keysym_r : Utils.keysym[Utils.keycode_0] ; width : keyWidth * 2.0 ; height : keyHeight }
-            Key { id : key_backspace ; keycode : Utils.keycode_backspace ; keysym : Utils.keysym[Utils.keycode_backspace] ; width : keyWidth ; height : keyHeight ; mask : 0 }
+            CandKey { id : key_1_2 ; keycode_l : Utils.keycode_1 ; keysym_l : Utils.keysym[Utils.keycode_1] ; keycode_r : Utils.keycode_2 ; keysym_r : Utils.keysym[Utils.keycode_2] ; width : numKeyWidth * 2.0 ; height : numKeyHeight }
+            CandKey { id : key_3_4 ; keycode_l : Utils.keycode_3 ; keysym_l : Utils.keysym[Utils.keycode_3] ; keycode_r : Utils.keycode_4 ; keysym_r : Utils.keysym[Utils.keycode_4] ; width : numKeyWidth * 2.0 ; height : numKeyHeight }
+            CandKey { id : key_5_6 ; keycode_l : Utils.keycode_5 ; keysym_l : Utils.keysym[Utils.keycode_5] ; keycode_r : Utils.keycode_6 ; keysym_r : Utils.keysym[Utils.keycode_6] ; width : numKeyWidth * 2.0 ; height : numKeyHeight }
+            CandKey { id : key_7_8 ; keycode_l : Utils.keycode_7 ; keysym_l : Utils.keysym[Utils.keycode_7] ; keycode_r : Utils.keycode_8 ; keysym_r : Utils.keysym[Utils.keycode_8] ; width : numKeyWidth * 2.0 ; height : numKeyHeight }
+            CandKey { id : key_9_0 ; keycode_l : Utils.keycode_9 ; keysym_l : Utils.keysym[Utils.keycode_9] ; keycode_r : Utils.keycode_0 ; keysym_r : Utils.keysym[Utils.keycode_0] ; width : numKeyWidth * 2.0 ; height : numKeyHeight }
+            Key { id : key_backspace ; keycode : Utils.keycode_backspace ; keysym : Utils.keysym[Utils.keycode_backspace] ; width : numKeyWidth ; height : numKeyHeight ; mask : 0 }
         }
         Row {
             Rectangle { width : keyWidth * 0.25 ; height : keyHeight }
@@ -129,6 +137,7 @@ Rectangle {
             Key { id : key_i ; keycode : Utils.keycode_i ; keysym : Utils.keysym[Utils.keycode_i] ; width : keyWidth ; height : keyHeight }
             Key { id : key_o ; keycode : Utils.keycode_o ; keysym : Utils.keysym[Utils.keycode_o] ; width : keyWidth ; height : keyHeight }
             Key { id : key_p ; keycode : Utils.keycode_p ; keysym : Utils.keysym[Utils.keycode_p] ; width : keyWidth ; height : keyHeight }
+            InvisibleKey { id : ikey_backspace ; width : keyWidth * 0.25 ; height : keyHeight }
         }
         Row {
             Rectangle { width : keyWidth * 0.5 ; height : keyHeight }
@@ -162,5 +171,10 @@ Rectangle {
             Rectangle { width : keyWidth * 2.0 ; height : keyHeight * 0.8 }
             Key { id : key_shift_r ; keycode : Utils.keycode_shift_r ; keysym : Utils.keysym[Utils.keycode_shift_r] ; width : keyWidth * 2.0 ; height : keyHeight * 0.8 ; mask : 0 }
         }
+    }
+
+    Component.onCompleted : {
+        /*ikey_backspace.press.connect( key_backspace.onPressed )*/
+        /*ikey_backspace.release.connect( key_backspace.onReleased )*/
     }
 }

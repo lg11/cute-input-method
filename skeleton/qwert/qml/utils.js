@@ -104,14 +104,14 @@ keysym[keycode_ctrl] = [ "", "", "", "" ] ;
 keysym[keycode_alt] = [ "", "", "", "" ] ;
 
 var candIndex = Array( 10 ) ;
-candIndex[0] = 4
-candIndex[1] = 0
-candIndex[2] = 0
+candIndex[0] = 3
+candIndex[1] = 4
+candIndex[2] = 4
 candIndex[3] = 1
 candIndex[4] = 1
-candIndex[5] = 2
-candIndex[6] = 2
-candIndex[7] = 3
-candIndex[8] = 3
-candIndex[9] = 4
+candIndex[5] = 0
+candIndex[6] = 0
+candIndex[7] = 2
+candIndex[8] = 2
+candIndex[9] = 3
 

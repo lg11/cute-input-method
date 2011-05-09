@@ -1,5 +1,5 @@
 import Qt 4.7
-import Qt.labs.gestures 1.0
+/*import Qt.labs.gestures 1.0*/
 
 Rectangle {
     id : key
@@ -9,14 +9,13 @@ Rectangle {
     property int keycode : 0
     property variant keysym : [ "", "", "", "" ]
     property int mask : keyboard.mask
-    property bool isDown : false
-    /*property bool isToggle : false*/
+    property alias down : mouseArea.down
+    property bool keepDown : false 
 
     Rectangle {
         id : plat
-        anchors.centerIn: parent
-        /*width : parent.width * 0.985*/
-        /*height : parent.height - parent.width + width*/
+        x : 1
+        y : 1
         width : parent.width - 1
         height : parent.height - 1
         color : config.keyNormalColor
@@ -30,22 +29,20 @@ Rectangle {
         }
     }
 
-    property color platColor : plat.color
+    property alias platColor : plat.color
 
-    MouseArea {
+    FakeMouseArea {
         id : mouseArea
-        focus : false
         anchors.fill : parent
-        hoverEnabled : false
-        onPressed : { keyboard.keyPress( keycode ) }
-        onReleased : { keyboard.keyRelease( keycode ) }
+        onMousePressed : { keyboard.keyPress( keycode ) }
+        onMouseReleased : { keyboard.keyRelease( keycode ) }
     }
 
-    property bool isPressed : mouseArea.pressed
+    /*property alias isPressed : mouseArea.pressed*/
 
     states {
         State {
-            name : "DOWN" ; when : ( mouseArea.pressed == true && mouseArea.containsMouse == true ) || isDown == true
+            name : "DOWN" ; when : down || keepDown
             PropertyChanges { target : plat ; color : config.keyDownColor }
         } 
     }

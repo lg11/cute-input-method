@@ -5,10 +5,10 @@ Rectangle {
     width : 160
     height : 80
     color : "#00000000"
-    property int keycode_l : 0
-    property variant keysym_l : [ "", "", "", "" ]
-    property int keycode_r : 0
-    property variant keysym_r : [ "", "", "", "" ]
+    property alias keycode_l : key_l.keycode
+    property alias keysym_l : key_l.keysym
+    property alias keycode_r : key_r.keycode
+    property alias keysym_r : key_r.keysym
     property string candString
     property bool isActive : false
 
@@ -17,16 +17,12 @@ Rectangle {
             id : key_l
             width : key.width / 2
             height : key.height
-            keycode : key.keycode_l
-            keysym : key.keysym_l
         }
         Key {
             id : key_r
             width : key.width / 2
             height : key.height
-            keycode : key.keycode_r
-            keysym : key.keysym_r
-            isDown : key.isActive && key_l.isPressed
+            keepDown : key.isActive && key_l.down
         }
     }
 
