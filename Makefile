@@ -1,15 +1,18 @@
-DIRS = plugin ui src data
+DIRS = plugin python data
 
-ALL :
-	qmake -makefile src/backend.pro -o src/Makefile
+ALL : runtime
+	#qmake -makefile src/backend.pro -o src/Makefile
 	set -e ; for d in $(DIRS) ; do $(MAKE) -C $$d ; done
+
+runtime :
+	sh runtime.sh
 
 clean :
 	set -e ; for d in $(DIRS) ; do $(MAKE) -C $$d clean ; done
 
 install :
 	mkdir -p $(DESTDIR)/opt/cim
-	mkdir -p $(DESTDIR)/opt/cim/ui
+	mkdir -p $(DESTDIR)/opt/cim/python
 	mkdir -p $(DESTDIR)/opt/cim/plugin
 	mkdir -p $(DESTDIR)/opt/cim/data
 	cp src/libbackend.so $(DESTDIR)/opt/cim/ui/backend.so
@@ -18,8 +21,8 @@ install :
 	cp plugin/inputpad_plugin.so $(DESTDIR)/usr/lib/hildon-input-method/ 
 	cp plugin/me.maemo.chinese.inputpad.service $(DESTDIR)/usr/share/dbus-1/services/ 
 	cp data/formated $(DESTDIR)/opt/cim/data
-	cp ui/*.py $(DESTDIR)/opt/cim/ui
-	cp ui/*.pyo $(DESTDIR)/opt/cim/ui
+	cp -r python/* $(DESTDIR)/opt/cim/python
+	cp -r bin $(DESTDIR)/opt/cim/
 	cp run.sh $(DESTDIR)/opt/cim
 	if test "$(DESTDIR)x" == "x"; then \
 		hildon-im-recache; \

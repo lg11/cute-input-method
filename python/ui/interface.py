@@ -4,25 +4,23 @@ import dbus
 import dbus.service
 
 class Interface( dbus.service.Object ):
+    def __init__( self, session_bus ):
+        dbus.service.Object.__init__( self, session_bus, "/inputpad" )
+        self.session_bus = session_bus
     def commit( self, text ) :
         #text = str( text.toUtf8() )
         text = str( text.encode( "utf-8" ) )
+        #print type( text )
+        #print "commit", text
         #bus = dbus.SessionBus()
         bus = self.session_bus
         plugin = bus.get_object('me.maemo.input.chinese.plugin.dbus_conn', '/')
         method = plugin.get_dbus_method( 'request_commit', 'me.maemo.input.chinese.plugin.dbus_conn' )
         method( text )
-        pass
-    def __init__( self, session_bus, widget = None ):
-        dbus.service.Object.__init__( self, session_bus, "/inputpad" )
-        self.session_bus = session_bus
-        self.widget = widget
     @dbus.service.method( "me.maemo.input.chinese.inputpad", in_signature='s', out_signature='' )
     def show( self, text ):
-        if self.widget :
-            self.widget.callback_show( text )
-        else :
-            print "show"
+        #print text
+        self.active( text )
 
 if __name__ == "__main__" :
     import sys

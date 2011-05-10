@@ -1,5 +1,5 @@
-#ifndef __NODE_H
-#define __NODE_H
+#ifndef NODE_H
+#define NODE_H
 
 #include <QChar>
 #include <QVector>
