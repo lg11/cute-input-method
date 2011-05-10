@@ -1,11 +1,7 @@
-all : formated new_formated
+all : formated
 
 formated :
-	python get_formated.py > formated
-
-new_formated :
-	python get_new_formated.py > new_formated
+	python format.py > formated
 
 clean :
 	rm formated
-	rm new_formated

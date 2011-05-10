@@ -1,0 +1,4 @@
+#!/bin/sh
+
+cd /opt/cim/bin/
+run-standalone.sh /opt/cim/bin/mcip.py

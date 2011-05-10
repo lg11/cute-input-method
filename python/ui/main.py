@@ -44,7 +44,7 @@ if __name__ == "__main__" :
     name = dbus.service.BusName( "me.maemo.input.chinese", session_bus )
     #pad = InputPad( True )
     qwert = PinyinKeyboard( daemonFlag = True )
-    qwert.load( "./data/new_formated" )
+    qwert.load( "./data/formated" )
     iface = Interface( session_bus )
     
     checker = Checker( None, qwert )

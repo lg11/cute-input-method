@@ -15,7 +15,6 @@ install :
 	mkdir -p $(DESTDIR)/opt/cim/python
 	mkdir -p $(DESTDIR)/opt/cim/plugin
 	mkdir -p $(DESTDIR)/opt/cim/data
-	cp src/libbackend.so $(DESTDIR)/opt/cim/ui/backend.so
 	cp plugin/gconf.sh $(DESTDIR)/opt/cim/plugin 
 	cp plugin/recover.sh $(DESTDIR)/opt/cim/plugin 
 	cp plugin/inputpad_plugin.so $(DESTDIR)/usr/lib/hildon-input-method/ 
@@ -23,7 +22,7 @@ install :
 	cp data/formated $(DESTDIR)/opt/cim/data
 	cp -r python/* $(DESTDIR)/opt/cim/python
 	cp -r bin $(DESTDIR)/opt/cim/
-	cp run.sh $(DESTDIR)/opt/cim
+	cp mcip $(DESTDIR)/opt/cim/
 	if test "$(DESTDIR)x" == "x"; then \
 		hildon-im-recache; \
 		su user -c "sh /opt/cim/plugin/gconf.sh"; \

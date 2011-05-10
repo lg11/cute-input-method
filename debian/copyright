@@ -1,16 +1,13 @@
 This package was debianized by Evan JIANG <firstfan@gmail.com> on
 Tue,  8 Mar 2011 23:24:50 +0800.
 
-It was downloaded from <fill in http/ftp site>
+It was downloaded from github.com/foolegg/cute-input-method
 
-Upstream Author: <put author(s) name and email here>
+Upstream Author: liang <sd.foolegg@gmail.com>
 
-Copyright: <put the year(s) of the copyright, and the names of the
-            copyright holder(s) here>
+Copyright: © 2010 liang <sd.foolegg@gmail.com>
 
-License:
-
-<Put the license of the package here>
+License: licensed under the GPL, see `/usr/share/common-licenses/GPL'.
 
 
 The Debian packaging is (C) 2011, Evan JIANG <firstfan@gmail.com> and

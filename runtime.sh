@@ -4,6 +4,7 @@ touch bin
 rm -rf bin
 mkdir bin
 cd bin
+ln -s ../mcip .
 ln -s ../python/pinyinLookup .
 ln -s ../python/qwert .
 ln -s ../python/ui .
