@@ -65,6 +65,7 @@ RootMouseArea {
                 }
             }
         }
+        moveTooltip( key )
     }
     function keyRelease( key ) {
         var keycode = key.keycode
@@ -128,8 +129,8 @@ RootMouseArea {
         moveTooltip( key )
     }
     function moveTooltip( key ) {
-        var keycode = key.keycode
-        var keysym = Utils.keysym[keycode]
+        /*var keycode = key.keycode*/
+        /*var keysym = Utils.keysym[keycode]*/
         var parent = key.parent
         var pos = parent.mapToItem( tooltip.parent, key.x, key.y )
         var x = pos.x + key.width / 2 - tooltip.width / 2
@@ -140,7 +141,7 @@ RootMouseArea {
         tooltip.x = x
         tooltip.y = y
         
-        tooltip.text = keysym[mask]
+        tooltip.text = key.text
     }
 
     Column {

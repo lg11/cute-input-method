@@ -4,8 +4,8 @@ RealMouseArea {
     width : 800
     height : 480
 
-    Config {
-        id : config
+    Palette {
+        id : palette
     }
     Rectangle {
         anchors.fill : parent
@@ -33,7 +33,7 @@ RealMouseArea {
     }
     Tooltip {
         id : tooltip
-        width : 65
+        /*width : 65*/
         height : 100
         /*text : "t"*/
     }

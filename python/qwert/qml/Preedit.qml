@@ -4,7 +4,7 @@ Rectangle {
     id : plat
     width : 0
     height : preeditStringText.paintedHeight + 10
-    color : config.preeditBackgroundColor
+    color : palette.preeditBackgroundColor
 
     property string selectedWord : ""
     property string preeditString : ""
@@ -16,19 +16,19 @@ Rectangle {
         Text {
             id : selectedWordText
             font.pointSize : 28; font.bold: false
-            color : config.selectedWordColor
+            color : palette.selectedWordColor
             text : selectedWord
         }
         Text {
             id : preeditStringText
             font.pointSize : 28; font.bold: false
-            color : config.preeditStringColor
+            color : palette.preeditStringColor
             text : preeditString
         }
         Text {
             id : invaildCodeText
             font.pointSize : 28; font.bold: false
-            color : config.invaildCodeColor
+            color : palette.invaildCodeColor
             text : invaildCode
         }
     }

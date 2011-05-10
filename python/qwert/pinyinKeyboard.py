@@ -1,6 +1,5 @@
 from QtImport import QtGui, QtCore, QtDeclarative
 from engine import IMEngine
-import config
 
 class Clipboard( QtCore.QObject ) :
     def __init__( self, parent = None ) :
@@ -19,7 +18,7 @@ class Keyboard( QtDeclarative.QDeclarativeView ) :
             self.setWindowFlags( QtCore.Qt.Dialog | QtCore.Qt.FramelessWindowHint )
             self.daemonFlag = True
         self.setAttribute( QtCore.Qt.WA_Maemo5PortraitOrientation, False )
-        path = config.check_path( config.qml_qwert_path )
+        path = "./qml/qwert.qml"
         self.setSource( QtCore.QUrl( path ) ) ;
 
         self.imEngine = IMEngine()
@@ -41,6 +40,7 @@ class Keyboard( QtDeclarative.QDeclarativeView ) :
 PinyinKeyboard = Keyboard
 
 if __name__ == "__main__" :
+    import config
     import sys
     app = QtGui.QApplication( sys.argv )
 
@@ -48,7 +48,7 @@ if __name__ == "__main__" :
 
     path = config.check_path( config.sysdict_path )
     print "load sysdict from :", path
-    #view.load( path )
+    view.load( path )
 
     view.show()
 

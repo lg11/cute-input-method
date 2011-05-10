@@ -8,4 +8,5 @@ Item {
     property color selectedWordColor : "#FFFFFFFF"
     property color preeditStringColor : "#FFFFFFFF"
     property color invaildCodeColor : "#FFFF0000"
+    property color backgroundColor : "#FFFFFFFF"
 }

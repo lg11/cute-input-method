@@ -11,6 +11,7 @@ FakeMouseArea {
         if ( target ) {
             parent = target.parent
             while ( flag ) {
+                /*console.log( target, target.takeMouse )*/
                 if ( target.takeMouse ) {
                     flag = false
                 }

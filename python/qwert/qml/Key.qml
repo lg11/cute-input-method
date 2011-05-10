@@ -14,18 +14,21 @@ FakeMouseArea {
         y : 1
         width : parent.width - 1
         height : parent.height - 1
-        color : config.keyNormalColor
+        color : palette.keyNormalColor
 
         Text {
             id : title
             text : keysym[mask]
             anchors.centerIn : parent
-            color : config.keyTextColor
+            color : palette.keyTextColor
             font.pointSize: 30; font.bold: true
         }
     }
 
+    property alias text : title.text
+    /*property Item plat : plat*/
     property alias color : plat.color
+    property alias platVisible : plat.visible
 
     onMousePressed : { keyboard.keyPress( key ) }
     onMouseReleased : { keyboard.keyRelease( key ) }
@@ -35,7 +38,7 @@ FakeMouseArea {
     states {
         State {
             name : "DOWN" ; when : down || keepDown
-            PropertyChanges { target : plat ; color : config.keyDownColor }
+            PropertyChanges { target : plat ; color : palette.keyDownColor }
         } 
     }
 
