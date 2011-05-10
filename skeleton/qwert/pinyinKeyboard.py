@@ -48,7 +48,7 @@ if __name__ == "__main__" :
 
     path = config.check_path( config.sysdict_path )
     print "load sysdict from :", path
-    view.load( path )
+    #view.load( path )
 
     view.show()
 

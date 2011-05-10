@@ -27,8 +27,10 @@ FakeMouseArea {
 
     property alias color : plat.color
 
-    onMousePressed : { keyboard.keyPress( keycode ) }
-    onMouseReleased : { keyboard.keyRelease( keycode ) }
+    onMousePressed : { keyboard.keyPress( key ) }
+    onMouseReleased : { keyboard.keyRelease( key ) }
+    onMouseEntered : { keyboard.keyEnter( key ) }
+    onMouseExited : { keyboard.keyExit( key ) }
 
     states {
         State {

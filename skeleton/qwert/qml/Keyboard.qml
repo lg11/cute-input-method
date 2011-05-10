@@ -12,6 +12,8 @@ RootMouseArea {
     property int numKeyWidth
     property int numKeyHeight
 
+    property Item pressedKey
+
     keyWidth : 800 / 10 * 0.975
     keyHeight : keyWidth
 
@@ -33,9 +35,9 @@ RootMouseArea {
         preedit.selectedWord = imEngine.selectedWord
 
         imEngine.updateCandString( 1 )
-        key_7_8.candString = imEngine.candString
-        imEngine.updateCandString( 2 )
         key_3_4.candString = imEngine.candString
+        imEngine.updateCandString( 2 )
+        key_7_8.candString = imEngine.candString
         imEngine.updateCandString( 3 )
         key_9_0.candString = imEngine.candString
         imEngine.updateCandString( 4 )
@@ -47,7 +49,8 @@ RootMouseArea {
             imEngine.clear()
         }
     }
-    function keyPress( keycode ) {
+    function keyPress( key ) {
+        var keycode = key.keycode
         if ( keycode == Utils.keycode_shift_l || keycode == Utils.keycode_shift_r ) {
             if ( mask == Utils.keymask_shift ) {
                 mask = Utils.keymask_null
@@ -63,7 +66,8 @@ RootMouseArea {
             }
         }
     }
-    function keyRelease( keycode ) {
+    function keyRelease( key ) {
+        var keycode = key.keycode
         var keysym = Utils.keysym[keycode]
         if ( keycode >= Utils.keycode_a && keycode <= Utils.keycode_z && mask == Utils.keymask_null ) {
             imEngine.appendCode( keysym[mask] )
@@ -113,6 +117,30 @@ RootMouseArea {
             textview.insert( keysym[mask] )
             /*preedit.preeditString = keysym[mask]*/
         }
+        tooltip.text = ""
+    }
+    function keyExit( key ) {
+        pressedKey = null
+        /*tooltip.text = keysym[mask]*/
+    }
+    function keyEnter( key ) {
+        pressedKey = key
+        moveTooltip( key )
+    }
+    function moveTooltip( key ) {
+        var keycode = key.keycode
+        var keysym = Utils.keysym[keycode]
+        var parent = key.parent
+        var pos = parent.mapToItem( tooltip.parent, key.x, key.y )
+        var x = pos.x + key.width / 2 - tooltip.width / 2
+        var y = pos.y - tooltip.height - keyHeight * 0.1
+        if ( y < -10 ) {
+            y = -10
+        }
+        tooltip.x = x
+        tooltip.y = y
+        
+        tooltip.text = keysym[mask]
     }
 
     Column {
@@ -153,7 +181,7 @@ RootMouseArea {
             Key { id : key_enter ; keycode : Utils.keycode_enter ; keysym : Utils.keysym[Utils.keycode_enter] ; width : keyWidth * 2.0 ; height : keyHeight ; mask : 0 }
         }
         Row {
-            Rectangle { width : keyWidth * 1.0 ; height : keyHeight }
+            ProxyMouseArea { id : ikey_shift_l ; width : keyWidth ; height : keyHeight }
             Key { id : key_z ; keycode : Utils.keycode_z ; keysym : Utils.keysym[Utils.keycode_z] ; width : keyWidth ; height : keyHeight }
             Key { id : key_x ; keycode : Utils.keycode_x ; keysym : Utils.keysym[Utils.keycode_x] ; width : keyWidth ; height : keyHeight }
             Key { id : key_c ; keycode : Utils.keycode_c ; keysym : Utils.keysym[Utils.keycode_c] ; width : keyWidth ; height : keyHeight }
@@ -163,6 +191,7 @@ RootMouseArea {
             Key { id : key_m ; keycode : Utils.keycode_m ; keysym : Utils.keysym[Utils.keycode_m] ; width : keyWidth ; height : keyHeight }
             Key { id : key_comma ; keycode : Utils.keycode_comma ; keysym : Utils.keysym[Utils.keycode_comma] ; width : keyWidth ; height : keyHeight }
             Key { id : key_dot ; keycode : Utils.keycode_dot ; keysym : Utils.keysym[Utils.keycode_dot] ; width : keyWidth ; height : keyHeight }
+            ProxyMouseArea { id : ikey_shift_r ; width : keyWidth ; height : keyHeight }
         }
         Row {
             Key { id : key_shift_l ; keycode : Utils.keycode_shift_l ; keysym : Utils.keysym[Utils.keycode_shift_l] ; width : keyWidth * 2.0 ; height : keyHeight * 0.8 ; mask : 0 }
@@ -175,5 +204,7 @@ RootMouseArea {
 
     Component.onCompleted : {
         ikey_backspace.target = key_backspace
+        ikey_shift_l.target = key_shift_l
+        ikey_shift_r.target = key_shift_r
     }
 }

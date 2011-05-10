@@ -118,7 +118,9 @@ class IMEngine( QtCore.QObject ) :
         if cand :
             preeditString = cand[3]
             count = len( preeditString ) - preeditString.count( "'" )
-            invaildCode = self.pinyinLookup.spliter.code[count:]
+        else :
+            count = 0
+        invaildCode = self.pinyinLookup.spliter.code[count:]
         #print invaildCode
         return invaildCode
     @QtCore.Slot( int )

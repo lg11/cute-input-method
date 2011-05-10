@@ -1,9 +1,7 @@
 import Qt 4.7
 
-MouseArea {
+FakeMouseArea {
     property Item prevMouseTarget
-    /*property int prevX*/
-    /*property int prevY*/
 
     function getMouseTarget( x, y ) {
         var pos = Qt.point( x, y )
@@ -14,9 +12,7 @@ MouseArea {
             parent = target.parent
             while ( flag ) {
                 if ( target.takeMouse ) {
-                    /*if ( target.takeMouse == true ) {*/
                     flag = false
-                    /*}*/
                 }
                 else {
                     pos = target.mapFromItem( parent, pos.x, pos.y )
@@ -48,34 +44,28 @@ MouseArea {
         return target
     }
 
-    onPressed : {
-        var target = switchMouseTarget( mouse.x, mouse.y )
+    onMousePressed : {
+        var target = switchMouseTarget( x, y )
         if ( target ) {
-            var pos = mapToItem( target, mouse.x, mouse.y )
+            var pos = mapToItem( target, x, y )
             target.pressed = true
             target.mousePressed( pos.x, pos.y )
         }
-        /*prevX = mouse.x*/
-        /*prevY = mouse.y*/
     }
-    onReleased : {
-        var target = switchMouseTarget( mouse.x, mouse.y )
+    onMouseReleased : {
+        var target = switchMouseTarget( x, y )
         if ( target ) {
-            var pos = mapToItem( target, mouse.x, mouse.y )
+            var pos = mapToItem( target, x, y )
             target.pressed = false
             target.mouseReleased( pos.x, pos.y )
         }
-        /*prevX = mouse.x*/
-        /*prevY = mouse.y*/
     }
-    onPositionChanged : {
-        var target = switchMouseTarget( mouse.x, mouse.y )
+    onMouseMoved : {
+        var target = switchMouseTarget( x, y )
         if ( target ) {
-            var pos = mapToItem( target, mouse.x, mouse.y )
+            var pos = mapToItem( target, x, y )
             target.pressed = pressed
             target.mouseMoved( pos.x, pos.y )
         }
-        /*prevX = mouse.x*/
-        /*prevY = mouse.y*/
     }
 }
