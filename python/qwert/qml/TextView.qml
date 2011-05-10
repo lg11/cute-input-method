@@ -9,7 +9,8 @@ Flickable {
     contentHeight : edit.paintedHeight
     clip : true
     boundsBehavior : Flickable.StopAtBounds
-    /*property string text*/
+
+    /*property alias text : edit.text*/
 
     function ensureVisible( r ) {
         if ( contentX >= r.x )

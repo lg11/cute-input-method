@@ -8,7 +8,7 @@ sys.path.append( "./ui" )
 sys.path.append( "./utils" )
 
 from interface import Interface
-from inputpad import InputPad
+#from inputpad import InputPad
 from pinyinKeyboard import PinyinKeyboard
 
 import dbus
@@ -27,12 +27,14 @@ class Checker() :
         self.desktop = QtGui.QDesktopWidget()
     def active( self, text ) :
         #print "act"
-        rect = self.desktop.screenGeometry()
-        if rect.height() < rect.width() :
-            self.qwertInput.setText( text )
-            self.qwertInput.show()
-        else :
-            self.numInput.callback_show( text )
+        #rect = self.desktop.screenGeometry()
+        #if rect.height() < rect.width() :
+            #self.qwertInput.setText( text )
+            #self.qwertInput.show()
+        #else :
+            #self.numInput.callback_show( text )
+        self.qwertInput.setText( text )
+        self.qwertInput.show()
 
 if __name__ == "__main__" :
     app = QtGui.QApplication( sys.argv )
@@ -40,15 +42,15 @@ if __name__ == "__main__" :
 
     session_bus = dbus.SessionBus()
     name = dbus.service.BusName( "me.maemo.input.chinese", session_bus )
-    pad = InputPad( True )
-    qwert = PinyinKeyboard()
-    qwert.load( "../data/new_formated" )
-    iface = Interface( session_bus, pad )
+    #pad = InputPad( True )
+    qwert = PinyinKeyboard( daemonFlag = True )
+    qwert.load( "./data/new_formated" )
+    iface = Interface( session_bus )
     
-    checker = Checker( pad, qwert )
+    checker = Checker( None, qwert )
     iface.active = checker.active
 
-    pad.request_commit.connect( iface.commit )
+    #pad.request_commit.connect( iface.commit )
     qwert.commit.connect( iface.commit )
 
     print "done"

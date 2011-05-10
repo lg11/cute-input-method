@@ -4,10 +4,9 @@ import dbus
 import dbus.service
 
 class Interface( dbus.service.Object ):
-    def __init__( self, session_bus, widget = None ):
+    def __init__( self, session_bus ):
         dbus.service.Object.__init__( self, session_bus, "/inputpad" )
         self.session_bus = session_bus
-        self.widget = widget
     def commit( self, text ) :
         #text = str( text.toUtf8() )
         text = str( text.encode( "utf-8" ) )
@@ -20,11 +19,8 @@ class Interface( dbus.service.Object ):
         method( text )
     @dbus.service.method( "me.maemo.input.chinese.inputpad", in_signature='s', out_signature='' )
     def show( self, text ):
-        if self.widget :
-            #self.widget.callback_show( text )
-            self.active( text )
-        else :
-            print "show"
+        #print text
+        self.active( text )
 
 if __name__ == "__main__" :
     import sys

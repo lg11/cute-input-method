@@ -1,22 +1,22 @@
 from QtImport import QtGui, QtCore, QtDeclarative
 from engine import IMEngine
 
-class Clipboard( QtCore.QObject ) :
-    def __init__( self, parent = None ) :
-        QtCore.QObject.__init__( self, parent )
-        self.clipboard = QtGui.QClipboard()
-    @QtCore.Slot( str )
-    def set( self, text ) :
-        self.clipboard.setText( text )
+#class Clipboard( QtCore.QObject ) :
+    #def __init__( self, parent = None ) :
+        #QtCore.QObject.__init__( self, parent )
+        #self.clipboard = QtGui.QClipboard()
+    #@QtCore.Slot( str )
+    #def set( self, text ) :
+        #self.clipboard.setText( text )
 
 class Keyboard( QtDeclarative.QDeclarativeView ) :
     commit = QtCore.Signal( str )
-    def __init__( self, parent = None ) :
+    def __init__( self, parent = None, daemonFlag = False ) :
         QtDeclarative.QDeclarativeView.__init__( self, parent )
         self.daemonFlag = False
-        if not parent :
+        if ( not parent ) and daemonFlag :
             self.setWindowFlags( QtCore.Qt.Dialog | QtCore.Qt.FramelessWindowHint )
-            self.daemonFlag = True
+            self.daemonFlag = daemonFlag
         self.setAttribute( QtCore.Qt.WA_Maemo5PortraitOrientation, False )
         path = "./qml/qwert.qml"
         self.setSource( QtCore.QUrl( path ) ) ;
@@ -35,7 +35,7 @@ class Keyboard( QtDeclarative.QDeclarativeView ) :
             text = self.getText()
             #print text
             self.commit.emit( text )
-            #event.ignore()
+            event.ignore()
 
 PinyinKeyboard = Keyboard
 
