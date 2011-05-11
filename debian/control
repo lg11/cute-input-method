@@ -9,7 +9,7 @@ Standards-Version: 3.7.2
 Package: mcip
 Architecture: any
 Conflicts: scim, mscim
-Depends:  ${shlibs:Depends}, pyside-qt4
+Depends:  ${shlibs:Depends}, pyside-qt4, python2.5-qt4-dbus
 Description: A Chinese Pinyin input method for Hildon Input Method Framework
  This package will install a plugin for Hildon Input Method Framework, and will replace your default virtual keyboard.
  Please uninstall MSCIM if you already installed that before.

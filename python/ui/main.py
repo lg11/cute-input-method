@@ -9,7 +9,8 @@ sys.path.append( "./utils" )
 
 from interface import Interface
 #from inputpad import InputPad
-from pinyinKeyboard import PinyinKeyboard
+from keyboard import Keyboard
+from engine import IMEngine
 
 import dbus
 import dbus.service
@@ -43,8 +44,12 @@ if __name__ == "__main__" :
     session_bus = dbus.SessionBus()
     name = dbus.service.BusName( "me.maemo.input.chinese", session_bus )
     #pad = InputPad( True )
-    qwert = PinyinKeyboard( daemonFlag = True )
-    qwert.load( "./data/formated" )
+
+    qwert = Keyboard( daemonFlag = True )
+    engine = IMEngine()
+    qwert.set( "./qml/qwert.qml", engine, "imEngine" )
+    engine.load( "./data/formated" )
+
     iface = Interface( session_bus )
     
     checker = Checker( None, qwert )

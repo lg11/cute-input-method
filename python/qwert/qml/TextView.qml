@@ -61,5 +61,6 @@ Flickable {
         activeFocusOnPress : false
         wrapMode : TextEdit.Wrap
         onCursorRectangleChanged : ensureVisible(cursorRectangle)
+        /*selectByMouse : true*/
     }
 }

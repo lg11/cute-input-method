@@ -66,6 +66,8 @@ Item {
             PropertyChanges { target : key_r ; text : candString }
             PropertyChanges { target : key_l ; x : key.width / 4 }
             PropertyChanges { target : key_r ; x : key.width / 4 }
+            PropertyChanges { target : key_l ; opacity : 0 }
+            PropertyChanges { target : key_r ; opacity : 0 }
         } 
     }
 }

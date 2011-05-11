@@ -26,6 +26,12 @@ class IMEngine( QtCore.QObject ) :
         #self.preeditString_value = value
     hasCode = QtCore.Property( bool, readHasCode, notify = hasCodeChanged )
 
+    codeChanged = QtCore.Signal( str )
+    @QtCore.Slot()
+    def readCode( self ) :
+        return self.pinyinLookup.spliter.code
+    code = QtCore.Property( str, readCode, notify = codeChanged )
+
     #contextTextChanged = QtCore.Signal( str )
     #@QtCore.Slot()
     #def readContextText( self ) :

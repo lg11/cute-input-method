@@ -99,6 +99,16 @@ RootMouseArea {
                 updateCandString()
             }
         }
+        else if ( keycode == Utils.keycode_enter ) {
+            if ( imEngine.hasCode ) {
+                textview.insert( imEngine.code )
+                imEngine.clear()
+                updateCandString()
+            }
+            else {
+                textview.insert( "\n" )
+            }
+        }
         else if ( keycode >= Utils.keycode_0 && keycode <= Utils.keycode_9 ) {
             if ( imEngine.hasCode ) {
                 var index = keycode - Utils.keycode_0
@@ -114,7 +124,7 @@ RootMouseArea {
                 textview.insert( keysym[mask] )
             }
         }
-        else if ( keycode != Utils.keycode_ctrl && keycode != Utils.keycode_alt && keycode != Utils.keycode_backspace && keycode != Utils.keycode_enter ) {
+        else if ( keycode != Utils.keycode_ctrl && keycode != Utils.keycode_alt ) {
             textview.insert( keysym[mask] )
             /*preedit.preeditString = keysym[mask]*/
         }
@@ -122,7 +132,7 @@ RootMouseArea {
     }
     function keyExit( key ) {
         pressedKey = null
-        /*tooltip.text = keysym[mask]*/
+        tooltip.text = ""
     }
     function keyEnter( key ) {
         pressedKey = key
@@ -152,10 +162,10 @@ RootMouseArea {
             CandKey { id : key_5_6 ; keycode_l : Utils.keycode_5 ; keysym_l : Utils.keysym[Utils.keycode_5] ; keycode_r : Utils.keycode_6 ; keysym_r : Utils.keysym[Utils.keycode_6] ; width : numKeyWidth * 2.0 ; height : numKeyHeight }
             CandKey { id : key_7_8 ; keycode_l : Utils.keycode_7 ; keysym_l : Utils.keysym[Utils.keycode_7] ; keycode_r : Utils.keycode_8 ; keysym_r : Utils.keysym[Utils.keycode_8] ; width : numKeyWidth * 2.0 ; height : numKeyHeight }
             CandKey { id : key_9_0 ; keycode_l : Utils.keycode_9 ; keysym_l : Utils.keysym[Utils.keycode_9] ; keycode_r : Utils.keycode_0 ; keysym_r : Utils.keysym[Utils.keycode_0] ; width : numKeyWidth * 2.0 ; height : numKeyHeight }
-            Key { id : key_backspace ; keycode : Utils.keycode_backspace ; keysym : Utils.keysym[Utils.keycode_backspace] ; width : numKeyWidth ; height : numKeyHeight ; mask : 0 }
+            Key { id : key_backspace ; keycode : Utils.keycode_backspace ; keysym : Utils.keysym[Utils.keycode_backspace] ; width : numKeyWidth ; height : numKeyHeight ; mask : 0 ; color : Qt.darker( palette.keyNormalColor, 1.25 ) }
         }
         Row {
-            Rectangle { width : keyWidth * 0.25 ; height : keyHeight }
+            Item { width : keyWidth * 0.25 ; height : keyHeight }
             Key { id : key_q ; keycode : Utils.keycode_q ; keysym : Utils.keysym[Utils.keycode_q] ; width : keyWidth ; height : keyHeight }
             Key { id : key_w ; keycode : Utils.keycode_w ; keysym : Utils.keysym[Utils.keycode_w] ; width : keyWidth ; height : keyHeight }
             Key { id : key_e ; keycode : Utils.keycode_e ; keysym : Utils.keysym[Utils.keycode_e] ; width : keyWidth ; height : keyHeight }
@@ -169,17 +179,17 @@ RootMouseArea {
             ProxyMouseArea { id : ikey_backspace ; width : keyWidth ; height : keyHeight }
         }
         Row {
-            Rectangle { width : keyWidth * 0.5 ; height : keyHeight }
+            Item { width : keyWidth * 0.5 ; height : keyHeight }
             Key { id : key_a ; keycode : Utils.keycode_a ; keysym : Utils.keysym[Utils.keycode_a] ; width : keyWidth ; height : keyHeight }
             Key { id : key_s ; keycode : Utils.keycode_s ; keysym : Utils.keysym[Utils.keycode_s] ; width : keyWidth ; height : keyHeight }
             Key { id : key_d ; keycode : Utils.keycode_d ; keysym : Utils.keysym[Utils.keycode_d] ; width : keyWidth ; height : keyHeight }
-            Key { id : key_f ; keycode : Utils.keycode_f ; keysym : Utils.keysym[Utils.keycode_f] ; width : keyWidth ; height : keyHeight }
+            Key { id : key_f ; keycode : Utils.keycode_f ; keysym : Utils.keysym[Utils.keycode_f] ; width : keyWidth ; height : keyHeight ; color : Qt.darker( palette.keyNormalColor, 1.25 ) }
             Key { id : key_g ; keycode : Utils.keycode_g ; keysym : Utils.keysym[Utils.keycode_g] ; width : keyWidth ; height : keyHeight }
             Key { id : key_h ; keycode : Utils.keycode_h ; keysym : Utils.keysym[Utils.keycode_h] ; width : keyWidth ; height : keyHeight }
-            Key { id : key_j ; keycode : Utils.keycode_j ; keysym : Utils.keysym[Utils.keycode_j] ; width : keyWidth ; height : keyHeight }
+            Key { id : key_j ; keycode : Utils.keycode_j ; keysym : Utils.keysym[Utils.keycode_j] ; width : keyWidth ; height : keyHeight ; color : Qt.darker( palette.keyNormalColor, 1.25 ) }
             Key { id : key_k ; keycode : Utils.keycode_k ; keysym : Utils.keysym[Utils.keycode_k] ; width : keyWidth ; height : keyHeight }
             Key { id : key_l ; keycode : Utils.keycode_l ; keysym : Utils.keysym[Utils.keycode_l] ; width : keyWidth ; height : keyHeight }
-            Key { id : key_enter ; keycode : Utils.keycode_enter ; keysym : Utils.keysym[Utils.keycode_enter] ; width : keyWidth * 2.0 ; height : keyHeight ; mask : 0 }
+            Key { id : key_enter ; keycode : Utils.keycode_enter ; keysym : Utils.keysym[Utils.keycode_enter] ; width : keyWidth * 2.0 ; height : keyHeight ; mask : 0 ; color : Qt.darker( palette.keyNormalColor, 1.25 ) }
         }
         Row {
             ProxyMouseArea { id : ikey_shift_l ; width : keyWidth ; height : keyHeight }
@@ -195,11 +205,11 @@ RootMouseArea {
             ProxyMouseArea { id : ikey_shift_r ; width : keyWidth ; height : keyHeight }
         }
         Row {
-            Key { id : key_shift_l ; keycode : Utils.keycode_shift_l ; keysym : Utils.keysym[Utils.keycode_shift_l] ; width : keyWidth * 2.0 ; height : keyHeight * 0.8 ; mask : 0 }
-            Rectangle { width : keyWidth * 1.0 ; height : keyHeight * 0.8 }
-            Key { id : key_space ; keycode : Utils.keycode_space ; keysym : Utils.keysym[Utils.keycode_space] ; width : keyWidth * 4.0 ; height : keyHeight * 0.8 ; mask : 0 }
-            Rectangle { width : keyWidth * 2.0 ; height : keyHeight * 0.8 }
-            Key { id : key_shift_r ; keycode : Utils.keycode_shift_r ; keysym : Utils.keysym[Utils.keycode_shift_r] ; width : keyWidth * 2.0 ; height : keyHeight * 0.8 ; mask : 0 }
+            Key { id : key_shift_l ; keycode : Utils.keycode_shift_l ; keysym : Utils.keysym[Utils.keycode_shift_l] ; width : keyWidth * 2.0 ; height : keyHeight * 0.8 ; mask : 0 ; color : Qt.darker( palette.keyNormalColor, 1.25 ) }
+            Item { width : keyWidth * 1.0 ; height : keyHeight * 0.8 }
+            Key { id : key_space ; keycode : Utils.keycode_space ; keysym : Utils.keysym[Utils.keycode_space] ; width : keyWidth * 4.0 ; height : keyHeight * 0.8 ; mask : 0 ; color : Qt.darker( palette.keyNormalColor, 1.25 ) }
+            Item { width : keyWidth * 2.0 ; height : keyHeight * 0.8 }
+            Key { id : key_shift_r ; keycode : Utils.keycode_shift_r ; keysym : Utils.keysym[Utils.keycode_shift_r] ; width : keyWidth * 2.0 ; height : keyHeight * 0.8 ; mask : 0 ; color : Qt.darker( palette.keyNormalColor, 1.25 ) }
         }
     }
 
