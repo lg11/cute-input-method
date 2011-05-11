@@ -12,6 +12,7 @@ class Keyboard( QtDeclarative.QDeclarativeView ) :
     commit = QtCore.Signal( str )
     def __init__( self, parent = None, daemonFlag = False ) :
         QtDeclarative.QDeclarativeView.__init__( self, parent )
+        self.setAttribute( QtCore.Qt.WA_InputMethodEnabled, False )
         self.daemonFlag = False
         #self.setWindowFlags( QtCore.Qt.Dialog | QtCore.Qt.FramelessWindowHint )
         if ( not parent ) and daemonFlag :
