@@ -1,4 +1,4 @@
-mcip (0.2-maemo5) fremantle; urgency=low
+mcip (0.2-maemo5-1) fremantle; urgency=low
 
   * fix enter issue
   * fix depend issue
