@@ -1,5 +1,13 @@
 mcip (0.2-maemo5) fremantle; urgency=low
 
+  * fix enter issue
+  * fix depend issue
+  * some ui change
+
+ -- liang <sd.foolegg@gmail.com>  Tue,  10 May 2011 23:24:00 +0800
+
+mcip (0.2-maemo5) fremantle; urgency=low
+
   * 0.2 release
 
  -- liang <sd.foolegg@gmail.com>  Tue,  10 May 2011 23:24:00 +0800
