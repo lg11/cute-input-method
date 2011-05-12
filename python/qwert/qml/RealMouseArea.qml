@@ -4,6 +4,7 @@ RootMouseArea {
     MouseArea {
         anchors.fill : parent
         onPressed : {
+            /*console.log( "press" )*/
             parent.pressed = true
             parent.mousePressed( mouse.x, mouse.y )
         }

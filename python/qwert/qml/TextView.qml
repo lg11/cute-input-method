@@ -53,11 +53,21 @@ Flickable {
         return edit.text
     }
 
+    Rectangle {
+        id : course
+        x : edit.cursorRectangle.x
+        y : edit.cursorRectangle.y
+        width : 4
+        height : edit.cursorRectangle.height
+        color : palette.keyDownColor
+    }
+
     TextEdit {
         id : edit
         width : view.width
         height : view.height
         focus : true
+        font.pointSize: 22
         activeFocusOnPress : false
         wrapMode : TextEdit.Wrap
         onCursorRectangleChanged : ensureVisible(cursorRectangle)

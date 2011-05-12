@@ -15,10 +15,10 @@ RootMouseArea {
     property Item pressedKey
 
     keyWidth : 800 / 10 * 0.975
-    keyHeight : keyWidth
+    keyHeight : keyWidth * 0.975
 
     numKeyWidth : keyWidth
-    numKeyHeight : numKeyWidth
+    numKeyHeight : numKeyWidth * 0.925
 
     /*keyWidth : 800 / 10 * 1.010*/
     /*keyHeight : keyWidth * 0.975*/
@@ -51,21 +51,61 @@ RootMouseArea {
     }
     function keyPress( key ) {
         var keycode = key.keycode
-        if ( keycode == Utils.keycode_shift_l || keycode == Utils.keycode_shift_r ) {
-            if ( mask == Utils.keymask_shift ) {
-                mask = Utils.keymask_null
-                key_shift_l.keepDown = false
-                key_shift_r.keepDown = false
+        if ( keycode == Utils.keycode_space ) {
+            if ( !imEngine.hasCode ) {
+                if ( mask == Utils.keymask_null ) {
+                    clearMask()
+                    key_space.keepDown = true
+                    mask = Utils.keymask_space
+                }
             }
-            else {
-                if ( !imEngine.hasCode ) {
-                    mask = Utils.keymask_shift
+        }
+        else if ( keycode == Utils.keycode_shift_l || keycode == Utils.keycode_shift_r ) {
+            if ( !imEngine.hasCode ) {
+                if ( mask == Utils.keymask_null ) {
+                    clearMask()
                     key_shift_l.keepDown = true
                     key_shift_r.keepDown = true
+                    mask = Utils.keymask_shift
+                }
+            }
+        }
+        else if ( keycode == Utils.keycode_alt_l || keycode == Utils.keycode_alt_r ) {
+            if ( !imEngine.hasCode ) {
+                if ( mask == Utils.keymask_null ) {
+                    clearMask()
+                    key_alt_l.keepDown = true
+                    key_alt_r.keepDown = true
+                    mask = Utils.keymask_alt
                 }
             }
         }
         moveTooltip( key )
+    }
+    /*function checkClearMask( keycode ) {*/
+        /*if ( keycode != Utils.keycode_alt_l && keycode != Utils.keycode_alt_r && keycode != Utils.keycode_shift_l && keycode != Utils.keycode_shift_r ) {*/
+            /*key_alt_l.keepDown = false*/
+            /*key_alt_r.keepDown = false*/
+            /*key_shift_l.keepDown = false*/
+            /*key_shift_r.keepDown = false*/
+            /*mask = Utils.keymask_null*/
+        /*}*/
+        /*else if ( keycode != Utils.keycode_shift_l && keycode != Utils.keycode_shift_r ) {*/
+            /*key_shift_l.keepDown = false*/
+            /*key_shift_r.keepDown = false*/
+        /*}*/
+        /*else if ( keycode != Utils.keycode_alt_l && keycode != Utils.keycode_alt_r ) {*/
+            /*key_alt_l.keepDown = false*/
+            /*key_alt_r.keepDown = false*/
+        /*}*/
+    /*}*/
+    function clearMask() {
+        key_alt_l.keepDown = false
+        key_alt_r.keepDown = false
+        key_shift_l.keepDown = false
+        key_shift_r.keepDown = false
+        key_space.keepDown = false
+        mask = Utils.keymask_null
     }
     function keyRelease( key ) {
         var keycode = key.keycode
@@ -99,6 +139,18 @@ RootMouseArea {
                 updateCandString()
             }
         }
+        else if ( keycode == Utils.keycode_alt_l ) {
+            if ( imEngine.hasCode ) {
+                imEngine.prevPage()
+                updateCandString()
+            }
+        }
+        else if ( keycode == Utils.keycode_alt_r ) {
+            if ( imEngine.hasCode ) {
+                imEngine.nextPage()
+                updateCandString()
+            }
+        }
         else if ( keycode == Utils.keycode_enter ) {
             if ( imEngine.hasCode ) {
                 textview.insert( imEngine.code )
@@ -107,6 +159,19 @@ RootMouseArea {
             }
             else {
                 textview.insert( "\n" )
+            }
+        }
+        else if ( keycode == Utils.keycode_space ) {
+            if ( imEngine.hasCode ) {
+                imEngine.select( 0 )
+                updateCandString()
+                if ( imEngine.needCommit ) {
+                    commit()
+                    updateCandString()
+                }
+            }
+            else {
+                textview.insert( keysym[mask] )
             }
         }
         else if ( keycode >= Utils.keycode_0 && keycode <= Utils.keycode_9 ) {
@@ -124,14 +189,18 @@ RootMouseArea {
                 textview.insert( keysym[mask] )
             }
         }
-        else if ( keycode != Utils.keycode_ctrl && keycode != Utils.keycode_alt ) {
+        else if ( keycode != Utils.keycode_ctrl && keycode != Utils.keycode_alt_l && keycode != Utils.keycode_alt_r ) {
             textview.insert( keysym[mask] )
             /*preedit.preeditString = keysym[mask]*/
         }
         tooltip.text = ""
+        textViewPart.needClose = false
+        /*checkClearMask( keycode )*/
+        clearMask()
     }
     function keyExit( key ) {
         pressedKey = null
+        /*console.log( "exit" )*/
         tooltip.text = ""
     }
     function keyEnter( key ) {
@@ -141,17 +210,22 @@ RootMouseArea {
     function moveTooltip( key ) {
         /*var keycode = key.keycode*/
         /*var keysym = Utils.keysym[keycode]*/
-        var parent = key.parent
-        var pos = parent.mapToItem( tooltip.parent, key.x, key.y )
-        var x = pos.x + key.width / 2 - tooltip.width / 2
-        var y = pos.y - tooltip.height - keyHeight * 0.1
-        if ( y < -10 ) {
-            y = -10
+        if ( !key.keepDown ) {
+            var parent = key.parent
+            var pos = parent.mapToItem( tooltip.parent, key.x, key.y )
+            var x = pos.x + key.width / 2 - tooltip.width / 2
+            var y = pos.y - tooltip.height - keyHeight * 0.1
+            if ( y < -10 ) {
+                y = -10
+            }
+            tooltip.x = x
+            tooltip.y = y
+            
+            tooltip.text = key.text
         }
-        tooltip.x = x
-        tooltip.y = y
-        
-        tooltip.text = key.text
+        else {
+            tooltip.text = ""
+        }
     }
 
     Column {
@@ -179,7 +253,7 @@ RootMouseArea {
             ProxyMouseArea { id : ikey_backspace ; width : keyWidth ; height : keyHeight }
         }
         Row {
-            Item { width : keyWidth * 0.5 ; height : keyHeight }
+            ProxyMouseArea { id : ikey_a ; width : keyWidth * 0.5 ; height : keyHeight }
             Key { id : key_a ; keycode : Utils.keycode_a ; keysym : Utils.keysym[Utils.keycode_a] ; width : keyWidth ; height : keyHeight }
             Key { id : key_s ; keycode : Utils.keycode_s ; keysym : Utils.keysym[Utils.keycode_s] ; width : keyWidth ; height : keyHeight }
             Key { id : key_d ; keycode : Utils.keycode_d ; keysym : Utils.keysym[Utils.keycode_d] ; width : keyWidth ; height : keyHeight }
@@ -205,17 +279,32 @@ RootMouseArea {
             ProxyMouseArea { id : ikey_shift_r ; width : keyWidth ; height : keyHeight }
         }
         Row {
-            Key { id : key_shift_l ; keycode : Utils.keycode_shift_l ; keysym : Utils.keysym[Utils.keycode_shift_l] ; width : keyWidth * 2.0 ; height : keyHeight * 0.8 ; mask : 0 ; color : Qt.darker( palette.keyNormalColor, 1.25 ) }
-            Item { width : keyWidth * 1.0 ; height : keyHeight * 0.8 }
-            Key { id : key_space ; keycode : Utils.keycode_space ; keysym : Utils.keysym[Utils.keycode_space] ; width : keyWidth * 4.0 ; height : keyHeight * 0.8 ; mask : 0 ; color : Qt.darker( palette.keyNormalColor, 1.25 ) }
-            Item { width : keyWidth * 2.0 ; height : keyHeight * 0.8 }
-            Key { id : key_shift_r ; keycode : Utils.keycode_shift_r ; keysym : Utils.keysym[Utils.keycode_shift_r] ; width : keyWidth * 2.0 ; height : keyHeight * 0.8 ; mask : 0 ; color : Qt.darker( palette.keyNormalColor, 1.25 ) }
+            Key { id : key_shift_l ; keycode : Utils.keycode_shift_l ; keysym : Utils.keysym[Utils.keycode_shift_l] ; width : keyWidth * 2.0 ; height : keyHeight ; mask : 0 }
+            ProxyMouseArea { id : ikey_shift_l_2 ; width : keyWidth * 0.25 ; height : keyHeight }
+            Key { id : key_alt_l ; keycode : Utils.keycode_alt_l ; keysym : Utils.keysym[Utils.keycode_alt_l] ; width : keyWidth * 1.5 ; height : keyHeight ; mask : 0 ; color : Qt.darker( palette.keyNormalColor, 1.25 ) }
+            ProxyMouseArea { id : ikey_alt_l ; width : keyWidth * 0.25 ; height : keyHeight }
+            Key { id : key_space ; keycode : Utils.keycode_space ; keysym : Utils.keysym[Utils.keycode_space] ; width : keyWidth * 3.0 ; height : keyHeight ; mask : 0 }
+            ProxyMouseArea { id : ikey_alt_r ; width : keyWidth * 0.25 ; height : keyHeight }
+            Key { id : key_alt_r ; keycode : Utils.keycode_alt_r ; keysym : Utils.keysym[Utils.keycode_alt_r] ; width : keyWidth * 1.5 ; height : keyHeight ; mask : 0 ; color : Qt.darker( palette.keyNormalColor, 1.25 ) }
+            ProxyMouseArea { id : ikey_shift_r_2 ; width : keyWidth * 0.25 ; height : keyHeight }
+            Key { id : key_shift_r ; keycode : Utils.keycode_shift_r ; keysym : Utils.keysym[Utils.keycode_shift_r] ; width : keyWidth * 2.0 ; height : keyHeight ; mask : 0 }
         }
+    }
+    ProxyMouseArea {
+        id : ikey_l ; width : keyWidth * 0.35 ; height : keyHeight
+        x : key_l.x + key_l.parent.x + key_l.parent.parent.x + key_l.width
+        y : key_l.y + key_l.parent.y + key_l.parent.parent.y
     }
 
     Component.onCompleted : {
+        ikey_a.target = key_a
+        ikey_l.target = key_l
         ikey_backspace.target = key_backspace
         ikey_shift_l.target = key_shift_l
         ikey_shift_r.target = key_shift_r
+        ikey_shift_l_2.target = key_shift_l
+        ikey_shift_r_2.target = key_shift_r
+        ikey_alt_l.target = key_alt_l
+        ikey_alt_r.target = key_alt_r
     }
 }

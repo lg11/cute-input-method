@@ -29,6 +29,7 @@ FakeMouseArea {
     /*property Item plat : plat*/
     property alias color : plat.color
     property alias platVisible : plat.visible
+    /*property bool showTooltip : true*/
 
     onMousePressed : { keyboard.keyPress( key ) }
     onMouseReleased : { keyboard.keyRelease( key ) }

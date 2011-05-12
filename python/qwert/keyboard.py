@@ -14,16 +14,18 @@ class Keyboard( QtDeclarative.QDeclarativeView ) :
         QtDeclarative.QDeclarativeView.__init__( self, parent )
         self.setAttribute( QtCore.Qt.WA_InputMethodEnabled, False )
         self.daemonFlag = False
-        #self.setWindowFlags( QtCore.Qt.Dialog | QtCore.Qt.FramelessWindowHint )
+        #self.setWindowFlags( QtCore.Qt.X11BypassWindowManagerHint | QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.FramelessWindowHint )
+        self.setWindowFlags( QtCore.Qt.X11BypassWindowManagerHint )
+        self.show = self.showFullScreen
         if ( not parent ) and daemonFlag :
-            self.setWindowFlags( QtCore.Qt.Dialog | QtCore.Qt.FramelessWindowHint )
+            #self.setWindowFlags( QtCore.Qt.Dialog | QtCore.Qt.FramelessWindowHint )
             self.daemonFlag = daemonFlag
         self.setAttribute( QtCore.Qt.WA_Maemo5PortraitOrientation, False )
 
-        #self.setAttribute( QtCore.Qt.WA_TranslucentBackground, True )
-        #palette = QtGui.QPalette()
-        #palette.setColor( QtGui.QPalette.Base, QtCore.Qt.transparent )
-        #self.setPalette( palette )
+        self.setAttribute( QtCore.Qt.WA_TranslucentBackground, True )
+        palette = QtGui.QPalette()
+        palette.setColor( QtGui.QPalette.Base, QtCore.Qt.transparent )
+        self.setPalette( palette )
     def set( self, qmlSourcePath, engine = None, engineName = "" ) :
         self.setSource( QtCore.QUrl( qmlSourcePath ) ) ;
         if engine :
@@ -36,6 +38,7 @@ class Keyboard( QtDeclarative.QDeclarativeView ) :
         root = self.rootObject()
         self.setText = root.setText
         self.getText = root.getText
+        root.close.connect( self.close )
     def closeEvent( self, event ) :
         if self.daemonFlag :
             self.hide()

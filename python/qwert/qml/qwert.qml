@@ -1,8 +1,9 @@
 import Qt 4.7
 
-RealMouseArea {
+Item {
     width : 800
     height : 480
+    signal close
 
     Palette {
         id : palette
@@ -18,41 +19,78 @@ RealMouseArea {
         fillMode : Image.PreserveAspectCrop
     }
     Rectangle {
-        anchors.fill : parent
-        color : "#00FFFFFF"
-    }
-    Rectangle {
-        width : 720
-        height : 65
-        x : 40
-        y : 5
-        color : palette.backgroundColor
-        TextView {
-            id : textview
-            x : 2
-            y : 2
-            width : parent.width - 4
-            height : parent.height - 4
+        x : 0
+        y : 0
+        width : 800
+        height : 480
+        /*color : "#FF000000"*/
+        gradient : Gradient {
+            GradientStop { position : 0.0 ; color : "#66000000" }
+            GradientStop { position : 0.25 ; color : "#00000000" }
+            GradientStop { position : 0.6 ; color : "#00000000" }
+            GradientStop { position : 1.0 ; color : "#CC000000" }
         }
     }
-    Preedit {
-        id : preedit
-        y : 10
-        anchors.horizontalCenter : parent.horizontalCenter
-        /*preeditString : imEngine.preeditString*/
-    }
-    Keyboard {
-        id : keyboard
-        width : parent.width * 1.15
-        height : width * 0.7
-        x : -25
-        y : 75
-    }
+    RealMouseArea {
+        anchors.fill : parent
+        Item {
+            id : textViewPart
+            x : 0
+            y : 0
+            width : 800
+            height : 135
+            property bool needClose : false
+            FakeMouseArea {
+                x : 0
+                y : 0
+                width : parent.width
+                height : parent.height - 20
+                onMousePressed : {
+                    parent.needClose = true
+                }
+                onMouseReleased : {
+                    if ( parent.needClose ) {
+                        close()
+                    }
+                    parent.needClose = false
+                }
+            }
+            Item {
+                width : parent.width - 90
+                height : parent.height
+                anchors.centerIn : parent
+                Rectangle {
+                    width : parent.width - 60
+                    height : parent.height - 10
+                    anchors.centerIn : parent
+                    color : palette.backgroundColor
+                    TextView {
+                        id : textview
+                        width : parent.width - 4
+                        height : parent.height - 4
+                        anchors.centerIn : parent
+                    }
+                }
+            }
+            Preedit {
+                id : preedit
+                anchors.centerIn : parent
+                /*anchors.horizontalCenter : parent.horizontalCenter*/
+            }
+        }
+        Keyboard {
+            id : keyboard
+            width : parent.width * 1.15
+            height : width * 0.7
+            x : -30
+            y : 135
+        }
     Tooltip {
         id : tooltip
         /*width : 65*/
         height : 100
         /*text : "t"*/
+    }
     }
     function setText( text ) {
         textview.set( text )
