@@ -21,20 +21,19 @@ Item {
         /*fillMode : Image.PreserveAspectFit*/
         fillMode : Image.PreserveAspectCrop
     }
-    Rectangle {
-        id : shadowPart
-        x : 0
-        y : 0
-        width : 800
-        height : 480
-        /*color : "#FF000000"*/
-        gradient : Gradient {
-            GradientStop { position : 0.0 ; color : "#66000000" }
-            GradientStop { position : 0.25 ; color : "#00000000" }
-            GradientStop { position : 0.6 ; color : "#00000000" }
-            GradientStop { position : 1.0 ; color : "#CC000000" }
-        }
-    }
+    /*Rectangle {*/
+        /*id : shadowPart*/
+        /*x : 0*/
+        /*y : 0*/
+        /*width : 800*/
+        /*height : 480*/
+        /*gradient : Gradient {*/
+            /*GradientStop { position : 0.0 ; color : "#66000000" }*/
+            /*GradientStop { position : 0.25 ; color : "#00000000" }*/
+            /*GradientStop { position : 0.6 ; color : "#00000000" }*/
+            /*GradientStop { position : 1.0 ; color : "#CC000000" }*/
+        /*}*/
+    /*}*/
     RealMouseArea {
         anchors.fill : parent
         Item {
