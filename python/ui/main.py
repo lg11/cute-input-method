@@ -49,6 +49,7 @@ if __name__ == "__main__" :
     engine = IMEngine()
     qwert.set( "./qml/qwert.qml", engine, "imEngine" )
     engine.load( "./data/formated" )
+    engine.load( "/home/user/.config/mcip/userdict.log" )
 
     iface = Interface( session_bus )
     

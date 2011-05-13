@@ -190,4 +190,16 @@ class IMEngine( QtCore.QObject ) :
     def backspace( self ) :
         self.pinyinLookup.pop()
         self.pageIndex = 0
+    @QtCore.Slot()
+    def commit( self ) :
+        if len( self.selected ) > 0 :
+            key = []
+            word = self.selectedWord
+            freq = self.selected[-1][2]
+            for selected in self.selected :
+                key.append( selected[0] )
+            key = "'".join( key )
+            self.pinyinLookup.update( key, word, freq )
+            #print key, word, freq
+        self.clear()
         

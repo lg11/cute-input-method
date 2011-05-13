@@ -17,6 +17,7 @@ class PinyinLookup() :
         self.candList = []
     def load( self, filePath ) :
         newKeys = self.dict.load( filePath )
+        print "start build index"
         newPinyinSet = set()
         for key in newKeys :
             if key.count( "'" ) <= 0 :
@@ -27,6 +28,14 @@ class PinyinLookup() :
             self.spliter.beginCharSet.add( pinyin[0] ) 
             self.spliter.pinyinTree.addPath( pinyin )
         print "built"
+    def update( self, key, word, freq ) :
+        newKey = self.dict.update( key, word, freq )
+        if newKey :
+            if newKey.count( "'" ) <= 0 :
+                self.fitter.pinyinSet.add( newKey )
+                self.spliter.beginCharSet.add( newKey[0] ) 
+                self.spliter.pinyinTree.addPath( newKey )
+            self.fitter.dictTree.addKey( newKey )
     def append( self, code ) :
         self.spliter.append( code )
         fitList = []

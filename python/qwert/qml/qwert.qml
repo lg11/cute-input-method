@@ -10,17 +10,20 @@ Item {
     Palette {
         id : palette
     }
-    Image {
-        id : backgroundImage
-        /*anchors.fill : parent*/
-        x : 0
-        y : 0
-        width : 800
-        height : 480
-        source : "/home/user/MyDocs/.images/water1.jpg"
-        /*fillMode : Image.PreserveAspectFit*/
-        fillMode : Image.PreserveAspectCrop
+    Rectangle {
+        anchors.fill : parent
+        color : palette.backgroundColor
     }
+    /*Image {*/
+        /*id : backgroundImage*/
+        /*x : 0*/
+        /*y : 0*/
+        /*width : 800*/
+        /*height : 480*/
+        /*source : "/home/user/MyDocs/.images/water1.jpg"*/
+        /*fillMode : Image.PreserveAspectFit*/
+        /*fillMode : Image.PreserveAspectCrop*/
+    /*}*/
     /*Rectangle {*/
         /*id : shadowPart*/
         /*x : 0*/
@@ -67,7 +70,7 @@ Item {
                     width : parent.width - 60
                     height : parent.height - 10
                     anchors.centerIn : parent
-                    color : palette.backgroundColor
+                    color : Qt.darker( palette.backgroundColor, 1.025 )
                     TextView {
                         id : textview
                         width : parent.width - 4

@@ -46,7 +46,7 @@ RootMouseArea {
     function commit() {
         if ( imEngine.hasSelected ) {
             textview.insert( imEngine.selectedWord )
-            imEngine.clear()
+            imEngine.commit()
         }
     }
     function keyPress( key ) {
