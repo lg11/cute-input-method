@@ -1,14 +1,17 @@
 import Qt 4.7
 
 Item {
+    id : all
     width : 800
     height : 480
     signal close
+    property int stateFlag : 0
 
     Palette {
         id : palette
     }
     Image {
+        id : backgroundImage
         /*anchors.fill : parent*/
         x : 0
         y : 0
@@ -19,6 +22,7 @@ Item {
         fillMode : Image.PreserveAspectCrop
     }
     Rectangle {
+        id : shadowPart
         x : 0
         y : 0
         width : 800
@@ -50,7 +54,8 @@ Item {
                 }
                 onMouseReleased : {
                     if ( parent.needClose ) {
-                        close()
+                        closeTimer.start()
+                        stateFlag = 1
                     }
                     parent.needClose = false
                 }
@@ -94,6 +99,7 @@ Item {
     }
     function setText( text ) {
         textview.set( text )
+        stateFlag = 0
         imEngine.clear()
         keyboard.updateCandString()
     }
@@ -103,4 +109,28 @@ Item {
     Component.onCompleted : {
         tooltip.proxyTarget = keyboard
     }
+    Timer {
+        id : closeTimer
+        repeat : false
+        interval : 300
+        onTriggered : { close() }
+    }
+    states {
+        State {
+            name : "HIDE" ; when : stateFlag == 1
+            PropertyChanges { target : textViewPart ; x : 1000 ; }
+            PropertyChanges { target : keyboard ; y : 1200 ; }
+            PropertyChanges { target : all ; opacity : 0.0 ; }
+        } 
+    }
+    transitions {
+        Transition {
+            from : "" ; to : "HIDE" ; reversible : true
+            ParallelAnimation {
+                NumberAnimation { target : textViewPart ; properties : "x" ; duration : 200 }
+                NumberAnimation { target : keyboard ; properties : "y" ; duration : 200 }
+                NumberAnimation { target : all ; properties : "opacity" ; duration : 300 }
+            }
+        } 
+    } 
 }
