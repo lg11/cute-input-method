@@ -14,16 +14,15 @@ Item {
         anchors.fill : parent
         color : palette.backgroundColor
     }
-    /*Image {*/
-        /*id : backgroundImage*/
-        /*x : 0*/
-        /*y : 0*/
-        /*width : 800*/
-        /*height : 480*/
-        /*source : "/home/user/MyDocs/.images/water1.jpg"*/
-        /*fillMode : Image.PreserveAspectFit*/
-        /*fillMode : Image.PreserveAspectCrop*/
-    /*}*/
+    Image {
+        id : backgroundImage
+        x : 0
+        y : 0
+        width : 800
+        height : 480
+        source : "/home/user/MyDocs/.images/water1.jpg"
+        fillMode : Image.PreserveAspectCrop
+    }
     /*Rectangle {*/
         /*id : shadowPart*/
         /*x : 0*/
