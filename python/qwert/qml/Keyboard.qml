@@ -108,16 +108,21 @@ RootMouseArea {
         mask = Utils.keymask_null
     }
     function backspace() {
-        if ( imEngine.hasSelected ) {
-            imEngine.cancel()
-            updateCandString()
-        }
-        else if ( imEngine.hasCode ) {
-            imEngine.backspace()
-            updateCandString()
-        }
-        else {
-            textview.backspace()
+        if ( !key_backspace.paused ) {
+            if ( imEngine.hasSelected ) {
+                imEngine.cancel()
+                updateCandString()
+            }
+            else if ( imEngine.hasCode ) {
+                imEngine.backspace()
+                updateCandString()
+                if ( !imEngine.hasCode ) {
+                    key_backspace.pauseAutoRepeat()
+                }
+            }
+            else {
+                textview.backspace()
+            }
         }
     }
     function keyRelease( key ) {
@@ -256,7 +261,8 @@ RootMouseArea {
             Key { id : key_i ; keycode : Utils.keycode_i ; keysym : Utils.keysym[Utils.keycode_i] ; width : keyWidth ; height : keyHeight ; color : palette.keyNormalColor }
             Key { id : key_o ; keycode : Utils.keycode_o ; keysym : Utils.keysym[Utils.keycode_o] ; width : keyWidth ; height : keyHeight ; color : palette.keyNormalColor }
             Key { id : key_p ; keycode : Utils.keycode_p ; keysym : Utils.keysym[Utils.keycode_p] ; width : keyWidth ; height : keyHeight ; color : palette.keyNormalColor }
-            ProxyMouseArea { id : ikey_backspace ; width : keyWidth ; height : keyHeight }
+            /*ProxyMouseArea { id : ikey_backspace ; width : keyWidth ; height : keyHeight }*/
+            ProxyMouseArea { id : ikey_p ; width : keyWidth ; height : keyHeight }
         }
         Row {
             ProxyMouseArea { id : ikey_a ; width : keyWidth * 0.5 ; height : keyHeight }
@@ -305,7 +311,7 @@ RootMouseArea {
     Component.onCompleted : {
         ikey_a.target = key_a
         ikey_l.target = key_l
-        ikey_backspace.target = key_backspace
+        ikey_p.target = key_p
         ikey_shift_l.target = key_shift_l
         ikey_shift_r.target = key_shift_r
         ikey_shift_l_2.target = key_shift_l

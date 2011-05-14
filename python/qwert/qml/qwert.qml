@@ -15,8 +15,7 @@ Item {
     }
     Rectangle {
         anchors.fill : parent
-        /*color : palette.backgroundColor*/
-        color : "#00FFFFFF"
+        color : palette.backgroundColor
     }
     Image {
         id : backgroundImage
