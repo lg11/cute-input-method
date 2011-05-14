@@ -65,7 +65,7 @@ class Dictionary() :
         self.highestFreq = -1
         #记录最高词频，给新词一个合理的初始词频，目前取最高词频的一半
         #self.newRecordQueue = [ [], [], [] ]
-        self.logFile = open( "/home/user/.config/mcip/userdict.log", "a" )
+        #self.logFile = open( "/home/user/.config/mcip/userdict.log", "a" )
     def load( self, filePath ) :
         print "start load"
         newKeys, highestFreq = load_dict( self.dict, filePath )
@@ -117,8 +117,8 @@ class Dictionary() :
             newKey = key
         r = [ key, word.encode( "utf-8" ), str( freq ) ]
         l = " ".join( r ) + "\n"
-        self.logFile.write( l )
-        self.logFile.flush()
+        #self.logFile.write( l )
+        #self.logFile.flush()
         return newKey
 
 if __name__ == "__main__" :

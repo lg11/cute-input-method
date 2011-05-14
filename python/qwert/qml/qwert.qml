@@ -3,16 +3,20 @@ import Qt 4.7
 Item {
     id : all
     width : 800
-    height : 480
+    height : 424
     signal close
     property int stateFlag : 0
 
     Palette {
         id : palette
     }
+    Config {
+        id : config
+    }
     Rectangle {
         anchors.fill : parent
-        color : palette.backgroundColor
+        /*color : palette.backgroundColor*/
+        color : "#00FFFFFF"
     }
     Image {
         id : backgroundImage
@@ -22,6 +26,8 @@ Item {
         height : 480
         source : "/home/user/MyDocs/.images/water1.jpg"
         fillMode : Image.PreserveAspectCrop
+        visible : config.backgroundImageVisible
+        opacity : config.backgroundImageOpacity
     }
     /*Rectangle {*/
         /*id : shadowPart*/
@@ -43,19 +49,21 @@ Item {
             x : 0
             y : 0
             width : 800
-            height : 135
+            height : 80
             property bool needClose : false
             FakeMouseArea {
+                /*takeMouse : false*/
                 x : 0
                 y : 0
                 width : parent.width
-                height : parent.height - 20
+                /*height : parent.height - 20*/
+                height : parent.height
                 onMousePressed : {
                     parent.needClose = true
                 }
                 onMouseReleased : {
                     if ( parent.needClose ) {
-                        closeTimer.start()
+                        /*closeTimer.start()*/
                         stateFlag = 1
                     }
                     parent.needClose = false
@@ -69,7 +77,7 @@ Item {
                     width : parent.width - 60
                     height : parent.height - 10
                     anchors.centerIn : parent
-                    color : Qt.darker( palette.backgroundColor, 1.025 )
+                    color : palette.textviewBackgroundColor
                     TextView {
                         id : textview
                         width : parent.width - 4
@@ -89,14 +97,21 @@ Item {
             width : parent.width * 1.15
             height : width * 0.7
             x : -30
-            y : 135
+            y : 80
         }
+        ProxyMouseArea{
+            /*y : 125*/
+            /*x : 0*/
+            width : 800
+            height : 480
+            target : keyboard
+        }
+    }
     Tooltip {
         id : tooltip
         /*width : 65*/
         height : 100
         /*text : "t"*/
-    }
     }
     function setText( text ) {
         textview.set( text )
@@ -107,31 +122,31 @@ Item {
     function getText() {
         return textview.get()
     }
-    Component.onCompleted : {
-        tooltip.proxyTarget = keyboard
-    }
     Timer {
         id : closeTimer
         repeat : false
         interval : 300
         onTriggered : { close() }
     }
-    states {
-        State {
-            name : "HIDE" ; when : stateFlag == 1
-            PropertyChanges { target : textViewPart ; x : 1000 ; }
-            PropertyChanges { target : keyboard ; y : 1200 ; }
-            PropertyChanges { target : all ; opacity : 0.0 ; }
-        } 
+    /*states {*/
+        /*State {*/
+            /*name : "HIDE" ; when : stateFlag == 1*/
+            /*PropertyChanges { target : textViewPart ; x : 1000 ; }*/
+            /*PropertyChanges { target : keyboard ; y : 1200 ; }*/
+            /*PropertyChanges { target : all ; opacity : 0.0 ; }*/
+        /*} */
+    /*}*/
+    /*transitions {*/
+        /*Transition {*/
+            /*from : "" ; to : "HIDE" ; reversible : true*/
+            /*ParallelAnimation {*/
+                /*NumberAnimation { target : textViewPart ; properties : "x" ; duration : 200 }*/
+                /*NumberAnimation { target : keyboard ; properties : "y" ; duration : 200 }*/
+                /*NumberAnimation { target : all ; properties : "opacity" ; duration : 300 }*/
+            /*}*/
+        /*} */
+    /*} */
+    Component.onCompleted : {
+        /*tooltip.proxyTarget = keyboard*/
     }
-    transitions {
-        Transition {
-            from : "" ; to : "HIDE" ; reversible : true
-            ParallelAnimation {
-                NumberAnimation { target : textViewPart ; properties : "x" ; duration : 200 }
-                NumberAnimation { target : keyboard ; properties : "y" ; duration : 200 }
-                NumberAnimation { target : all ; properties : "opacity" ; duration : 300 }
-            }
-        } 
-    } 
 }

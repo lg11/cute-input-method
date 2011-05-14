@@ -14,7 +14,8 @@ FakeMouseArea {
         y : 1
         width : parent.width - 1
         height : parent.height - 1
-        color : palette.keyNormalColor
+        /*color : palette.keyNormalColor*/
+        radius : config.keyRadius
 
         Text {
             id : title
@@ -26,7 +27,6 @@ FakeMouseArea {
     }
 
     property alias text : title.text
-    /*property Item plat : plat*/
     property alias color : plat.color
     property alias platVisible : plat.visible
     /*property bool showTooltip : true*/
@@ -45,7 +45,7 @@ FakeMouseArea {
 
     transitions {
         Transition {
-            from : "" ; to : "DOWN" ; reversible : false
+            from : "" ; to : "DOWN" ; reversible : true
             ParallelAnimation {
                 ColorAnimation { target : plat ; duration : 128 }
             }

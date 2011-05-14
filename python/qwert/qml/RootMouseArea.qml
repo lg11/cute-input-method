@@ -25,13 +25,14 @@ FakeMouseArea {
                 }
             }
         }
+        /*console.log( target )*/
         return target
     }
     function switchMouseTarget( x, y ) {
         var target = getMouseTarget( x, y )
         if ( target != prevMouseTarget ) {
             if ( prevMouseTarget ) {
-                var pos = mapToItem( target, x, y )
+                var pos = mapToItem( prevMouseTarget, x, y )
                 prevMouseTarget.containsMouse = false
                 prevMouseTarget.mouseExited( pos.x, pos.y )
             }

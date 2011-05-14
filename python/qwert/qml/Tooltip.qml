@@ -5,46 +5,42 @@ Item {
     width : title.paintedWidth > 75 ? Math.ceil( title.paintedWidth / 25 ) * 25 : 75
 
     visible : false
+
     Rectangle {
         id : platBackground
         anchors.horizontalCenter : parent.horizontalCenter
-        color : palette.backgroundColor
+        color : palette.tooltipBorderColor
         width : parent.width
         height : parent.height * 0.8
     }
     Rectangle {
-        color : palette.backgroundColor
+        color : palette.tooltipBorderColor
         anchors.centerIn : parent
         anchors.verticalCenterOffset : parent.height * 0.3
         width : parent.height * 0.15
         height : width
         rotation : 45
         Rectangle {
-            color : palette.keyDownColor
+            color : palette.tooltipBackgroundColor
             anchors.centerIn : parent
             width : parent.width - 2
             height : parent.height - 2
         }
     }
     Rectangle {
-        color : palette.keyDownColor
+        id : post
+        color : palette.tooltipBackgroundColor
         anchors.centerIn : platBackground
         width : platBackground.width - 2
         height : platBackground.height - 2
-        Text {
-            id : title
-            anchors.centerIn : parent
-            color : palette.keyTextColor
-            font.pointSize: 36; font.bold: true
-        }
+    }
+    Text {
+        id : title
+        anchors.centerIn : post
+        color : palette.keyTextColor
+        font.pointSize: 36; font.bold: true
     }
     property alias text : title.text
-
-    ProxyMouseArea {
-        id : mouseArea
-        anchors.fill : parent
-    }
-    property alias proxyTarget : mouseArea.target
 
     states {
         State {

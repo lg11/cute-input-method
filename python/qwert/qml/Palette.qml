@@ -4,11 +4,16 @@ Item {
     property color keyNormalColor : "#FF444444"
     property color keyDownColor : "#FF2299FF"
     property color keyTextColor : "#FFFFFFFF"
-    property color preeditBackgroundColor : "#FF444444"
+    property color keyBorderColor : "#FF444444"
+    property color preeditBackgroundColor : "#AA444444"
     property color selectedWordColor : "#FFFFFFFF"
     property color preeditStringColor : "#FFFFFFFF"
     property color invaildCodeColor : "#FFFF0000"
     property color backgroundColor : "#FFFFFFFF"
+    property color textviewBackgroundColor : "#FFFFFFFF"
+    property color textviewCursorColor : keyDownColor
+    property color tooltipBackgroundColor : keyDownColor
+    property color tooltipBorderColor : "#FFFFFFFF"
 
     /*property color keyNormalColor : "#DD444444"*/
     /*property color keyDownColor : "#DD2299FF"*/

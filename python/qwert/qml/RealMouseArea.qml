@@ -4,15 +4,19 @@ RootMouseArea {
     MouseArea {
         anchors.fill : parent
         onPressed : {
-            /*console.log( "press" )*/
+            mouseTracker.reset()
+            mouseTracker.push( mouse.x, mouse.y )
             parent.pressed = true
             parent.mousePressed( mouse.x, mouse.y )
         }
         onReleased : {
+            mouseTracker.push( mouse.x, mouse.y )
+            mouseTracker.end()
             parent.pressed = false
-            parent.mouseReleased( mouse.x, mouse.y )
+            parent.mouseReleased( mouseTracker.endX, mouseTracker.endY )
         }
         onPositionChanged : {
+            mouseTracker.push( mouse.x, mouse.y )
             parent.pressed = pressed
             parent.mouseMoved( mouse.x, mouse.y )
         }

@@ -1,4 +1,5 @@
 from QtImport import QtGui, QtCore, QtDeclarative
+from mouseTracker import Tracker
 
 #class Clipboard( QtCore.QObject ) :
     #def __init__( self, parent = None ) :
@@ -14,11 +15,11 @@ class Keyboard( QtDeclarative.QDeclarativeView ) :
         QtDeclarative.QDeclarativeView.__init__( self, parent )
         self.setAttribute( QtCore.Qt.WA_InputMethodEnabled, False )
         self.daemonFlag = False
-        #self.setWindowFlags( QtCore.Qt.X11BypassWindowManagerHint | QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.FramelessWindowHint )
-        self.setWindowFlags( QtCore.Qt.X11BypassWindowManagerHint )
-        self.show = self.showFullScreen
+        #self.setWindowFlags( QtCore.Qt.X11BypassWindowManagerHint )
+        #self.show = self.showFullScreen
+        #self.setWindowFlags( QtCore.Qt.Dialog | QtCore.Qt.FramelessWindowHint )
         if ( not parent ) and daemonFlag :
-            #self.setWindowFlags( QtCore.Qt.Dialog | QtCore.Qt.FramelessWindowHint )
+            self.setWindowFlags( QtCore.Qt.Dialog | QtCore.Qt.FramelessWindowHint )
             self.daemonFlag = daemonFlag
         self.setAttribute( QtCore.Qt.WA_Maemo5PortraitOrientation, False )
 
@@ -26,6 +27,8 @@ class Keyboard( QtDeclarative.QDeclarativeView ) :
         palette = QtGui.QPalette()
         palette.setColor( QtGui.QPalette.Base, QtCore.Qt.transparent )
         self.setPalette( palette )
+
+        self.mouseTracker = Tracker()
     def set( self, qmlSourcePath, engine = None, engineName = "" ) :
         self.setSource( QtCore.QUrl( qmlSourcePath ) ) ;
         if engine :
@@ -35,6 +38,7 @@ class Keyboard( QtDeclarative.QDeclarativeView ) :
                 context.setContextProperty( "imEngine", self.engine )
             else :
                 context.setContextProperty( engineName, self.engine )
+        context.setContextProperty( "mouseTracker", self.mouseTracker )
         root = self.rootObject()
         self.setText = root.setText
         self.getText = root.getText
@@ -60,7 +64,7 @@ if __name__ == "__main__" :
 
     path = config.check_path( config.sysdict_path )
     print "load sysdict from :", path
-    engine.load( path )
+    #engine.load( path )
 
     view.show()
 

@@ -9,18 +9,32 @@ Flickable {
     contentHeight : edit.paintedHeight
     clip : true
     boundsBehavior : Flickable.StopAtBounds
+    property real keepLines : 0
 
     /*property alias text : edit.text*/
 
     function ensureVisible( r ) {
+        /*console.log( "start", contentX, contentY, r.x, r.y )*/
         if ( contentX >= r.x )
             contentX = r.x ;
-        else if ( contentX+width <= r.x + r.width )
+        else if ( contentX + width <= r.x + r.width )
             contentX = r.x + r.width - width ;
         if ( contentY >= r.y )
             contentY = r.y ;
-        else if ( contentY+height <= r.y + r.height )
+        /*else if ( contentY + height - r.height * keepLines <= r.y + r.height )*/
+            /*contentY = r.y + r.height - height + r.height * keepLines ;*/
+        else if ( contentY + height <= r.y + r.height )
             contentY = r.y + r.height - height ;
+        /*console.log( "end", contentX, contentY, r.x, r.y )*/
+    }
+    function ensureCenter( r ) {
+        /*console.log( "start", contentX, contentY, r.x, r.y )*/
+        if ( contentX >= r.x )
+            contentX = r.x ;
+        else if ( contentX + width <= r.x + r.width )
+            contentX = r.x + r.width - width ;
+        contentY = r.y + r.height - height + height * 0.5 - r.height * 0.5 ;
+        /*console.log( "end", contentX, contentY, r.x, r.y )*/
     }
     function insert( s ) {
         var head = edit.text.slice( 0, edit.cursorPosition )
@@ -59,18 +73,24 @@ Flickable {
         y : edit.cursorRectangle.y
         width : 4
         height : edit.cursorRectangle.height
-        color : palette.keyDownColor
+        color : palette.textviewCursorColor
     }
 
     TextEdit {
         id : edit
         width : view.width
         height : view.height
-        focus : true
+        /*focus : true*/
+        readOnly : true
         font.pointSize: 22
         activeFocusOnPress : false
         wrapMode : TextEdit.Wrap
-        onCursorRectangleChanged : ensureVisible(cursorRectangle)
         /*selectByMouse : true*/
+        /*selectionColor : palette.keyDownColor*/
+        onCursorRectangleChanged : ensureVisible( cursorRectangle )
+        /*onCursorPositionChanged : ensureVisible( cursorRectangle )*/
+        /*onCursorRectangleChanged : ensureCenter( cursorRectangle )*/
+        /*onCursorPositionChanged : ensureCenter( cursorRectangle )*/
     }
+    /*onMovementEnded : ensureVisible( edit.cursorRectangle )*/
 }

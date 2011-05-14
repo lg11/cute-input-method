@@ -41,7 +41,8 @@ Rectangle {
     states {
         State {
             name : "ACTIVE" ; when : selectedWord.length > 0 || preeditString.length > 0 || invaildCode.length > 0
-            PropertyChanges { target : plat ; width : selectedWordText.paintedWidth + preeditStringText.paintedWidth + invaildCodeText.paintedWidth + 30 }
+            /*PropertyChanges { target : plat ; width : selectedWordText.paintedWidth + preeditStringText.paintedWidth + invaildCodeText.paintedWidth + 30 }*/
+            PropertyChanges { target : plat ; width : 800 }
         } 
     }
 }
