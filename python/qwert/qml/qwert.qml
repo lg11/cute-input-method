@@ -24,8 +24,8 @@ Item {
         y : 0
         width : 800
         height : 480
-        source : "/home/user/MyDocs/.images/water1.jpg"
         fillMode : Image.PreserveAspectCrop
+        source : config.backgroundImagePath
         visible : config.backgroundImageVisible
         opacity : config.backgroundImageOpacity
     }
