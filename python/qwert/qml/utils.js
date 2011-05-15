@@ -169,7 +169,7 @@ var keymask_space = 3 ;
 //var keymask_ctrl = 3 ;
 
 var modeString = Array( 2 )
-modeString[0] = "CN"
+modeString[0] = "中"
 modeString[1] = "EN"
 var mode_CN = 0
 var mode_EN = 1

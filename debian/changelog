@@ -1,3 +1,11 @@
+mcip (0.2.4-maemo5-1) fremantle; urgency=low
+  * fix mouse offset when finger release
+  * show dialog mode
+  * add CN/EN mode change
+  * add backspace auto repeat
+  * add chinese punc
+ -- liang <sd.foolegg@gmail.com>  Sun,  15 May 2011 12:00:00 +0800
+ 
 mcip (0.2.3-maemo5-1) fremantle; urgency=low
   * add userdict and phrase freq adjuest
  -- liang <sd.foolegg@gmail.com>  Thu,  13 May 2011 21:24:00 +0800
