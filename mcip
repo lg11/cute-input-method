@@ -1,10 +1,9 @@
 #!/bin/sh
 
-cd /opt/cim/bin/
-
 mkdir -p /home/user/.config/mcip
 touch /home/user/.config/mcip/userdict.log
 sort -r /home/user/.config/mcip/userdict.log > /home/user/.config/mcip/userdict.tmp
 python /opt/cim/bin/pinyinLookup/prePhrase.py /home/user/.config/mcip/userdict.tmp > /home/user/.config/mcip/userdict.log
 
+cd /opt/cim/bin/
 run-standalone.sh /opt/cim/bin/mcip.py

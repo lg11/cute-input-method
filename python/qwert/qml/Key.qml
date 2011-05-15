@@ -1,11 +1,13 @@
 import Qt 4.7
 /*import Qt.labs.gestures 1.0*/
+import "utils.js" as Utils
 
 FakeMouseArea {
     id : key
     property int keycode : 0
     property variant keysym : [ "", "", "", "" ]
-    property int mask : keyboard.mask
+    property int mask : 0
+    /*property int mode : keyboard.mode*/
     property bool keepDown : false 
 
     Rectangle {
@@ -19,7 +21,7 @@ FakeMouseArea {
 
         Text {
             id : title
-            text : keysym[mask]
+            text : Utils.keysym[keyboard.mode][keycode][keyboard.mask]
             anchors.centerIn : parent
             color : palette.keyTextColor
             font.pointSize: 30; font.bold: true

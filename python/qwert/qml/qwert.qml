@@ -1,4 +1,5 @@
 import Qt 4.7
+import "utils.js" as Utils
 
 Item {
     id : all
@@ -43,14 +44,29 @@ Item {
     /*}*/
     RealMouseArea {
         anchors.fill : parent
+        Text {
+            x : 6
+            y : 6
+            text : Utils.modeString[keyboard.mode]
+            color : "#EEFFFFFF"
+            font.pointSize: 26; font.bold: true
+        }
+        Text {
+            x : 5
+            y : 5
+            text : Utils.modeString[keyboard.mode]
+            color : "#EE666666"
+            font.pointSize: 26; font.bold: true
+        }
         Item {
             id : textViewPart
             x : 0
             y : 0
             width : 800
             height : 80
-            property bool needClose : false
+            property bool switchFlag : false
             FakeMouseArea {
+                id : switchArea
                 /*takeMouse : false*/
                 x : 0
                 y : 0
@@ -58,15 +74,21 @@ Item {
                 /*height : parent.height - 20*/
                 height : parent.height
                 onMousePressed : {
-                    parent.needClose = true
+                    parent.switchFlag = true
                 }
                 onMouseReleased : {
-                    if ( parent.needClose ) {
-                        /*closeTimer.start()*/
-                        stateFlag = 1
+                    if ( parent.switchFlag ) {
+                        keyboard.switchMode()
                     }
-                    parent.needClose = false
+                    parent.switchFlag = false
                 }
+            }
+            ProxyMouseArea {
+                x : parent.width / 2
+                y : 0
+                width : parent.width / 2
+                height : parent.height
+                target : keyboard.backspaceKey
             }
             Item {
                 width : parent.width - 90
@@ -97,13 +119,6 @@ Item {
             height : width * 0.7
             x : -30
             y : 80
-        }
-        ProxyMouseArea{
-            /*y : 125*/
-            /*x : 0*/
-            width : 800
-            height : 480
-            target : keyboard
         }
     }
     Tooltip {

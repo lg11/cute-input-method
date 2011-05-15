@@ -65,6 +65,7 @@ if __name__ == "__main__" :
     path = config.check_path( config.sysdict_path )
     print "load sysdict from :", path
     #engine.load( path )
+    #engine.pinyinLookup.dict.logOn()
 
     view.show()
 

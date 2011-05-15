@@ -6,9 +6,7 @@ Item {
     height : 80
     /*color : "#00000000"*/
     property alias keycode_l : key_l.keycode
-    property alias keysym_l : key_l.keysym
     property alias keycode_r : key_r.keycode
-    property alias keysym_r : key_r.keysym
     property string candString
     property bool isActive : false
 

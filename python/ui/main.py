@@ -50,6 +50,7 @@ if __name__ == "__main__" :
     qwert.set( "./qml/qwert.qml", engine, "imEngine" )
     engine.load( "./data/formated" )
     engine.load( "/home/user/.config/mcip/userdict.log" )
+    engine.pinyinLookup.dict.logOn()
 
     iface = Interface( session_bus )
     
