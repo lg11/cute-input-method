@@ -131,7 +131,7 @@ class Dictionary() :
             self.logFile.write( l )
             self.logFile.write( "\n" )
             self.logFile.flush()
-            print "log", l
+            #print "log", l
         return newKey
 
 if __name__ == "__main__" :

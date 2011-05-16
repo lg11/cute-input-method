@@ -324,12 +324,16 @@ Item {
         x : key_l.x + key_l.parent.x + key_l.parent.parent.x + key_l.width
         y : key_l.y + key_l.parent.y + key_l.parent.parent.y
     }
+    property bool useIKey_l : true
 
     property Item backspaceKey : key_backspace
 
     Component.onCompleted : {
         ikey_a.target = key_a
-        ikey_l.target = key_l
+        if ( useIKey_l )
+            ikey_l.target = key_l
+        else
+            ikey_l.target = key_enter
         ikey_p.target = key_p
         ikey_shift_l.target = key_shift_l
         ikey_shift_r.target = key_shift_r

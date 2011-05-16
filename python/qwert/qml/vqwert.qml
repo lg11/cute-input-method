@@ -3,8 +3,8 @@ import "utils.js" as Utils
 
 Item {
     id : all
-    width : 800
-    height : 424
+    width : 480
+    height : 700
     signal rotateSignal
     property int stateFlag : 0
 
@@ -20,28 +20,13 @@ Item {
     }
     Image {
         id : backgroundImage
-        x : 0
-        y : 0
-        width : 800
-        height : 480
+        anchors.fill : parent
         fillMode : Image.PreserveAspectCrop
         source : config.backgroundImagePath
         visible : config.backgroundImageVisible
         opacity : config.backgroundImageOpacity
+        rotation : 90
     }
-    /*Rectangle {*/
-        /*id : shadowPart*/
-        /*x : 0*/
-        /*y : 0*/
-        /*width : 800*/
-        /*height : 480*/
-        /*gradient : Gradient {*/
-            /*GradientStop { position : 0.0 ; color : "#66000000" }*/
-            /*GradientStop { position : 0.25 ; color : "#00000000" }*/
-            /*GradientStop { position : 0.6 ; color : "#00000000" }*/
-            /*GradientStop { position : 1.0 ; color : "#CC000000" }*/
-        /*}*/
-    /*}*/
     RealMouseArea {
         anchors.fill : parent
         Text {
@@ -62,12 +47,11 @@ Item {
             id : textViewPart
             x : 0
             y : 0
-            width : 800
-            height : 80
+            width : 480
+            height : 160
             property bool switchFlag : false
             FakeMouseArea {
                 id : switchArea
-                /*takeMouse : false*/
                 x : 0
                 y : 0
                 width : parent.width
@@ -86,9 +70,9 @@ Item {
                         else {
                             keyboard.switchMode()
                         }
+                        needRotate = false
+                        rotateTimer.stop()
                     }
-                    needRotate = false
-                    rotateTimer.stop()
                 }
             }
             ProxyMouseArea {
@@ -99,12 +83,12 @@ Item {
                 target : keyboard.backspaceKey
             }
             Item {
-                width : parent.width - 90
+                width : parent.width - 110
                 height : parent.height
                 anchors.centerIn : parent
                 Rectangle {
-                    width : parent.width - 60
-                    height : parent.height - 10
+                    width : parent.width - 8
+                    height : parent.height - 8
                     anchors.centerIn : parent
                     color : palette.textviewBackgroundColor
                     TextView {
@@ -118,10 +102,15 @@ Item {
         }
         Keyboard {
             id : keyboard
+            keyWidth : 480 / 10 * 0.975 * 1.045
+            keyHeight : keyWidth * 1.75
+            numKeyWidth : keyWidth 
+            numKeyHeight : numKeyWidth * 1.75
             width : parent.width * 1.15
-            height : width * 0.7
-            x : -30
-            y : 80
+            height : parent.height
+            x : -18
+            y : 160
+            useIKey_l : false
         }
     }
     Preedit {
@@ -131,18 +120,7 @@ Item {
     }
     Tooltip {
         id : tooltip
-        /*width : 65*/
         height : 100
-        /*text : "t"*/
-    }
-    function setText( text ) {
-        textview.set( text )
-        stateFlag = 0
-        imEngine.clear()
-        keyboard.updateCandString()
-    }
-    function getText() {
-        return textview.get()
     }
     property bool needRotate : false
     Timer {
@@ -164,6 +142,15 @@ Item {
             font.pointSize : 36 ; font.bold : true
             text : "R"
         }
+    }
+    function setText( text ) {
+        textview.set( text )
+        stateFlag = 0
+        imEngine.clear()
+        keyboard.updateCandString()
+    }
+    function getText() {
+        return textview.get()
     }
     Component.onCompleted : {
         /*tooltip.proxyTarget = keyboard*/
