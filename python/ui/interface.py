@@ -17,6 +17,11 @@ class Interface( dbus.service.Object ):
         plugin = bus.get_object('me.maemo.input.chinese.plugin.dbus_conn', '/')
         method = plugin.get_dbus_method( 'request_commit', 'me.maemo.input.chinese.plugin.dbus_conn' )
         method( text )
+    def enter( self ) :
+        bus = self.session_bus
+        plugin = bus.get_object('me.maemo.input.chinese.plugin.dbus_conn', '/')
+        method = plugin.get_dbus_method( 'request_enter', 'me.maemo.input.chinese.plugin.dbus_conn' )
+        method()
     @dbus.service.method( "me.maemo.input.chinese.inputpad", in_signature='s', out_signature='' )
     def show( self, text ):
         #print text

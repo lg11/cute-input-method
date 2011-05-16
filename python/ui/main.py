@@ -100,19 +100,25 @@ class Checker() :
             self.port.hide()
         self.text = text
         self.active( text )
-    @QtCore.Slot()
+    @QtCore.Slot( str )
+    def checkCommit( self, text ) :
+        if text[-1] == "\n" :
+            self.iface.commit( self.text[:-1] )
+            self.iface.enter()
+        else :
+            self.iface.commit( self.text )
+    @QtCore.Slot( str )
     def recover( self, text ) :
         self.text = text
         #print "recover", self.flag, self.currentRotate
         if self.flag != self.currentRotate :
             self.rotater[self.currentRotate].show()
         else :
-            self.iface.commit( self.text )
+            self.checkCommit( self.text )
     @QtCore.Slot( int )
     def recoverDone( self, flag ) :
         self.rotater[flag].hide()
-        self.iface.commit( self.text )
-
+        self.checkCommit( self.text )
 
 if __name__ == "__main__" :
     app = QtGui.QApplication( sys.argv )
