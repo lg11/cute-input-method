@@ -23,10 +23,10 @@ class Keyboard( QtDeclarative.QDeclarativeView ) :
             self.daemonFlag = daemonFlag
         #self.setAttribute( QtCore.Qt.WA_Maemo5PortraitOrientation, False )
 
-        #self.setAttribute( QtCore.Qt.WA_TranslucentBackground, True )
-        #palette = QtGui.QPalette()
-        #palette.setColor( QtGui.QPalette.Base, QtCore.Qt.transparent )
-        #self.setPalette( palette )
+        self.setAttribute( QtCore.Qt.WA_TranslucentBackground, True )
+        palette = QtGui.QPalette()
+        palette.setColor( QtGui.QPalette.Base, QtCore.Qt.transparent )
+        self.setPalette( palette )
 
         #self.keepedWidth = 800
         #self.keepedHeight = 480

@@ -1,3 +1,8 @@
+mcip (0.2.5-maemo5-1) fremantle; urgency=low
+  * add portrait mode
+  * add send enterkey event func
+ -- liang <sd.foolegg@gmail.com>  Mon,  16 May 2011 12:00:00 +0800
+ 
 mcip (0.2.4-maemo5-1) fremantle; urgency=low
   * fix mouse offset when finger release
   * show dialog mode
