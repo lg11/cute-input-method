@@ -111,6 +111,7 @@ class Checker() :
     def recover( self, text ) :
         self.text = text
         if self.flag != self.currentRotate :
+            self.rotater[self.currentRotate].resize( 1, 1 )
             self.rotater[self.currentRotate].show()
         else :
             self.checkCommit( self.text )
