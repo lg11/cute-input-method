@@ -110,7 +110,6 @@ class Checker() :
     @QtCore.Slot( str )
     def recover( self, text ) :
         self.text = text
-        #print "recover", self.flag, self.currentRotate
         if self.flag != self.currentRotate :
             self.rotater[self.currentRotate].show()
         else :
