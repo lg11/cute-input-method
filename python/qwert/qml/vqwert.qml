@@ -58,7 +58,7 @@ Item {
                 height : parent.height
                 onMousePressed : {
                     parent.switchFlag = true
-                    rotateTimer.restart()
+                    /*rotateTimer.restart()*/
                     needRotate = false
                 }
                 onMouseReleased : {
