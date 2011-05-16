@@ -102,9 +102,12 @@ class Checker() :
         self.active( text )
     @QtCore.Slot( str )
     def checkCommit( self, text ) :
-        if text[-1] == "\n" :
-            self.iface.commit( self.text[:-1] )
-            self.iface.enter()
+        if len( text ) > 0 :
+            if text[-1] == "\n" :
+                self.iface.commit( self.text[:-1] )
+                self.iface.enter()
+            else :
+                self.iface.commit( self.text )
         else :
             self.iface.commit( self.text )
     @QtCore.Slot( str )
