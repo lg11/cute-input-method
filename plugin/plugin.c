@@ -32,6 +32,12 @@ static gboolean win_flag;
 
 GType him_plugin_get_type(void){ return him_plugin_type; }
 
+gboolean him_plugin_request_enter( GObject* plugin ){
+    g_debug( "him_plugin_request_enter" ) ;
+    him_plugin_private* priv = HIM_PLUGIN_PRIVATE( plugin ) ;
+    hildon_im_ui_send_communication_message( priv->ui, HILDON_IM_CONTEXT_HANDLE_ENTER ) ;
+    return TRUE ;
+}
 
 gboolean him_plugin_request_commit( GObject* plugin, GString gstr ){
     g_debug( "him_plugin_request_commit \"%s\"", gstr.str );
@@ -55,7 +61,8 @@ static void enable( HildonIMPlugin* plugin, gboolean init ){
     g_debug( "enable" );
     him_plugin_private* priv = HIM_PLUGIN_PRIVATE( plugin );
     priv->conn = conn;
-    dbus_conn_set( priv->conn, (GObject*)plugin, him_plugin_request_commit );
+    dbus_conn_set_commit_func( priv->conn, (GObject*)plugin, him_plugin_request_commit );
+    dbus_conn_set_enter_func( priv->conn, (GObject*)plugin, him_plugin_request_enter );
     /*hildon_im_ui_send_communication_message( priv->ui, HILDON_IM_CONTEXT_SURROUNDING_MODE );*/
     Window win = hildon_im_ui_get_input_window( priv->ui );
     win_flag = check_x11win_classhint(win);
@@ -264,6 +271,7 @@ static void him_plugin_interface_init( HildonIMPluginIface* iface ){
     iface->button_activated = button_activated;
     iface->preedit_committed = preedit_committed;
 }
+
 void module_init( GTypeModule* module ){
     g_debug( "module_init" );
     static const GTypeInfo type_info = {

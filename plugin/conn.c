@@ -1,9 +1,13 @@
 #include "conn.h"
 
 gboolean dbus_conn_request_commit( dbus_conn* obj, GString gstr ){
-    /*obj->commit*/
     g_debug( "dbus_conn_request_commit" );
     return obj->request_commit( obj->plugin, gstr );
+}
+
+gboolean dbus_conn_request_enter( dbus_conn* obj ){
+    g_debug( "dbus_conn_request_enter" );
+    return obj->request_enter( obj->plugin );
 }
 
 #include "bind.h"
@@ -63,8 +67,13 @@ dbus_conn* dbus_conn_new(void){
    
     return obj;
 }
-void dbus_conn_set( dbus_conn* conn, GObject* plugin, request_commit_func func ){
+
+void dbus_conn_set_commit_func( dbus_conn* conn, GObject* plugin, request_commit_func func ){
     conn->plugin = plugin;
     conn->request_commit = func;
 }
 
+void dbus_conn_set_enter_func( dbus_conn* conn, GObject* plugin, request_enter_func func ){
+    conn->plugin = plugin;
+    conn->request_enter = func;
+}
