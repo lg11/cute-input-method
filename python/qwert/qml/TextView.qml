@@ -92,9 +92,9 @@ FakeMouseArea {
     }
     function mouseMove( x, y ) {
         var dy = y - startY
-        contentY = startContentY - dy 
+        contentY = startContentY + dy 
         var editPos = mapToItem( edit, x, y )
-        var pos = edit.positionAt( editPos.x, editPos.y - edit.cursorRectangle.height / 2 )
+        var pos = edit.positionAt( editPos.x, editPos.y )
         edit.cursorPosition = pos
     }
     onMouseMoved : {
