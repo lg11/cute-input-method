@@ -1,7 +1,7 @@
 import Qt 4.7
 
 FakeMouseArea {
-    property Item prevMouseTarget
+    property Item mouseTarget : null
 
     function getMouseTarget( x, y ) {
         var pos = Qt.point( x, y )
@@ -30,18 +30,18 @@ FakeMouseArea {
     }
     function switchMouseTarget( x, y ) {
         var target = getMouseTarget( x, y )
-        if ( target != prevMouseTarget ) {
-            if ( prevMouseTarget ) {
-                var pos = mapToItem( prevMouseTarget, x, y )
-                prevMouseTarget.containsMouse = false
-                prevMouseTarget.mouseExited( pos.x, pos.y )
+        if ( target != mouseTarget ) {
+            if ( mouseTarget ) {
+                var pos = mapToItem( mouseTarget, x, y )
+                mouseTarget.containsMouse = false
+                mouseTarget.mouseExited( pos.x, pos.y )
             }
             if ( target ) {
                 var pos = mapToItem( target, x, y )
                 target.containsMouse = true
                 target.mouseEntered( pos.x, pos.y )
             }
-            prevMouseTarget = target
+            mouseTarget = target
         }
         return target
     }
@@ -61,6 +61,7 @@ FakeMouseArea {
             target.pressed = false
             target.mouseReleased( pos.x, pos.y )
         }
+        mouseTarget = null
     }
     onMouseMoved : {
         var target = switchMouseTarget( x, y )

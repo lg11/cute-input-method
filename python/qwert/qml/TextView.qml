@@ -1,40 +1,34 @@
 import Qt 4.7
 
-Flickable {
+FakeMouseArea {
     id : view
+    property alias contentWidth : edit.paintedWidth
+    property alias contentHeight : edit.paintedHeight
+    property alias contentX : edit.x
+    property alias contentY : edit.y
 
-    width : 300
-    height : 200
-    contentWidth : edit.paintedWidth
-    contentHeight : edit.paintedHeight
-    clip : true
-    boundsBehavior : Flickable.StopAtBounds
-    property real keepLines : 0
-
-    /*property alias text : edit.text*/
+    Rectangle {
+        anchors.fill : parent
+        color : "#FFFFFFFF"
+    }
 
     function ensureVisible( r ) {
-        /*console.log( "start", contentX, contentY, r.x, r.y )*/
-        if ( contentX >= r.x )
-            contentX = r.x ;
-        else if ( contentX + width <= r.x + r.width )
-            contentX = r.x + r.width - width ;
-        if ( contentY >= r.y )
-            contentY = r.y ;
-        /*else if ( contentY + height - r.height * keepLines <= r.y + r.height )*/
-            /*contentY = r.y + r.height - height + r.height * keepLines ;*/
-        else if ( contentY + height <= r.y + r.height )
-            contentY = r.y + r.height - height ;
-        /*console.log( "end", contentX, contentY, r.x, r.y )*/
-    }
-    function ensureCenter( r ) {
-        /*console.log( "start", contentX, contentY, r.x, r.y )*/
-        if ( contentX >= r.x )
-            contentX = r.x ;
-        else if ( contentX + width <= r.x + r.width )
-            contentX = r.x + r.width - width ;
-        contentY = r.y + r.height - height + height * 0.5 - r.height * 0.5 ;
-        /*console.log( "end", contentX, contentY, r.x, r.y )*/
+        if ( !down ) {
+            /*console.log( "start", contentY, r.y )*/
+            if ( -contentX >= r.x )
+                contentX = -r.x ;
+            else if ( contentX + width <= r.x + r.width )
+                contentX = -( r.x + r.width - width ) ;
+            if ( -contentY >= r.y )
+                contentY = -r.y ;
+            else if ( contentY + height <= r.y + r.height )
+                contentY = -( r.y + r.height - height ) ;
+            if ( contentX > 0 )
+                contentX = 0
+            if ( contentY > 0 )
+                contentY = 0
+            /*console.log( "end", contentY, r.y )*/
+        }
     }
     function insert( s ) {
         var head = edit.text.slice( 0, edit.cursorPosition )
@@ -67,30 +61,51 @@ Flickable {
         return edit.text
     }
 
-    Rectangle {
-        id : course
-        x : edit.cursorRectangle.x
-        y : edit.cursorRectangle.y
-        width : 4
-        height : edit.cursorRectangle.height
-        color : palette.textviewCursorColor
-    }
-
     TextEdit {
         id : edit
         width : view.width
         height : view.height
         /*focus : true*/
+        focus : false
         readOnly : true
-        font.pointSize: 22
+        cursorVisible : false
+        font.pointSize: 24
         activeFocusOnPress : false
         wrapMode : TextEdit.Wrap
         /*selectByMouse : true*/
         /*selectionColor : palette.keyDownColor*/
         onCursorRectangleChanged : ensureVisible( cursorRectangle )
-        /*onCursorPositionChanged : ensureVisible( cursorRectangle )*/
-        /*onCursorRectangleChanged : ensureCenter( cursorRectangle )*/
-        /*onCursorPositionChanged : ensureCenter( cursorRectangle )*/
+        Rectangle {
+            id : course
+            x : edit.cursorRectangle.x
+            y : edit.cursorRectangle.y
+            width : 4
+            height : edit.cursorRectangle.height
+            color : palette.textviewCursorColor
+        }
     }
-    /*onMovementEnded : ensureVisible( edit.cursorRectangle )*/
+    property real startY
+    property real startContentY
+    onMousePressed : {
+        startY = y
+        startContentY = contentY
+    }
+    function mouseMove( x, y ) {
+        var dy = y - startY
+        contentY = startContentY - dy 
+        var editPos = mapToItem( edit, x, y )
+        var pos = edit.positionAt( editPos.x, editPos.y - edit.cursorRectangle.height / 2 )
+        edit.cursorPosition = pos
+    }
+    onMouseMoved : {
+        mouseMove( x, y )
+    }
+    onMouseExited : {
+        mouseMove( x, y )
+        ensureVisible( edit.cursorRectangle )
+    }
+    onMouseReleased : {
+        mouseMove( x, y )
+        ensureVisible( edit.cursorRectangle )
+    }
 }

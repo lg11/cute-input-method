@@ -17,9 +17,6 @@ import dbus.service
 from dbus.mainloop.qt import DBusQtMainLoop
 
 from PySide import QtCore, QtGui
-#from PyQt4 import QtCore, QtGui
-#QtCore.Signal = QtCore.pyqtSignal
-#QtCore.Slot = QtCore.pyqtSlot
 
 #class Rotater( QtGui.QWidget ) :
     #rotateFinished = QtCore.Signal( int )
@@ -38,78 +35,35 @@ from PySide import QtCore, QtGui
         #event.ignore()
 
 class Checker( QtCore.QObject ) :
-    #check = QtCore.Signal()
     def __init__( self, engine, iface, parent = None ) :
         QtCore.QObject.__init__( self, parent )
-        self.land = None
         self.port = None
         self.engine = engine
         self.iface = iface
-        self.activeFlag = False
-        self.rotateFlag = 0
-        self.currentRotate = 0
-        self.desktop = QtGui.QApplication.desktop()
-        self.desktop.resized.connect( self.desktopResized )
-    @QtCore.Slot()
-    def checkRotate( self ) :
-        #print "check", self.desktop.width(), self.desktop.height()
-        if self.desktop.width() > self.desktop.height() :
-            return 0
-        else :
-            return 1
-    @QtCore.Slot()
-    def desktopResized( self ) :
-        rotateFlag = self.checkRotate()
-        if self.rotateFlag != rotateFlag :
-            self.rotateFlag = rotateFlag
-            if self.activeFlag :
-                self.rotate()
-    def createLand( self ) :
-        land = Keyboard( daemonFlag = True )
-        #land.setAttribute( QtCore.Qt.WA_Maemo5PortraitOrientation, False )
-        land.set( "./qml/qwert.qml", self.engine, "imEngine" )
-        #land.rotateSignal.connect( self.rotate )
-        land.commit.connect( self.checkCommit )
-        self.land = land
-    def createPort( self ) :
-        port = Keyboard( daemonFlag = True )
-        #port.setAttribute( QtCore.Qt.WA_Maemo5PortraitOrientation, True )
-        port.set( "./qml/vqwert.qml", self.engine, "imEngine" )
-        #port.rotateSignal.connect( self.rotate )
-        port.commit.connect( self.checkCommit )
-        self.port = port
+        self.keyboard = self.createKeyboard()
+        self.commitTimer = QtCore.QTimer()
+        self.commitTimer.setSingleShot( True )
+        self.commitTimer.timeout.connect( self.commit )
+        self.commitText = ""
+    def createKeyboard( self ) :
+        keyboard = Keyboard( daemonFlag = True )
+        keyboard.set( "./qml/qwert.qml", self.engine, "imEngine" )
+        keyboard.commit.connect( self.checkCommit )
+        return keyboard
     @QtCore.Slot( str )
     def active( self, text ) :
-        self.activeFlag = True
-        if self.rotateFlag == 0 :
-            if self.land == None :
-                self.createLand()
-            self.land.setText( text )
-            self.land.show()
-            self.currentRotate = 0
-        elif self.rotateFlag == 1 :
-            if self.port == None :
-                self.createPort()
-            self.port.setText( text )
-            self.port.show()
-            self.currentRotate = 1
-    @QtCore.Slot()
-    def rotate( self ) :
-        if self.currentRotate == 0 :
-            text = self.land.getText()
-            self.land.hide()
-        elif self.currentRotate == 1 :
-            text = self.port.getText()
-            self.port.hide()
-        self.text = text
-        self.active( text )
+        self.keyboard.setText( text )
+        self.keyboard.show()
     @QtCore.Slot( str )
     def checkCommit( self, text ) :
-        self.activeFlag = False
-        if self.currentRotate == 0 :
-            self.land.hide()
-        elif self.currentRotate == 1 :
-            self.port.hide()
+        self.commitText = text
+        self.keyboard.hide()
+        self.commitTimer.start( 10 )
+    @QtCore.Slot()
+    def commit( self ) :
+        self.commitTimer.stop()
+        #print "delay commit test"
+        text = self.commitText
         if len( text ) > 0 :
             if text[-1] == "\n" :
                 self.iface.commit( text[:-1] )

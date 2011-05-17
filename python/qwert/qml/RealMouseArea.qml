@@ -1,23 +1,32 @@
 import Qt 4.7
 
 RootMouseArea {
+    property bool useMouseTracker : false
     MouseArea {
         anchors.fill : parent
         onPressed : {
-            mouseTracker.reset()
-            mouseTracker.push( mouse.x, mouse.y )
             parent.pressed = true
+            if ( useMouseTracker ) {
+                mouseTracker.reset()
+                mouseTracker.push( mouse.x, mouse.y )
+            }
             parent.mousePressed( mouse.x, mouse.y )
         }
         onReleased : {
-            mouseTracker.push( mouse.x, mouse.y )
-            mouseTracker.end()
             parent.pressed = false
-            parent.mouseReleased( mouseTracker.endX, mouseTracker.endY )
+            if ( useMouseTracker ) {
+                mouseTracker.push( mouse.x, mouse.y )
+                mouseTracker.end()
+                parent.mouseReleased( mouseTracker.endX, mouseTracker.endY )
+            }
+            else
+                parent.mouseReleased( mouse.x, mouse.y )
         }
         onPositionChanged : {
-            mouseTracker.push( mouse.x, mouse.y )
             parent.pressed = pressed
+            if ( useMouseTracker ) {
+                mouseTracker.push( mouse.x, mouse.y )
+            }
             parent.mouseMoved( mouse.x, mouse.y )
         }
     }

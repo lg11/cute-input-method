@@ -130,9 +130,11 @@ class Dictionary() :
         if self.logFile :
             self.logFile.write( l )
             self.logFile.write( "\n" )
-            self.logFile.flush()
             #print "log", l
         return newKey
+    def flush( self ) :
+        if self.logFile :
+            self.logFile.flush()
 
 if __name__ == "__main__" :
     tree = DictTree()

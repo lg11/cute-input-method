@@ -15,24 +15,21 @@ class Keyboard( QtDeclarative.QDeclarativeView ) :
         QtDeclarative.QDeclarativeView.__init__( self, parent )
         self.setAttribute( QtCore.Qt.WA_InputMethodEnabled, False )
         self.daemonFlag = False
-        #self.setWindowFlags( QtCore.Qt.X11BypassWindowManagerHint )
-        #self.show = self.showFullScreen
-        #self.setWindowFlags( QtCore.Qt.Dialog | QtCore.Qt.FramelessWindowHint )
         if ( not parent ) and daemonFlag :
             self.setWindowFlags( QtCore.Qt.Dialog | QtCore.Qt.FramelessWindowHint )
             self.daemonFlag = daemonFlag
-        #self.setAttribute( QtCore.Qt.WA_Maemo5PortraitOrientation, False )
 
         self.setAttribute( QtCore.Qt.WA_TranslucentBackground, True )
         palette = QtGui.QPalette()
         palette.setColor( QtGui.QPalette.Base, QtCore.Qt.transparent )
         self.setPalette( palette )
 
-        #self.keepedWidth = 800
-        #self.keepedHeight = 480
-
+        self.root = None
         self.mouseTracker = Tracker()
         self.sceneResized.connect( self.keepSize )
+
+        self.desktop = QtGui.QApplication.desktop()
+        self.desktop.resized.connect( self.checkRotate )
     def set( self, qmlSourcePath, engine = None, engineName = "" ) :
         self.setSource( QtCore.QUrl( qmlSourcePath ) ) ;
         if engine :
@@ -46,47 +43,52 @@ class Keyboard( QtDeclarative.QDeclarativeView ) :
         root = self.rootObject()
         self.setText = root.setText
         self.getText = root.getText
-        self.keepedWidth = root.width()
-        self.keepedHeight = root.height()
-        self.rotateSignal = root.rotateSignal
-        #root.close.connect( self.close )
+        self.setRotate = root.setRotate
+        self.root = root
     @QtCore.Slot( QtCore.QSize)
     def keepSize( self, size ) :
-        #print "keep"
         if ( self.daemonFlag ) :
             width = self.size().width()
             height = self.size().height()
+            keepedWidth = self.root.width()
+            keepedHeight = self.root.height()
             #print width, height, self.keepedWidth, self.keepedHeight
-            if height != self.keepedHeight or width != self.keepedWidth :
-                #print width, height, self.keepedWidth, self.keepedHeight
-                self.resize( self.keepedWidth, self.keepedHeight )
+            if height != keepedHeight or width != keepedWidth :
+                self.resize( keepedWidth, keepedHeight )
     def closeEvent( self, event ) :
         if self.daemonFlag :
-            self.hide()
+            self.engine.pinyinLookup.dict.flush()
+            #self.hide()
             text = self.getText()
-            #print text
             self.commit.emit( text )
             event.ignore()
+    @QtCore.Slot()
+    def checkRotate( self ) :
+        desktopWidth = self.desktop.width()
+        desktopHeight = self.desktop.height()
+        if desktopWidth >= desktopHeight :
+            self.setRotate( 0 )
+        else :
+            self.setRotate( 1 )
 
 
 if __name__ == "__main__" :
-    def r() :
-        print "r"
     import config
     import sys
     from engine import IMEngine
     app = QtGui.QApplication( sys.argv )
 
-    view = Keyboard()
+    #view = Keyboard( daemonFlag = True )
+    view = Keyboard( daemonFlag = False )
     engine = IMEngine()
     view.set( "./qml/qwert.qml", engine )
     #view.setAttribute( QtCore.Qt.WA_Maemo5PortraitOrientation, True )
-    view.rotateSignal.connect( r )
 
     path = config.check_path( config.sysdict_path )
     print "load sysdict from :", path
     #engine.load( path )
     #engine.pinyinLookup.dict.logOn()
+
 
     view.show()
 

@@ -13,13 +13,9 @@ Item {
     property int numKeyWidth
     property int numKeyHeight
 
+    property bool useIKey_l : true
     property Item pressedKey
-
-    keyWidth : 800 / 10 * 0.975
-    keyHeight : keyWidth * 0.975
-
-    numKeyWidth : keyWidth
-    numKeyHeight : numKeyWidth * 0.925
+    property alias backspaceKey : key_backspace
 
     /*keyWidth : 800 / 10 * 1.010*/
     /*keyHeight : keyWidth * 0.975*/
@@ -47,7 +43,7 @@ Item {
     }
     function commit() {
         if ( imEngine.hasSelected ) {
-            textview.insert( imEngine.selectedWord )
+            root.textview.insert( imEngine.selectedWord )
             imEngine.commit()
         }
     }
@@ -133,7 +129,7 @@ Item {
                 }
             }
             else {
-                textview.backspace()
+                root.textview.backspace()
             }
         }
     }
@@ -147,7 +143,7 @@ Item {
                 updateCandString()
             }
             else {
-                textview.insert( keysym[mask] )
+                root.textview.insert( keysym[mask] )
             }
         }
         else if ( keycode == Utils.keycode_backspace ) {
@@ -179,12 +175,12 @@ Item {
         }
         else if ( keycode == Utils.keycode_enter ) {
             if ( imEngine.hasCode ) {
-                textview.insert( imEngine.code )
+                root.textview.insert( imEngine.code )
                 imEngine.clear()
                 updateCandString()
             }
             else {
-                textview.insert( "\n" )
+                root.textview.insert( "\n" )
             }
         }
         else if ( keycode == Utils.keycode_space ) {
@@ -197,7 +193,7 @@ Item {
                 }
             }
             else {
-                textview.insert( keysym[mask] )
+                root.textview.insert( keysym[mask] )
             }
         }
         else if ( keycode >= Utils.keycode_0 && keycode <= Utils.keycode_9 ) {
@@ -212,14 +208,13 @@ Item {
                 }
             }
             else {
-                textview.insert( keysym[mask] )
+                root.textview.insert( keysym[mask] )
             }
         }
         else if ( keycode != Utils.keycode_ctrl && keycode != Utils.keycode_alt_l && keycode != Utils.keycode_alt_r ) {
-            textview.insert( keysym[mask] )
+            root.textview.insert( keysym[mask] )
         }
         tooltip.text = ""
-        textViewPart.switchFlag = false
         /*checkClearMask( keycode )*/
         clearMask()
         /*tooltip.visible = true*/
@@ -324,9 +319,6 @@ Item {
         x : key_l.x + key_l.parent.x + key_l.parent.parent.x + key_l.width
         y : key_l.y + key_l.parent.y + key_l.parent.parent.y
     }
-    property bool useIKey_l : true
-
-    property Item backspaceKey : key_backspace
 
     Component.onCompleted : {
         ikey_a.target = key_a
