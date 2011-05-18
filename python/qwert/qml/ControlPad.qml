@@ -15,6 +15,7 @@ Item {
         else if ( mode == 1 )
             textview.selectTo( pos )
     }
+
     Column {
         id : controlPad
         Row {
@@ -34,7 +35,7 @@ Item {
                 }
             }
             BaseAutoRepeatKey {
-                id : key_up ; text : "u" ; width : keyWidth ; height : keyHeight ; color : palette.controlPadKeyNormalColor ; textColor : palette.controlPadKeyTextColor
+                id : key_up ; text : "▲" ; width : keyWidth ; height : keyHeight ; color : palette.controlPadKeyNormalColor ; textColor : palette.controlPadKeyTextColor
                 onMouseReleased : {
                     move( textview.up() )
                 }
@@ -60,7 +61,7 @@ Item {
         }
         Row {
             BaseAutoRepeatKey {
-                id : key_left ; text : "l" ; width : keyWidth ; height : keyHeight ; color : palette.controlPadKeyNormalColor ; textColor : palette.controlPadKeyTextColor
+                id : key_left ; text : "◄" ; width : keyWidth ; height : keyHeight ; color : palette.controlPadKeyNormalColor ; textColor : palette.controlPadKeyTextColor
                 onMouseReleased : {
                     move( textview.left() )
                 }
@@ -69,7 +70,7 @@ Item {
                 }
             }
             BaseAutoRepeatKey {
-                id : key_down ; text : "d" ; width : keyWidth ; height : keyHeight ; color : palette.controlPadKeyNormalColor ; textColor : palette.controlPadKeyTextColor
+                id : key_down ; text : "▼" ; width : keyWidth ; height : keyHeight ; color : palette.controlPadKeyNormalColor ; textColor : palette.controlPadKeyTextColor
                 onMouseReleased : {
                     move( textview.down() )
                 }
@@ -78,7 +79,7 @@ Item {
                 }
             }
             BaseAutoRepeatKey {
-                id : key_right ; text : "r" ; width : keyWidth ; height : keyHeight ; color : palette.controlPadKeyNormalColor ; textColor : palette.controlPadKeyTextColor
+                id : key_right ; text : "►" ; width : keyWidth ; height : keyHeight ; color : palette.controlPadKeyNormalColor ; textColor : palette.controlPadKeyTextColor
                 onMouseReleased : {
                     move( textview.right() )
                 }
