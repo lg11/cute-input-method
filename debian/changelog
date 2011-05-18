@@ -1,3 +1,10 @@
+mcip (0.2.6-maemo5-1) fremantle; urgency=low
+  * add textCursor control pad
+  * add copy/paste
+  * improve rotate
+  * add commit delay for improve commit
+ -- liang <sd.foolegg@gmail.com>  Web,  18 May 2011 12:24:00 +0800
+ 
 mcip (0.2.5.2-maemo5-1) fremantle; urgency=low
   * add auto rotate with CSSU Rotate feature
  -- liang <sd.foolegg@gmail.com>  Tue,  17 May 2011 00:40:00 +0800
