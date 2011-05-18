@@ -11,7 +11,8 @@ Item {
     property color invaildCodeColor : "#FFFF0000"
     property color backgroundColor : "#FFFFFFFF"
     property color textviewBackgroundColor : "#FFFFFFFF"
-    property color textviewCursorColor : keyDownColor
+    property color textviewSelectionColor : "#992299FF"
+    property color textviewCursorColor : "#992299FF"
     property color tooltipBackgroundColor : keyDownColor
     property color tooltipBorderColor : "#FFFFFFFF"
 
