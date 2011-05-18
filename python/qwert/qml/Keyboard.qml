@@ -47,6 +47,8 @@ Item {
             imEngine.commit()
         }
     }
+    property bool needClearShift : false
+    property bool needClearAlt : false
     function keyPress( key ) {
         var keycode = key.keycode
         if ( keycode == Utils.keycode_space ) {
@@ -60,43 +62,30 @@ Item {
         }
         else if ( keycode == Utils.keycode_shift_l || keycode == Utils.keycode_shift_r ) {
             if ( !imEngine.hasCode ) {
-                if ( mask == Utils.keymask_null ) {
+                if ( mask != Utils.keymask_shift ) {
                     clearMask()
                     key_shift_l.keepDown = true
                     key_shift_r.keepDown = true
                     mask = Utils.keymask_shift
                 }
+                else
+                    needClearShift = true
             }
         }
         else if ( keycode == Utils.keycode_alt_l || keycode == Utils.keycode_alt_r ) {
             if ( !imEngine.hasCode ) {
-                if ( mask == Utils.keymask_null ) {
+                if ( mask != Utils.keymask_alt ) {
                     clearMask()
                     key_alt_l.keepDown = true
                     key_alt_r.keepDown = true
                     mask = Utils.keymask_alt
                 }
+                else
+                    needClearAlt = true
             }
         }
         moveTooltip( key )
     }
-    /*function checkClearMask( keycode ) {*/
-        /*if ( keycode != Utils.keycode_alt_l && keycode != Utils.keycode_alt_r && keycode != Utils.keycode_shift_l && keycode != Utils.keycode_shift_r ) {*/
-            /*key_alt_l.keepDown = false*/
-            /*key_alt_r.keepDown = false*/
-            /*key_shift_l.keepDown = false*/
-            /*key_shift_r.keepDown = false*/
-            /*mask = Utils.keymask_null*/
-        /*}*/
-        /*else if ( keycode != Utils.keycode_shift_l && keycode != Utils.keycode_shift_r ) {*/
-            /*key_shift_l.keepDown = false*/
-            /*key_shift_r.keepDown = false*/
-        /*}*/
-        /*else if ( keycode != Utils.keycode_alt_l && keycode != Utils.keycode_alt_r ) {*/
-            /*key_alt_l.keepDown = false*/
-            /*key_alt_r.keepDown = false*/
-        /*}*/
-    /*}*/
     function clearMask() {
         key_alt_l.keepDown = false
         key_alt_r.keepDown = false
@@ -215,21 +204,20 @@ Item {
             root.textview.insert( keysym[mask] )
         }
         tooltip.text = ""
-        clearMask()
         if ( keycode == Utils.keycode_shift_l || keycode == Utils.keycode_shift_r ) {
-            if ( !imEngine.hasCode ) {
-                key_shift_l.keepDown = true
-                key_shift_r.keepDown = true
-                mask = Utils.keymask_shift
+            if ( needClearShift ) {
+                clearMask()
+                needClearShift = false
             }
         }
         else if ( keycode == Utils.keycode_alt_l || keycode == Utils.keycode_alt_r ) {
-            if ( !imEngine.hasCode ) {
-                key_alt_l.keepDown = true
-                key_alt_r.keepDown = true
-                mask = Utils.keymask_alt
+            if ( needClearAlt ) {
+                clearMask()
+                needClearAlt = false
             }
         }
+        else
+            clearMask()
     }
     function keyExit( key ) {
         pressedKey = null

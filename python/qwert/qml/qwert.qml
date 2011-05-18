@@ -77,6 +77,10 @@ Item {
         height : 100
     }
     function setText( text ) {
+        controlPadPart.mode = 0
+        controlPadPart.stateFlag = 0
+        textview.selectionEndPos = 0
+        textview.selectEnd()
         textview.set( text )
         imEngine.clear()
         keyboard.updateCandString()

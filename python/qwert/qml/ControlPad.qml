@@ -20,7 +20,7 @@ Item {
         id : controlPad
         Row {
             BaseKey {
-                id : key_select_copy ; text : "select" ; width : keyWidth ; height : keyHeight ; color : palette.controlPadKeyNormalColor ; textColor : palette.controlPadKeyTextColor
+                id : key_select_copy ; text : "S" ; width : keyWidth ; height : keyHeight ; color : palette.controlPadKeyNormalColor ; textColor : palette.controlPadKeyTextColor
                 onMouseReleased : {
                     if ( mode == 0 ) {
                         mode = 1
@@ -44,7 +44,7 @@ Item {
                 }
             }
             BaseKey {
-                id : key_paste_cut ; text : "paste" ; width : keyWidth ; height : keyHeight ; color : palette.controlPadKeyNormalColor ; textColor : palette.controlPadKeyTextColor
+                id : key_paste_cut ; text : "P" ; width : keyWidth ; height : keyHeight ; color : palette.controlPadKeyNormalColor ; textColor : palette.controlPadKeyTextColor
                 onMouseReleased : {
                     if ( mode == 0 ) {
                         textview.insert( clipedString )
@@ -95,8 +95,8 @@ Item {
         } 
         State {
             name : "SELECTMODE" ; when : mode == 1
-            PropertyChanges { target : key_select_copy ; text : "copy" }
-            PropertyChanges { target : key_paste_cut ; text : "cut" }
+            PropertyChanges { target : key_select_copy ; text : "C" }
+            PropertyChanges { target : key_paste_cut ; text : "X" }
         } 
     }
 
