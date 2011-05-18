@@ -1,22 +1,13 @@
 import Qt 4.7
 
-RealMouseArea {
-    width : 800 ; height : 400 ;
-    property int keyWidth : 115
-    property int keyHeight : 95
+Item {
+    property int keyWidth
+    property int keyHeight
     property int mode : 0
-    property Item textview : tView
+    property Item textview
     property string clipedString : ""
-    Rectangle {
-        anchors.fill : parent
-        color : "#FFFFFFFF"
-    }
-    TextView {
-        id : tView
-        width : 600 ; height : 140 ;
-    }
-
-    Palette { id : palette }
+    width : keyWidth * 3
+    height : keyHeight * 2
 
     function move( pos ) {
         if ( mode == 0 )
@@ -26,39 +17,9 @@ RealMouseArea {
     }
     Column {
         id : controlPad
-        y : 150
-        Row {
-            BaseAutoRepeatKey {
-                id : key_left ; text : "l" ; width : keyWidth ; height : keyHeight ; color : palette.keyNormalColor 
-                onMouseReleased : {
-                    move( textview.left() )
-                }
-                onRepeated : {
-                    move( textview.left() )
-                }
-            }
-            BaseAutoRepeatKey {
-                id : key_up ; text : "u" ; width : keyWidth ; height : keyHeight ; color : palette.keyNormalColor 
-                onMouseReleased : {
-                    move( textview.up() )
-                }
-                onRepeated : {
-                    move( textview.up() )
-                }
-            }
-            BaseAutoRepeatKey {
-                id : key_right ; text : "r" ; width : keyWidth ; height : keyHeight ; color : palette.keyNormalColor
-                onMouseReleased : {
-                    move( textview.right() )
-                }
-                onRepeated : {
-                    move( textview.right() )
-                }
-            }
-        }
         Row {
             BaseKey {
-                id : key_select_copy ; text : "select" ; width : keyWidth ; height : keyHeight ; color : palette.keyNormalColor 
+                id : key_select_copy ; text : "select" ; width : keyWidth ; height : keyHeight ; color : palette.controlPadKeyNormalColor ; textColor : palette.controlPadKeyTextColor
                 onMouseReleased : {
                     if ( mode == 0 ) {
                         mode = 1
@@ -73,16 +34,16 @@ RealMouseArea {
                 }
             }
             BaseAutoRepeatKey {
-                id : key_down ; text : "d" ; width : keyWidth ; height : keyHeight ; color : palette.keyNormalColor
+                id : key_up ; text : "u" ; width : keyWidth ; height : keyHeight ; color : palette.controlPadKeyNormalColor ; textColor : palette.controlPadKeyTextColor
                 onMouseReleased : {
-                    move( textview.down() )
+                    move( textview.up() )
                 }
                 onRepeated : {
-                    move( textview.down() )
+                    move( textview.up() )
                 }
             }
             BaseKey {
-                id : key_paste_cut ; text : "paste" ; width : keyWidth ; height : keyHeight ; color : palette.keyNormalColor 
+                id : key_paste_cut ; text : "paste" ; width : keyWidth ; height : keyHeight ; color : palette.controlPadKeyNormalColor ; textColor : palette.controlPadKeyTextColor
                 onMouseReleased : {
                     if ( mode == 0 ) {
                         textview.insert( clipedString )
@@ -94,6 +55,35 @@ RealMouseArea {
                         mode = 0
                         textview.selectEnd()
                     }
+                }
+            }
+        }
+        Row {
+            BaseAutoRepeatKey {
+                id : key_left ; text : "l" ; width : keyWidth ; height : keyHeight ; color : palette.controlPadKeyNormalColor ; textColor : palette.controlPadKeyTextColor
+                onMouseReleased : {
+                    move( textview.left() )
+                }
+                onRepeated : {
+                    move( textview.left() )
+                }
+            }
+            BaseAutoRepeatKey {
+                id : key_down ; text : "d" ; width : keyWidth ; height : keyHeight ; color : palette.controlPadKeyNormalColor ; textColor : palette.controlPadKeyTextColor
+                onMouseReleased : {
+                    move( textview.down() )
+                }
+                onRepeated : {
+                    move( textview.down() )
+                }
+            }
+            BaseAutoRepeatKey {
+                id : key_right ; text : "r" ; width : keyWidth ; height : keyHeight ; color : palette.controlPadKeyNormalColor ; textColor : palette.controlPadKeyTextColor
+                onMouseReleased : {
+                    move( textview.right() )
+                }
+                onRepeated : {
+                    move( textview.right() )
                 }
             }
         }
@@ -109,9 +99,8 @@ RealMouseArea {
         } 
     }
 
-    Component.onCompleted : {
-        textview.set( "fhdjeuwzisjfdhsjgfjdk\n fhdjeuwzisjfdhsjgfjdk fhdjeuwzisjfdhsjgfjdk fhdje\nuwzisjfdhsjgfjdk fhdjeuwzisjfdhsjgfjdk fhdjeuwzisjfdhsjgfjdk fhdjeuwzisjfdhsjgfjdk\n fhdjeuwzisjfdhsjgfjdk fhdjeuwzisjfdhsjgfjdk fhdjeuwzisjfdhsjgfjdk fhdjeuwzisjfdhsjgfjdk fhdjeuwzisjfdhsjgfjdk " )
-    }
+    /*Component.onCompleted : {*/
+    /*}*/
 }
 
 

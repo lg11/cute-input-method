@@ -6,7 +6,7 @@ BaseKey {
     property bool paused : false
     Timer {
         id : startTimer
-        interval : 400
+        interval : 320
         repeat : false
         onTriggered : { paused = false ; repeated() ; repeatTimer.restart() }
     }

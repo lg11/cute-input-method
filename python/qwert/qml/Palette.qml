@@ -15,6 +15,8 @@ Item {
     property color textviewCursorColor : "#992299FF"
     property color tooltipBackgroundColor : keyDownColor
     property color tooltipBorderColor : "#FFFFFFFF"
+    property color controlPadKeyNormalColor : "#FFFFFFFF"
+    property color controlPadKeyTextColor : keyNormalColor
 
     /*property color keyNormalColor : "#DD444444"*/
     /*property color keyDownColor : "#DD2299FF"*/

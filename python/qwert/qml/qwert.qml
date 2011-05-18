@@ -51,6 +51,13 @@ Item {
             x : keyboardOffset
             y : textviewPartHeight
         }
+        ControlPadPart {
+            id : controlPadPart
+            keyWidth : 115
+            keyHeight : 95
+            textview : root.textview
+            textviewHeight : textviewPartHeight + 1
+        }
     }
     RealMouseArea {
         anchors.fill : parent
@@ -90,7 +97,7 @@ Item {
                 height : 424
                 keyboardOffset : -30
                 textviewPartHeight : 75
-                sideSpacing : 70
+                sideSpacing : 80
                 keyWidth : 800 / 10 * 0.975
                 keyHeight : keyWidth * 0.975
                 numKeyWidth : keyWidth
@@ -106,7 +113,7 @@ Item {
                 height : 700
                 keyboardOffset : -18
                 textviewPartHeight : 160
-                sideSpacing : 45
+                sideSpacing : 50
                 keyWidth : 480 / 10 * 0.975 * 1.045
                 keyHeight : keyWidth * 1.75
                 numKeyWidth : keyWidth 

@@ -18,6 +18,7 @@ FakeMouseArea {
         }
     }
     property alias text : title.text
+    property alias textColor : title.color
     property alias color : plat.color
     property alias platVisible : plat.visible
 

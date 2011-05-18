@@ -215,9 +215,21 @@ Item {
             root.textview.insert( keysym[mask] )
         }
         tooltip.text = ""
-        /*checkClearMask( keycode )*/
         clearMask()
-        /*tooltip.visible = true*/
+        if ( keycode == Utils.keycode_shift_l || keycode == Utils.keycode_shift_r ) {
+            if ( !imEngine.hasCode ) {
+                key_shift_l.keepDown = true
+                key_shift_r.keepDown = true
+                mask = Utils.keymask_shift
+            }
+        }
+        else if ( keycode == Utils.keycode_alt_l || keycode == Utils.keycode_alt_r ) {
+            if ( !imEngine.hasCode ) {
+                key_alt_l.keepDown = true
+                key_alt_r.keepDown = true
+                mask = Utils.keymask_alt
+            }
+        }
     }
     function keyExit( key ) {
         pressedKey = null
