@@ -7,6 +7,7 @@ Item {
     property alias contentHeight : edit.paintedHeight
     property alias contentX : edit.x
     property alias contentY : edit.y
+    property alias cursorPosition : edit.cursorPosition
     property int selectionEndPos
     property int selectionBeginPos
 

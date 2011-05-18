@@ -1,3 +1,7 @@
+mcip (0.2.6.1-maemo5-1) fremantle; urgency=low
+  * link control pad clipstring to system clipboard
+ -- liang <sd.foolegg@gmail.com>  Web,  18 May 2011 19:24:00 +0800
+
 mcip (0.2.6-maemo5-1) fremantle; urgency=low
   * add textCursor control pad
   * add copy/paste

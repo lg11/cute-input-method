@@ -21,6 +21,12 @@ Item {
         y : textviewHeight
     }
 
+    onStateFlagChanged : {
+        var pos = textview.cursorPosition
+        textview.selectEnd()
+        textview.cursorPosition = pos
+        pad.mode = 0
+    }
     states {
         State {
             name : "HIDE" ; when : stateFlag == 0

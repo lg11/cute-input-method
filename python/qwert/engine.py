@@ -44,6 +44,7 @@ class IMEngine( QtCore.QObject ) :
     @QtCore.Slot()
     def readSelectedWord( self ) :
         return self.selectedWord_value
+    @QtCore.Slot( str )
     def writeSelectedWord( self, value ) :
         self.selectedWord_value = value
     selectedWord = QtCore.Property( str, readSelectedWord, writeSelectedWord, notify = selectedWordChanged )
@@ -52,6 +53,7 @@ class IMEngine( QtCore.QObject ) :
     @QtCore.Slot()
     def readPreeditString( self ) :
         return self.preeditString_value
+    @QtCore.Slot( str )
     def writePreeditString( self, value ) :
         self.preeditString_value = value
     preeditString = QtCore.Property( str, readPreeditString, writePreeditString, notify = preeditStringChanged )
@@ -60,6 +62,7 @@ class IMEngine( QtCore.QObject ) :
     @QtCore.Slot()
     def readInvaildCode( self ) :
         return self.invaildCode_value
+    @QtCore.Slot( str )
     def writeInvaildCode( self, value ) :
         self.invaildCode_value = value
     invaildCode = QtCore.Property( str, readInvaildCode, writeInvaildCode, notify = invaildCodeChanged )

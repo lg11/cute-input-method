@@ -5,7 +5,7 @@ Item {
     property int keyHeight
     property int mode : 0
     property Item textview
-    property string clipedString : ""
+    /*property string clipedString : ""*/
     width : keyWidth * 3
     height : keyHeight * 2
 
@@ -27,7 +27,8 @@ Item {
                         textview.selectStart()
                     }
                     else if ( mode == 1 ) {
-                        clipedString = textview.getSelectedString()
+                        clipboard.text = textview.getSelectedString()
+                        /*clipedString = textview.getSelectedString()*/
                         /*console.log( clipedString )*/
                         mode = 0
                         textview.selectEnd()
@@ -47,10 +48,12 @@ Item {
                 id : key_paste_cut ; text : "P" ; width : keyWidth ; height : keyHeight ; color : palette.controlPadKeyNormalColor ; textColor : palette.controlPadKeyTextColor
                 onMouseReleased : {
                     if ( mode == 0 ) {
-                        textview.insert( clipedString )
+                        textview.insert( clipboard.text )
+                        /*textview.insert( clipedString )*/
                     }
                     else if ( mode == 1 ) {
-                        clipedString = textview.getSelectedString()
+                        clipboard.text = textview.getSelectedString() 
+                        /*clipedString = textview.getSelectedString()*/
                         /*console.log( clipedString )*/
                         textview.setSelectedString( "" )
                         mode = 0

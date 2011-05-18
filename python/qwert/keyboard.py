@@ -1,13 +1,18 @@
 from QtImport import QtGui, QtCore, QtDeclarative
 from mouseTracker import Tracker
 
-#class Clipboard( QtCore.QObject ) :
-    #def __init__( self, parent = None ) :
-        #QtCore.QObject.__init__( self, parent )
-        #self.clipboard = QtGui.QClipboard()
-    #@QtCore.Slot( str )
-    #def set( self, text ) :
-        #self.clipboard.setText( text )
+class Clipboard( QtCore.QObject ) :
+    textChanged = QtCore.Signal( str )
+    @QtCore.Slot()
+    def readText( self ) :
+        return self.clipboard.text()
+    @QtCore.Slot( str )
+    def writeText( self, value ) :
+        self.clipboard.setText( value )
+    text = QtCore.Property( str, readText, writeText, notify = textChanged )
+    def __init__( self, parent = None ) :
+        QtCore.QObject.__init__( self, parent )
+        self.clipboard = QtGui.QClipboard()
 
 class Keyboard( QtDeclarative.QDeclarativeView ) :
     commit = QtCore.Signal( str )
@@ -30,6 +35,7 @@ class Keyboard( QtDeclarative.QDeclarativeView ) :
 
         self.desktop = QtGui.QApplication.desktop()
         self.desktop.resized.connect( self.checkRotate )
+        self.clipboard = Clipboard()
     def set( self, qmlSourcePath, engine = None, engineName = "" ) :
         self.setSource( QtCore.QUrl( qmlSourcePath ) ) ;
         if engine :
@@ -40,6 +46,7 @@ class Keyboard( QtDeclarative.QDeclarativeView ) :
             else :
                 context.setContextProperty( engineName, self.engine )
         context.setContextProperty( "mouseTracker", self.mouseTracker )
+        context.setContextProperty( "clipboard", self.clipboard )
         root = self.rootObject()
         self.setText = root.setText
         self.getText = root.getText
