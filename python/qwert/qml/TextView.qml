@@ -201,6 +201,7 @@ Item {
         width : view.width
         height : view.height
         focus : false
+        textFormat : TextEdit.PlainText
         readOnly : true
         cursorVisible : false
         font.pointSize: 22

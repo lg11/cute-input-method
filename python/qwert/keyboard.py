@@ -12,7 +12,7 @@ class Clipboard( QtCore.QObject ) :
     text = QtCore.Property( str, readText, writeText, notify = textChanged )
     def __init__( self, parent = None ) :
         QtCore.QObject.__init__( self, parent )
-        self.clipboard = QtGui.QClipboard()
+        self.clipboard = QtGui.QApplication.clipboard()
 
 class Keyboard( QtDeclarative.QDeclarativeView ) :
     commit = QtCore.Signal( str )
@@ -80,7 +80,6 @@ class Keyboard( QtDeclarative.QDeclarativeView ) :
 
 
 if __name__ == "__main__" :
-    import config
     import sys
     from engine import IMEngine
     app = QtGui.QApplication( sys.argv )
@@ -91,9 +90,9 @@ if __name__ == "__main__" :
     view.set( "./qml/qwert.qml", engine )
     #view.setAttribute( QtCore.Qt.WA_Maemo5PortraitOrientation, True )
 
-    path = config.check_path( config.sysdict_path )
+    path = "../../data/formated"
     print "load sysdict from :", path
-    #engine.load( path )
+    engine.load( path )
     #engine.pinyinLookup.dict.logOn()
 
 
