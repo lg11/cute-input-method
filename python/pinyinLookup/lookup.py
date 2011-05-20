@@ -53,7 +53,7 @@ class PinyinLookup() :
         preeditList = []
         for i in range( len( fitList ) ) :
             key = fitList[i]
-            currentSubFitPoint = len( key ) - key.count( "'" ) - len( self.spliter.code )
+            currentSubFitPoint = key.count( "'" ) + 1 - len( pinyinStringList[i].string )
             if currentSubFitPoint >= subFitPoint :
                 newFitList.append( key )
                 preeditList.append( str( pinyinStringList[i] ) )

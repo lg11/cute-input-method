@@ -45,12 +45,14 @@ class PinyinString () :
             self.length -= 1
     def space( self ) :
         self.string.append( "" )
-    def length( self ) :
-        return len( self.string )
     def clear( self ) :
         self.string = [ "" ]
         #self.vaild = True
         #self.completeFlag = True
+    #def __getitem__( self, index ) :
+        #return self.string[index]
+    #def __len__( self ) :
+        #return len( self.string )
     def __str__( self ) :
         s = "'".join( self.string )
         return s
