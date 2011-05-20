@@ -10,6 +10,7 @@ class Fitter() :
         for pinyin in pinyinString :
             path += pinyin[0]
         keys = self.dictTree.getKeys( path )
+        #print pinyinString, keys
         results = []
         #hasFullFit = False
         fitPoint = -999

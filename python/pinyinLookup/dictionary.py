@@ -137,9 +137,4 @@ class Dictionary() :
             self.logFile.flush()
 
 if __name__ == "__main__" :
-    tree = DictTree()
-    tree.addKey( "wo" )
-    tree.addKey( "zhi'dao" )
-    print tree.getKeys( "w" )
-    print tree.getKeys( "zd" )
-    print tree.getKeys( "j" )
+    pass

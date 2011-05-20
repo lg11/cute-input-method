@@ -56,23 +56,26 @@ class PinyinLookup() :
         #print newFitList, newPreeditList
         return newFitList, newPreeditList
     def append( self, code ) :
-        #print "append", code
+        print "append", code
         self.spliter.append( code )
         fitList = []
         preeditList = []
         fitPoint = -999
         for pinyinString in self.spliter.stack :
-            currentFitPoint, keys = self.fitter.fit( pinyinString.string )
-            #print currentFitPoint, keys
-            if currentFitPoint > fitPoint :
-                fitList = []
-                fitList.extend( keys )
-                fitPoint = currentFitPoint
-                preeditList = []
-                preeditList.extend( [ str( pinyinString ) ] * len( keys ) )
-            elif currentFitPoint == fitPoint :
-                fitList.extend( keys )
-                preeditList.extend( [ str( pinyinString ) ] * len( keys ) )
+            if pinyinString.length < len( self.spliter.code ) :
+                pass
+            else :
+                currentFitPoint, keys = self.fitter.fit( pinyinString.string )
+                #print currentFitPoint, keys
+                if currentFitPoint > fitPoint :
+                    fitList = []
+                    fitList.extend( keys )
+                    fitPoint = currentFitPoint
+                    preeditList = []
+                    preeditList.extend( [ str( pinyinString ) ] * len( keys ) )
+                elif currentFitPoint == fitPoint :
+                    fitList.extend( keys )
+                    preeditList.extend( [ str( pinyinString ) ] * len( keys ) )
         fitList, preeditList = self.subFit( fitList, preeditList )
         self.picker.set( fitList, preeditList, True )
         cache = [ fitPoint, fitList, preeditList ] 
