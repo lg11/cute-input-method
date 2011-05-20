@@ -21,8 +21,24 @@ def __node_add_path( node, path ) :
             node = child
     return node
 
+def __node_power_seek( node ) :
+    current_stack = []
+    deeper_stack = []
+    result_list = []
+    current_stack.extend( node[1] )
+    while len( current_stack ) > 0 and len( result_list ) <= 0 :
+        for child in current_stack :
+            if child[2] :
+                result_list.extend( child[2] )
+            elif len( result_list ) <= 0 :
+                deeper_stack.extend( child[1] )
+        #print current_stack, deeper_stack, result_list
+        current_stack = deeper_stack
+    return result_list
+
 node_add_path = __node_add_path
 node_seek_path = __node_seek_path
+node_power_seek = __node_power_seek
 
 class PinyinTree() :
     def __init__( self ) :
@@ -79,6 +95,7 @@ class DictTree() :
             return False
         else :
             return True
+
 
 if __name__ == "__main__" :
     tree = Tree()

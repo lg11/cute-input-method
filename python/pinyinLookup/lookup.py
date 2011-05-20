@@ -67,6 +67,7 @@ class PinyinLookup() :
         pinyinStringList = []
         fitPoint = -999
         for pinyinString in self.spliter.stack :
+            #print pinyinString
             if pinyinString.length < len( self.spliter.code ) :
                 pass
             else :
@@ -84,6 +85,7 @@ class PinyinLookup() :
                     #preeditList.extend( [ str( pinyinString ) ] * len( keys ) )
                     pinyinStringList.extend( [ pinyinString ] * len( keys ) )
         fitList, preeditList = self.subFit( fitList, pinyinStringList )
+        #print fitList
         self.picker.set( fitList, preeditList, True )
         cache = [ fitPoint, fitList, preeditList ] 
         self.cache.append( cache )
@@ -143,6 +145,7 @@ class PinyinLookup() :
         self.candList = []
         self.candCacheIndex = 0
         self.candStartIndex = 0
+
 
 if __name__ == "__main__" :
     import sys

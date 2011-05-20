@@ -50,4 +50,3 @@ class Picker() :
         else :
             return None, None, 0, None
 
-
