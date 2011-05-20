@@ -36,7 +36,27 @@ class PinyinLookup() :
                 self.spliter.beginCharSet.add( newKey[0] ) 
                 self.spliter.pinyinTree.addPath( newKey )
             self.fitter.dictTree.addKey( newKey )
+    def subFit( self, fitList, preeditList ) :
+        subFitPoint = -999
+        for key in fitList :
+            currentSubFitPoint = len( key ) - key.count( "'" ) - len( self.spliter.code )
+            if currentSubFitPoint > 0 :
+                currentSubFitPoint = -998
+            if currentSubFitPoint > subFitPoint :
+                subFitPoint = currentSubFitPoint
+            #print key, currentSubFitPoint, subFitPoint
+        newFitList = []
+        newPreeditList = []
+        for i in range( len( fitList ) ) :
+            key = fitList[i]
+            currentSubFitPoint = len( key ) - key.count( "'" ) - len( self.spliter.code )
+            if currentSubFitPoint >= subFitPoint :
+                newFitList.append( key )
+                newPreeditList.append( preeditList[i] )
+        #print newFitList, newPreeditList
+        return newFitList, newPreeditList
     def append( self, code ) :
+        #print "append", code
         self.spliter.append( code )
         fitList = []
         preeditList = []
@@ -53,6 +73,7 @@ class PinyinLookup() :
             elif currentFitPoint == fitPoint :
                 fitList.extend( keys )
                 preeditList.extend( [ str( pinyinString ) ] * len( keys ) )
+        fitList, preeditList = self.subFit( fitList, preeditList )
         self.picker.set( fitList, preeditList, True )
         cache = [ fitPoint, fitList, preeditList ] 
         self.cache.append( cache )
@@ -116,7 +137,7 @@ class PinyinLookup() :
 if __name__ == "__main__" :
     import sys
     lookup = PinyinLookup()
-    lookup.load( "../../data/new_formated" )
+    lookup.load( "../../data/formated" )
     while (1) :
         code = sys.stdin.readline()[:-1]
         for c in code :
