@@ -7,7 +7,7 @@ Item {
     /*color : "#00000000"*/
     property alias keycode_l : key_l.keycode
     property alias keycode_r : key_r.keycode
-    property string candString
+    property alias candString : candText.text
     property bool isActive : false
 
     Key {
@@ -38,7 +38,6 @@ Item {
         color : "#00000000"
         Text {
             id : candText
-            text : candString
             anchors.centerIn : parent
             color : "#FFFFFFFF"
             font.pointSize: 24; font.bold: false

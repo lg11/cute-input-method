@@ -5,6 +5,7 @@ Item {
     property bool switchFlag : false
     property int sideSpacing : 50
     property alias view : textview
+    property alias rightProxyTarget : rightProxyArea.target
     /*property alias onMouseReleased : middlePart.onMousePressed*/
 
     Row {
@@ -46,9 +47,9 @@ Item {
             }
         }
         ProxyMouseArea {
+            id : rightProxyArea
             width : sideSpacing
             height : part.height
-            target : keyboard.backspaceKey
         }
     }
 }

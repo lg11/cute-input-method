@@ -96,6 +96,7 @@ if __name__ == "__main__" :
     #engine.pinyinLookup.dict.logOn()
 
 
+    #view.setAttribute( QtCore.Qt.WA_Maemo5PortraitOrientation, True )
     view.show()
 
     sys.exit( app.exec_() )

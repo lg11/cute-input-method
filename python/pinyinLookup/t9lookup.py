@@ -68,6 +68,54 @@ class T9Fitter() :
     def fit( self, s ) :
         return self.dictTree.getKeys( s )
 
+#class CodeString() :
+    #def __init__( self ) :
+        #self.list = []
+        #self.append = self.list.append
+        #self.__len__ = self.list.__len__
+        #self.__getitem__ = self.list.__getitem__
+    #def __str__( self ) :
+        #s = "'".join( self.list )
+        #return s
+
+#def __split_code( code, key ) :
+    #prevIndex = 0
+    #index = key.find( "'" )
+    #codeString = CodeString()
+    #if index < 0 :
+        #codeString.append( code )
+    #else :
+        #count = 0
+        #while index > 0 :
+            #endIndex = index - count
+            #codeString.append( code[prevIndex:endIndex] )
+            #prevIndex = index - count
+            #count += 1
+            #index = key.find( "'", index + 1 )
+        #codeString.append( code[prevIndex:] )
+    #return codeString
+
+#split_code = __split_code
+
+def __gen_code( code, key ) :
+    count = key.count( "'" )
+    if count > 0 :
+        index = 0
+        for i in range( len( code ) ) :
+            if key[index] == "'" :
+                index += 1
+            index += 1
+        head = key[:index]
+        d = count - head.count( "'" )
+        for i in range( d ) :
+            head += "'"
+    else :
+        d = len( code )
+        head = key[:d]
+    return head
+
+gen_code = __gen_code
+
 class T9PinyinLookup( PinyinLookup ) :
     def __init__( self ) :
         PinyinLookup.__init__( self )
@@ -92,10 +140,12 @@ class T9PinyinLookup( PinyinLookup ) :
         print "built"
     def append( self, code ) :
         self.spliter.append( code )
-        codeList = []
         fitPoint, keys = self.fitter.fit( self.spliter.code )
+        code = self.spliter.code
+        codeList = []
         for key in keys :
-            codeList.append( self.spliter.code )
+            codeString = gen_code( code, key )
+            codeList.append( codeString )
         self.picker.set( keys, codeList, True )
         cache = [ fitPoint, keys, codeList ] 
         self.cache.append( cache )

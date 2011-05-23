@@ -17,6 +17,7 @@ Item {
     property alias t9KeyHeight : t9Keyboard.keyHeight
     property alias useIKey_l : keyboard.useIKey_l
     property alias textview : textViewPart.view
+    property alias rightProxyTarget : textViewPart.rightProxyTarget
     property bool t9Mode : true
 
     Palette { id : palette }
@@ -46,6 +47,7 @@ Item {
             id : textViewPart
             x : 0 ; y : 0
             width : parent.width ; height : textviewPartHeight
+            rightProxyTarget : keyboard.backspaceKey
         }
         Keyboard {
             id : keyboard
@@ -65,6 +67,25 @@ Item {
             keyHeight : 95
             textview : root.textview
             textviewHeight : textviewPartHeight + 1
+        }
+        Item {
+            id : t9Switcher
+            x : 0 ; y : 550
+            width : root.width ; height : 150
+            Text {
+                id : t9SwitcherText
+                anchors.centerIn : parent
+                text : "switch"
+            }
+            FakeMouseArea {
+                anchors.fill : parent
+                onMouseReleased : {
+                    if ( t9Mode == false )
+                        t9Mode = true
+                    else if ( t9Mode == true )
+                        t9Mode = false
+                }
+            }
         }
     }
     RealMouseArea {
@@ -100,14 +121,14 @@ Item {
         rotateFlag = flag
     }
 
-    onRotateFlagChanged : {
-        if ( rotateFlag == 0 ) {
-            t9Mode = false
+    onT9ModeChanged : {
+        if ( t9Mode == false ) {
             imEngine.setMode( 0 )
+            keyboard.updateCandString()
         }
-        else if ( rotateFlag == 1 ) {
-            t9Mode = true
+        else if ( t9Mode == true ) {
             imEngine.setMode( 1 )
+            t9Keyboard.updateCandString()
         }
     }
     states {
@@ -127,6 +148,7 @@ Item {
                 useIKey_l : true
                 t9KeyWidth : 0
                 t9KeyHeight : 0
+                rightProxyTarget : keyboard.backspaceKey
             }
         } 
         State {
@@ -145,6 +167,7 @@ Item {
                 useIKey_l : false
                 t9KeyWidth : 0
                 t9KeyHeight : 0
+                rightProxyTarget : keyboard.backspaceKey
             }
         } 
         State {
@@ -163,6 +186,7 @@ Item {
                 useIKey_l : false
                 t9KeyWidth : 138
                 t9KeyHeight : 97
+                rightProxyTarget : t9Keyboard.backspaceKey
             }
         } 
     }

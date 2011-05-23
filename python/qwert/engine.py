@@ -185,7 +185,10 @@ class IMEngine( QtCore.QObject ) :
     def cancel( self ) :
         if len( self.selected ) > 0 :
             item = self.selected[-1]
-            code = item[3] + self.lokup[self.mode].spliter.code
+            code = item[3]
+            if self.mode == 1 :
+                code = code.translate( self.lookup[1].trans )
+            code = code + self.lookup[self.mode].spliter.code
             self.lookup[self.mode].clear()
             self.pageIndex = 0
             for c in code :
