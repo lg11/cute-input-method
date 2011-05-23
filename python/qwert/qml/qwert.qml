@@ -79,10 +79,16 @@ Item {
             FakeMouseArea {
                 anchors.fill : parent
                 onMouseReleased : {
-                    if ( t9Mode == false )
+                    if ( t9Mode == false ) {
                         t9Mode = true
-                    else if ( t9Mode == true )
+                        /*if ( !imEngine.hasCode )*/
+                            /*t9Mode = true*/
+                    }
+                    else if ( t9Mode == true ) {
                         t9Mode = false
+                        /*if ( !imEngine.hasCode )*/
+                            /*t9Mode = false*/
+                    }
                 }
             }
         }
@@ -139,6 +145,10 @@ Item {
             if ( rotateFlag == 1 ) {
                 imEngine.setMode( 1 )
                 t9Keyboard.updateCandString()
+                if ( t9Keyboard.puncMode ) {
+                    t9Keyboard.puncMode = false
+                    t9Keyboard.updatePunc()
+                }
             }
         }
     }
@@ -154,6 +164,10 @@ Item {
             if ( t9Mode == true ) {
                 imEngine.setMode( 1 )
                 t9Keyboard.updateCandString()
+                if ( t9Keyboard.puncMode ) {
+                    t9Keyboard.puncMode = false
+                    t9Keyboard.updatePunc()
+                }
             }
             keyboardModeRecord = keyboard.mode
         }
