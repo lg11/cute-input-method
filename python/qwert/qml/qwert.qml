@@ -18,6 +18,7 @@ Item {
     property alias useIKey_l : keyboard.useIKey_l
     property alias textview : textViewPart.view
     property alias rightProxyTarget : textViewPart.rightProxyTarget
+    property alias rightProxyOffset : textViewPart.rightProxyOffset 
     property alias modeTextVisible : modeText.visible
     property bool t9Mode : false
     property int keyboardModeRecord : 0
@@ -175,6 +176,7 @@ Item {
                 t9KeyWidth : 0
                 t9KeyHeight : 0
                 rightProxyTarget : keyboard.backspaceKey
+                rightProxyOffset : 550
                 modeTextVisible : true
             }
         } 
@@ -195,6 +197,7 @@ Item {
                 t9KeyWidth : 0
                 t9KeyHeight : 0
                 rightProxyTarget : keyboard.backspaceKey
+                rightProxyOffset : 290
                 modeTextVisible : true
                 t9Text : "t9"
             }
@@ -216,6 +219,7 @@ Item {
                 t9KeyWidth : 140
                 t9KeyHeight : 100
                 rightProxyTarget : t9Keyboard.backspaceKey
+                rightProxyOffset : 290
                 modeTextVisible : false
                 t9Text : "qwert"
             }

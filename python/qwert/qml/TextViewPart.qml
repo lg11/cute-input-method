@@ -6,6 +6,7 @@ Item {
     property int sideSpacing : 50
     property alias view : textview
     property alias rightProxyTarget : rightProxyArea.target
+    property alias rightProxyOffset : rightProxyArea.x
     /*property alias onMouseReleased : middlePart.onMousePressed*/
 
     Row {
@@ -51,9 +52,9 @@ Item {
     }
     ProxyMouseArea {
         id : rightProxyArea
-        x : parent.width / 5 * 3
+        x : 550
         y : 0
-        width : parent.width / 5 * 2
+        width : parent.width - x
         height : part.height
     }
 }
