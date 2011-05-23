@@ -188,3 +188,13 @@ modeString[0] = "中"
 modeString[1] = "EN"
 var mode_CN = 0
 var mode_EN = 1
+
+var t9PuncMap = Array( 4 )
+var punc_page_1 = [ " ", "\n", "，", "。", "？", "……", "～", "！", ]
+var punc_page_2 = [ "、", "；", "：", "“", "”", "——", "（", "）", ]
+var punc_page_3 = [ "@", "&", "_", "《", "》", "%", "‘", "’", ] 
+var punc_page_4 = [ "*", "#", "\\", "+", "-", "=", "*", "/", ]
+t9PuncMap[0] = punc_page_1
+t9PuncMap[1] = punc_page_2
+t9PuncMap[2] = punc_page_3
+t9PuncMap[3] = punc_page_4

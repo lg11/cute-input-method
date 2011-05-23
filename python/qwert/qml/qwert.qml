@@ -18,7 +18,10 @@ Item {
     property alias useIKey_l : keyboard.useIKey_l
     property alias textview : textViewPart.view
     property alias rightProxyTarget : textViewPart.rightProxyTarget
-    property bool t9Mode : true
+    property alias modeTextVisible : modeText.visible
+    property bool t9Mode : false
+    property int keyboardModeRecord : 0
+    property alias t9Text : t9SwitcherText.text
 
     Palette { id : palette }
     Config { id : config }
@@ -38,6 +41,7 @@ Item {
         id : mouseLayer
         anchors.fill : parent
         Text {
+            id : modeText
             x : 5 ; y : 5
             text : Utils.modeString[keyboard.mode]
             color : palette.keyNormalColor
@@ -70,12 +74,13 @@ Item {
         }
         Item {
             id : t9Switcher
-            x : 0 ; y : 550
-            width : root.width ; height : 150
+            x : 0 ; y : 580
+            width : root.width ; height : 120
             Text {
                 id : t9SwitcherText
                 anchors.centerIn : parent
-                text : "switch"
+                text : "t9"
+                color : palette.keyNormalColor
             }
             FakeMouseArea {
                 anchors.fill : parent
@@ -123,12 +128,33 @@ Item {
 
     onT9ModeChanged : {
         if ( t9Mode == false ) {
-            imEngine.setMode( 0 )
-            keyboard.updateCandString()
+            if ( rotateFlag == 1 ) {
+                imEngine.setMode( 0 )
+                keyboard.updateCandString()
+                keyboard.mode = 1
+            }
         }
         else if ( t9Mode == true ) {
-            imEngine.setMode( 1 )
-            t9Keyboard.updateCandString()
+            if ( rotateFlag == 1 ) {
+                imEngine.setMode( 1 )
+                t9Keyboard.updateCandString()
+            }
+        }
+    }
+    onRotateFlagChanged : {
+        if ( rotateFlag == 0 ) {
+            if ( t9Mode == true ) {
+                imEngine.setMode( 0 )
+                keyboard.updateCandString()
+                keyboard.mode = keyboardModeRecord
+            }
+        }
+        else if ( rotateFlag == 1 ) {
+            if ( t9Mode == true ) {
+                imEngine.setMode( 1 )
+                t9Keyboard.updateCandString()
+            }
+            keyboardModeRecord = keyboard.mode
         }
     }
     states {
@@ -149,6 +175,7 @@ Item {
                 t9KeyWidth : 0
                 t9KeyHeight : 0
                 rightProxyTarget : keyboard.backspaceKey
+                modeTextVisible : true
             }
         } 
         State {
@@ -168,6 +195,8 @@ Item {
                 t9KeyWidth : 0
                 t9KeyHeight : 0
                 rightProxyTarget : keyboard.backspaceKey
+                modeTextVisible : true
+                t9Text : "t9"
             }
         } 
         State {
@@ -176,7 +205,7 @@ Item {
                 target : root
                 width : 480
                 height : 700
-                keyboardOffset : -18
+                keyboardOffset : -10
                 textviewPartHeight : 160
                 sideSpacing : 50
                 keyWidth : 0
@@ -184,10 +213,15 @@ Item {
                 numKeyWidth : keyWidth 
                 numKeyHeight : numKeyWidth * 1.75
                 useIKey_l : false
-                t9KeyWidth : 138
-                t9KeyHeight : 97
+                t9KeyWidth : 140
+                t9KeyHeight : 100
                 rightProxyTarget : t9Keyboard.backspaceKey
+                modeTextVisible : false
+                t9Text : "qwert"
             }
         } 
+     }
+    Component.onCompleted : {
+        t9Mode = true
     }
 }

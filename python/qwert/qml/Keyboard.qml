@@ -94,6 +94,8 @@ Item {
         key_shift_r.keepDown = false
         key_space.keepDown = false
         mask = Utils.keymask_null
+        needClearAlt = false
+        needClearShift = false
     }
     function switchMode() {
         if ( mode == Utils.mode_CN ) {
@@ -208,17 +210,25 @@ Item {
         if ( keycode == Utils.keycode_shift_l || keycode == Utils.keycode_shift_r ) {
             if ( needClearShift ) {
                 clearMask()
-                needClearShift = false
+                /*needClearShift = false*/
             }
+            /*else*/
+                /*needClearShift = true*/
         }
         else if ( keycode == Utils.keycode_alt_l || keycode == Utils.keycode_alt_r ) {
             if ( needClearAlt ) {
                 clearMask()
-                needClearAlt = false
+                /*needClearAlt = false*/
             }
+            /*else*/
+                /*needClearAlt = true*/
         }
-        else
+        else {
             clearMask()
+            /*if ( !needClearAlt && !needClearShift ) {*/
+                /*clearMask()*/
+            /*}*/
+        }
     }
     function keyExit( key ) {
         pressedKey = null

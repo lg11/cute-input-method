@@ -14,8 +14,10 @@ Item {
             height : part.height
             onMousePressed : switchFlag = true 
             onMouseReleased : {
-                if ( switchFlag ) 
-                    keyboard.switchMode()
+                if ( switchFlag && !imEngine.hasCode ) {
+                    if ( !( root.rotateFlag == 1 && root.t9Mode == true ) )
+                        keyboard.switchMode()
+                }
             }
             onMouseExited : switchFlag = false
         }
