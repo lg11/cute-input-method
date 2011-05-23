@@ -84,7 +84,7 @@ if __name__ == "__main__" :
     engine = IMEngine()
     engine.load( "./data/formated" )
     engine.load( "/home/user/.config/mcip/userdict.log" )
-    engine.pinyinLookup.dict.logOn()
+    engine.lookup[0].dict.logOn()
 
     iface = Interface( session_bus )
     
