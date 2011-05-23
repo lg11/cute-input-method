@@ -98,12 +98,16 @@ Item {
                 updateCandString()
             }
             else if ( imEngine.hasCode ) {
-                if ( selectMode == true )
+                if ( selectMode == true ) {
                     selectMode = false
-                imEngine.backspace()
-                updateCandString()
-                if ( !imEngine.hasCode ) {
-                    key_backspace.pauseAutoRepeat()
+                    /*key_backspace.pauseAutoRepeat()*/
+                }
+                else {
+                    imEngine.backspace()
+                    updateCandString()
+                    if ( !imEngine.hasCode ) {
+                        key_backspace.pauseAutoRepeat()
+                    }
                 }
             }
             else {
