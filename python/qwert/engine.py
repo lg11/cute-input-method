@@ -221,7 +221,8 @@ class IMEngine( QtCore.QObject ) :
             for selected in self.selected :
                 key.append( selected[0] )
             key = "'".join( key )
-            self.lookup[self.mode].update( key, word, freq )
+            self.lookup[0].update( key, word, freq )
+            self.lookup[1].addKey( key ) 
             #print key, word, freq
         self.clear()
         
