@@ -28,8 +28,26 @@ FakeMouseArea {
         /*console.log( target )*/
         return target
     }
+    function getProxyTarget( target ) {
+        if ( target != null ) {
+            var prevTarget = target
+            var flag = true 
+            while ( target && flag ) {
+                /*console.log( prevTarget, target )*/
+                prevTarget = target
+                if ( target.proxyTarget ) {
+                    target = target.proxyTarget
+                }
+                else
+                    flag = false
+            }
+            target = prevTarget
+        }
+        return target
+    }
     function switchMouseTarget( x, y ) {
         var target = getMouseTarget( x, y )
+        target = getProxyTarget( target )
         if ( target != mouseTarget ) {
             if ( mouseTarget ) {
                 var pos = mapToItem( mouseTarget, x, y )

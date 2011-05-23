@@ -46,10 +46,12 @@ Item {
                 controlPadPart.stateFlag = 1
             }
         }
-        ProxyMouseArea {
-            id : rightProxyArea
-            width : sideSpacing
-            height : part.height
-        }
+    }
+    ProxyMouseArea {
+        id : rightProxyArea
+        x : parent.width / 5 * 3
+        y : 0
+        width : parent.width / 5 * 2
+        height : part.height
     }
 }
