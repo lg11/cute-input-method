@@ -82,7 +82,7 @@ Item {
         key_4.candString = imEngine.candString
         imEngine.updateCandString( 4 )
         key_5.candString = imEngine.candString
-        imEngine.updateCandString( 6 )
+        imEngine.updateCandString( 5 )
         key_6.candString = imEngine.candString
     }
     function commit() {
