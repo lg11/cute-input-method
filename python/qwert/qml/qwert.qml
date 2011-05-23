@@ -65,13 +65,6 @@ Item {
             x : 20
             y : textviewPartHeight
         }
-        ControlPadPart {
-            id : controlPadPart
-            keyWidth : 115
-            keyHeight : 95
-            textview : root.textview
-            textviewHeight : textviewPartHeight + 1
-        }
         Item {
             id : t9Switcher
             x : 0 ; y : 580
@@ -91,6 +84,13 @@ Item {
                         t9Mode = false
                 }
             }
+        }
+        ControlPadPart {
+            id : controlPadPart
+            keyWidth : 115
+            keyHeight : 95
+            textview : root.textview
+            textviewHeight : textviewPartHeight + 1
         }
     }
     RealMouseArea {
