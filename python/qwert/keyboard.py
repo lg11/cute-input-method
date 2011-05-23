@@ -64,7 +64,7 @@ class Keyboard( QtDeclarative.QDeclarativeView ) :
                 self.resize( keepedWidth, keepedHeight )
     def closeEvent( self, event ) :
         if self.daemonFlag :
-            self.engine.pinyinLookup.dict.flush()
+            self.engine.lookup[0].dict.flush()
             #self.hide()
             text = self.getText()
             self.commit.emit( text )
@@ -93,7 +93,7 @@ if __name__ == "__main__" :
     path = "../../data/formated"
     print "load sysdict from :", path
     engine.load( path )
-    #engine.pinyinLookup.dict.logOn()
+    #engine.lookup[0].dict.logOn()
 
 
     #view.setAttribute( QtCore.Qt.WA_Maemo5PortraitOrientation, True )
