@@ -1,6 +1,6 @@
 import Qt 4.7
 
-Item {
+ProxyMouseArea {
     id : key
     property alias candString : candText.text
     property alias subtitle : subtitleText.text
@@ -9,6 +9,7 @@ Item {
     property alias color : baseKey.color
     property alias candSize : candText.font.pointSize
     property alias candColor : candText.color
+    target : baseKey
      
     Key {
         id : baseKey
@@ -36,10 +37,10 @@ Item {
         color : "#BBFFFFFF"
         font.pointSize: 15; font.bold: false
     }
-    ProxyMouseArea {
-        target : baseKey
-        anchors.fill : parent
-    }
+    /*ProxyMouseArea {*/
+        /*target : baseKey*/
+        /*anchors.fill : parent*/
+    /*}*/
 
     states {
         State {

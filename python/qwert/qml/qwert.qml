@@ -63,7 +63,7 @@ Item {
         }
         T9Keyboard {
             id : t9Keyboard
-            x : 20
+            x : keyboardOffset
             y : textviewPartHeight
         }
         Item {
@@ -222,7 +222,7 @@ Item {
                 target : root
                 width : 480
                 height : 700
-                keyboardOffset : -10
+                keyboardOffset : 15 - t9KeyWidth
                 textviewPartHeight : 160
                 sideSpacing : 50
                 keyWidth : 0

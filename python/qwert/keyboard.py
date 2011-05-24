@@ -92,7 +92,7 @@ if __name__ == "__main__" :
 
     path = "../../data/formated"
     print "load sysdict from :", path
-    engine.load( path )
+    #engine.load( path )
     #engine.lookup[0].dict.logOn()
 
 

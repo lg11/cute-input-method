@@ -3,7 +3,7 @@ import "utils.js" as Utils
 
 Item {
     id : keyboard
-    width : keyWidth * 4
+    width : keyWidth * 5
     height : keyHeight * 4
     clip : true
 
@@ -220,23 +220,29 @@ Item {
     Column {
         anchors.fill : parent
         Row {
+            ProxyMouseArea { id : ikey_1 ; width : keyWidth ; height : keyHeight }
             T9CandKey { id : key_1 ; keycode : Utils.keycode_1 ; width : keyWidth ; height : keyHeight ; color : palette.keyNormalColor }
             T9CandKey { id : key_2 ; keycode : Utils.keycode_2 ; width : keyWidth ; height : keyHeight ; color : palette.keyNormalColor ; subtitle : "abc" }
             T9CandKey { id : key_3 ; keycode : Utils.keycode_3 ; width : keyWidth ; height : keyHeight ; color : palette.keyNormalColor ; subtitle : "def" }
             AutoRepeatKey { id : key_backspace ; keycode : Utils.keycode_backspace ; width : keyWidth ; height : keyHeight ; color : Qt.darker( palette.keyNormalColor, 1.25 ) ; onRepeated : backspace() }
         }
         Row {
+            ProxyMouseArea { id : ikey_4 ; width : keyWidth ; height : keyHeight }
             T9CandKey { id : key_4 ; keycode : Utils.keycode_4 ; width : keyWidth ; height : keyHeight ; color : palette.keyNormalColor ; subtitle : "ghi" }
             T9CandKey { id : key_5 ; keycode : Utils.keycode_5 ; width : keyWidth ; height : keyHeight ; color : palette.keyNormalColor ; subtitle : "jkl" }
             T9CandKey { id : key_6 ; keycode : Utils.keycode_6 ; width : keyWidth ; height : keyHeight ; color : palette.keyNormalColor ; subtitle : "mno" }
+            ProxyMouseArea { id : ikey_6 ; width : keyWidth ; height : keyHeight }
         }
         Row {
+            ProxyMouseArea { id : ikey_7 ; width : keyWidth ; height : keyHeight }
             T9CandKey { id : key_7 ; keycode : Utils.keycode_7 ; width : keyWidth ; height : keyHeight ; color : palette.keyNormalColor ; subtitle : "pqrs" }
             T9CandKey { id : key_8 ; keycode : Utils.keycode_8 ; width : keyWidth ; height : keyHeight ; color : palette.keyNormalColor ; subtitle : "tuv" }
             T9CandKey { id : key_9 ; keycode : Utils.keycode_9 ; width : keyWidth ; height : keyHeight ; color : palette.keyNormalColor ; subtitle : "wxyz" }
+            ProxyMouseArea { id : ikey_9 ; width : keyWidth ; height : keyHeight }
             /*Key { id : key_enter ; keycode : Utils.keycode_enter ; width : keyWidth ; height : keyHeight ; color : palette.keyNormalColor }*/
         }
         Row {
+            ProxyMouseArea { id : ikey_shift_l ; width : keyWidth ; height : keyHeight }
             Key { id : key_shift_l ; keycode : Utils.keycode_shift_l ; width : keyWidth ; height : keyHeight ; color : palette.keyNormalColor }
             Key { id : key_0 ; keycode : Utils.keycode_0 ; width : keyWidth ; height : keyHeight ; color : palette.keyNormalColor }
             Key { id : key_enter ; keycode : Utils.keycode_enter ; width : keyWidth ; height : keyHeight ; color : palette.keyNormalColor }
@@ -257,6 +263,15 @@ Item {
             PropertyChanges { target : key_8 ; text : "" }
             PropertyChanges { target : key_9 ; text : "►" }
         } 
+    }
+    Component.onCompleted : {
+        ikey_1.target = key_1
+        ikey_4.target = key_4
+        ikey_6.target = key_6
+        ikey_7.target = key_7
+        ikey_9.target = key_9
+        ikey_shift_l.target = key_shift_l
+
     }
 }
 
