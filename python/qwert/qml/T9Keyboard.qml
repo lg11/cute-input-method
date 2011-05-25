@@ -155,6 +155,10 @@ Item {
             else if ( keycode == Utils.keycode_1 ) {
                 rollPunc()
             }
+            else if ( keycode == Utils.keycode_backspace ) {
+                puncMode = false
+                updatePunc()
+            }
         }
         else {
             if ( keycode >= Utils.keycode_2 && keycode <= Utils.keycode_9 ) {
