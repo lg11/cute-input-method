@@ -7,7 +7,8 @@ ProxyMouseArea {
     property alias keycode : baseKey.keycode
     property alias text : baseKey.text
     property alias color : baseKey.color
-    property alias candSize : candText.font.pointSize
+    /*property alias candSize : candText.font.pointSize*/
+    property int candSize : 20
     property alias candColor : candText.color
     target : baseKey
      
@@ -28,7 +29,7 @@ ProxyMouseArea {
         id : candText
         anchors.centerIn : parent
         color : "#FFFFFFFF"
-        font.pointSize: 20; font.bold: false
+        font.pointSize: candSize ; font.bold: false
     }
     Text {
         id : subtitleText
