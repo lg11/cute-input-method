@@ -48,6 +48,7 @@ class Checker( QtCore.QObject ) :
     def createKeyboard( self ) :
         keyboard = Keyboard( daemonFlag = True )
         keyboard.set( "./qml/qwert.qml", self.engine, "imEngine" )
+        keyboard.setAttribute( QtCore.Qt.WA_Maemo5AutoOrientation, True )
         keyboard.commit.connect( self.checkCommit )
         return keyboard
     @QtCore.Slot( str )
