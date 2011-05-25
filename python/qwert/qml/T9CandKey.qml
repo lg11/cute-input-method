@@ -29,6 +29,7 @@ ProxyMouseArea {
         id : candText
         anchors.centerIn : parent
         color : "#FFFFFFFF"
+        /*font.pointSize: 20 ; font.bold: false*/
         font.pointSize: candSize ; font.bold: false
     }
     Text {
