@@ -8,10 +8,10 @@
 #include <QStringList>
 #include <QTextStream>
 
-QDebug operator<<( QDebug dbg, const WordRecordList& l ) {
+QDebug operator<<( QDebug dbg, const dict::WordRecordList& l ) {
     dbg.nospace() << "{ " ;
     for ( int i = 0 ; i < l.length() ; i++ ) { 
-        const WordRecord& r = l.at(i) ;
+        const dict::WordRecord& r = l.at(i) ;
 #ifdef Q_WS_MAEMO_5
         dbg.nospace() << "( " << r.first << ", " << r.second << " ) ";
 #else
@@ -46,7 +46,7 @@ QDebug operator<<( QDebug dbg, const split::KeyString& string ) {
 //}
 
 
-void load( Dictionary* d, QString file_path ) {
+void load( dict::Dictionary* d, QString file_path ) {
     QFile file( file_path ) ;
     bool flag ;
 
@@ -67,7 +67,7 @@ void load( Dictionary* d, QString file_path ) {
 
 
 int main( int argc, char** argv ) {
-    Dictionary d ;
+    dict::Dictionary d ;
     split::Spliter spliter ;
     fit::KeyMap map ;
     load( &d, argv[argc-1] ) ;

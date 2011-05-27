@@ -6,6 +6,8 @@
 #include <QList>
 #include <QHash>
 
+namespace dict {
+
 typedef QPair<QString, qreal> WordRecord ;
 typedef QList<WordRecord> WordRecordList ;
 
@@ -44,5 +46,7 @@ public :
     inline WordRecordList* get( const QString& key ) { return this->hash.contains(key) ? &(this->hash[key]) : NULL ; }
     inline void insert( const QString& key, const QString& word, qreal freq ) { insert_record( &(this->hash[key]), word, freq ) ; }
 } ;
+
+}
 
 #endif
