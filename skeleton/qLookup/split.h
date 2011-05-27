@@ -7,6 +7,8 @@
 #include <QPair>
 #include <QSet>
 
+namespace split {
+
 typedef QPair< QPair< QSet<QString>, QSet<QChar> >, QSet<QString> > KeySet ;
 
 inline void add_key( KeySet* set, const QString& key ) {
@@ -94,7 +96,7 @@ public :
             }
         }
         int removedCount = 0 ;
-        foreach( int i, removeList ) {
+        foreach ( int i, removeList ) {
             this->stringList.removeAt( i - removedCount ) ;
             removedCount++ ;
         }
@@ -103,5 +105,7 @@ public :
     }
     inline void clear() { this->code.clear() ; this->stringList.clear() ; this->stringList.append( this->emptyString ) ; }
 } ;
+
+}
 
 #endif

@@ -1,5 +1,6 @@
 #include "dict.h"
 #include "split.h"
+#include "fit.h"
 //#include "lookup.h"
 
 #include <QDebug>
@@ -21,7 +22,7 @@ QDebug operator<<( QDebug dbg, const WordRecordList& l ) {
     return dbg.space();
 }
 
-QDebug operator<<( QDebug dbg, const KeyString& string ) {
+QDebug operator<<( QDebug dbg, const split::KeyString& string ) {
     QString s = string.first.join( "'" ) ;
 #ifdef Q_WS_MAEMO_5
     dbg.nospace() << s << ", " ;
@@ -45,7 +46,7 @@ QDebug operator<<( QDebug dbg, const KeyString& string ) {
 //}
 
 
-void load( Dict* d, QString file_path ) {
+void load( Dictionary* d, QString file_path ) {
     QFile file( file_path ) ;
     bool flag ;
 
@@ -66,13 +67,15 @@ void load( Dict* d, QString file_path ) {
 
 
 int main( int argc, char** argv ) {
-    Dict d ;
-    Spliter spliter ;
+    Dictionary d ;
+    split::Spliter spliter ;
+    fit::KeyMap map ;
     load( &d, argv[argc-1] ) ;
     qDebug() << "loaded" ;
-    foreach( QString key, d.hash.keys() ) {
+    foreach ( const QString& key, d.hash.keys() ) {
         if ( key.count( "'" ) <= 0 )
-            add_key( &(spliter.keySet), key ) ;
+            split::add_key( &(spliter.keySet), key ) ;
+        fit::add_key( &(map), key ) ;
     }
     //qDebug() << spliter.keySet.first.first ;
     //qDebug() << spliter.keySet.first.second ;
@@ -87,14 +90,14 @@ int main( int argc, char** argv ) {
         //WordRecordList* l = d.get(s) ;
         //if ( l )
             //qDebug() << *l ;
+        //qDebug() <<  *(fit::get_keys( &map, s )) ;
+        
         for ( int i = 0 ; i < s.length() ; i++ ) 
             spliter.appendCode( s[i] ) ;
         for ( int i = 0 ; i < spliter.stringList.length() ; i++ )
             qDebug() << spliter.stringList[i] ;
-        //qDebug() << "===" ;
         while ( !spliter.code.isEmpty() )
             spliter.popCode() ;
-        //spliter.clear() ;
 
         //QVector<QString> keys ;
         //t.goTo(s) ;

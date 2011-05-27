@@ -23,5 +23,5 @@ QT += core
 
 # Input
 ;HEADERS += dict.h trie.h lookup.h
-HEADERS += dict.h split.h
+HEADERS += dict.h split.h fit.h
 SOURCES += main.cpp

@@ -37,10 +37,10 @@ inline void insert_record( WordRecordList* list, const QString& word, qreal freq
 }
 
 
-class Dict {
+class Dictionary {
 public :
     QHash<QString, WordRecordList> hash ;
-    inline Dict() : hash() {} ;
+    inline Dictionary() : hash() {} ;
     inline WordRecordList* get( const QString& key ) { return this->hash.contains(key) ? &(this->hash[key]) : NULL ; }
     inline void insert( const QString& key, const QString& word, qreal freq ) { insert_record( &(this->hash[key]), word, freq ) ; }
 } ;
