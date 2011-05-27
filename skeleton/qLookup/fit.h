@@ -1,8 +1,6 @@
 #ifndef FIT_H
 #define FIT_H
 
-//#include "split.h"
-//#include "dich.h"
 #include <QHash>
 #include <QString>
 #include <QList>
@@ -50,7 +48,7 @@ inline void check_string( QStringList* string, const QString& key, bool* flag, i
     }
 }
 
-inline int fit( QStringList* string, QList<const QString*>* result, KeyMap* key_map ) {
+inline void fit( QStringList* string, QList<const QString*>* buffer, int* fit_point, KeyMap* key_map ) {
     QString path ;
     foreach ( const QString& s, *string )
         path.append( s.at(0) ) ;
@@ -61,28 +59,28 @@ inline int fit( QStringList* string, QList<const QString*>* result, KeyMap* key_
     if ( keys ) {
         //qDebug() << *string << *keys ;
         foreach( const QString& key, *keys ) {
-            int fit_point = 0 ;
+            *fit_point = 0 ;
             bool flag = true ;
-            check_string( string, key, &flag, &fit_point ) ;
+            check_string( string, key, &flag, fit_point ) ;
             //qDebug() << *string << key << flag << fit_point ;
             if ( flag ) {
-                if ( fit_point >= 0 ) {
-                    result->clear() ;
-                    result->append( &key ) ;
+                if ( *fit_point >= 0 ) {
+                    buffer->clear() ;
+                    buffer->append( &key ) ;
                     highest_point = 0 ;
                     break ;
                 }
-                else if ( fit_point > highest_point ) {
-                    result->clear() ;
-                    result->append( &key ) ;
-                    highest_point = fit_point ;
+                else if ( *fit_point > highest_point ) {
+                    buffer->clear() ;
+                    buffer->append( &key ) ;
+                    highest_point = *fit_point ;
                 }
-                else if ( fit_point == highest_point ) 
-                    result->append( &key ) ;
+                else if ( *fit_point == highest_point ) 
+                    buffer->append( &key ) ;
             }
         }
     }
-    return highest_point ;
+    *fit_point = highest_point ;
 }
 
 }

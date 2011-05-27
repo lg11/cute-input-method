@@ -1,6 +1,7 @@
 #include "dict.h"
 #include "split.h"
 #include "fit.h"
+#include "pick.h"
 //#include "lookup.h"
 
 #include <QDebug>
@@ -94,13 +95,35 @@ int main( int argc, char** argv ) {
         
         for ( int i = 0 ; i < s.length() ; i++ ) 
             spliter.appendCode( s[i] ) ;
+        QList<QString> stack ;
+        QList<const QString*> buffer ;
         QList<const QString*> result ;
+        QList<const QString*> preedit ;
+        int highest_point = -0x1000 ;
         for ( int i = 0 ; i < spliter.stringList.length() ; i++ ) {
-            int fit_point = fit::fit( &(spliter.stringList[i].first), &result, &map  ) ;
-            foreach( const QString* s, result )
-                qDebug() << *s << fit_point << spliter.stringList[i].first ;
-            result.clear() ;
-       }
+            int fit_point ;
+            fit::fit( &(spliter.stringList[i].first), &buffer, &fit_point, &map ) ;
+            if ( fit_point > highest_point ) {
+                highest_point = fit_point ;
+                stack.clear() ;
+                result.clear() ;
+                preedit.clear() ;
+                stack.append( spliter.stringList[i].first.join( "'" ) ) ;
+                foreach( const QString* s, buffer ) {
+                    result.append( s ) ;
+                    preedit.append( &(stack.last()) ) ;
+                }
+            }
+            else if ( fit_point == highest_point ) {
+                stack.append( spliter.stringList[i].first.join( "'" ) ) ;
+                foreach( const QString* s, buffer ) {
+                    result.append( s ) ;
+                    preedit.append( &(stack.last()) ) ;
+                }
+            }
+        }
+        for ( int i = 0 ; i < result.length() ; i ++ )
+            qDebug() << *(preedit.at(i)) << *(result.at(i)) << highest_point ;
         while ( !spliter.code.isEmpty() )
             spliter.popCode() ;
 
