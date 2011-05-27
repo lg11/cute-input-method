@@ -68,12 +68,15 @@ void load( Dict* d, QString file_path ) {
 int main( int argc, char** argv ) {
     Dict d ;
     Spliter spliter ;
-    load( &d, argv[1] ) ;
+    load( &d, argv[argc-1] ) ;
     qDebug() << "loaded" ;
     foreach( QString key, d.hash.keys() ) {
         if ( key.count( "'" ) <= 0 )
             add_key( &(spliter.keySet), key ) ;
     }
+    //qDebug() << spliter.keySet.first.first ;
+    //qDebug() << spliter.keySet.first.second ;
+    //qDebug() << spliter.keySet.second ;
     qDebug() << "built" ;
     //NumberLookup lookup( &d ) ;
 
@@ -88,7 +91,10 @@ int main( int argc, char** argv ) {
             spliter.appendCode( s[i] ) ;
         for ( int i = 0 ; i < spliter.stringList.length() ; i++ )
             qDebug() << spliter.stringList[i] ;
-        spliter.clear() ;
+        //qDebug() << "===" ;
+        while ( !spliter.code.isEmpty() )
+            spliter.popCode() ;
+        //spliter.clear() ;
 
         //QVector<QString> keys ;
         //t.goTo(s) ;
