@@ -7,7 +7,7 @@
 #include <QString>
 #include <QList>
 
-#include <QDebug>
+//#include <QDebug>
 
 namespace fit {
 
@@ -30,96 +30,59 @@ inline QList<QString>* get_keys( KeyMap* map, const QString& path ) {
 }
 
 inline void check_string( QStringList* string, const QString& key, bool* flag, int* fit_point ) {
-    *flag = true ;
-    *fit_point = 0 ;
-    QStringList l( key.split( "'" ) ) ;
-    for i in range( len(s) ) :
-        #print s[i], pinyinString[i]
-        if s[i] == pinyinString[i] :
-            pass
-        else :
-            currentFitPoint -= 1
-            l = len( pinyinString[i] )
-            if l > len( s[i] ) :
-                flag = False
-                break
-            elif pinyinString[i] in self.pinyinSet and i < len(s) - 1 :
-                if pinyinString[i] in self.extraSet :
-                    if s[i][:l] != pinyinString[i][:l] :
-                        flag = False
-                        break
-                else :
-                    flag = False
-                    break
-            else :
-                #print s[i][:l], pinyinString[i][:l]
-                if s[i][:l] != pinyinString[i][:l] :
-                    flag = False
-                    break
-    #print currentFitPoint, key, flag
-    if flag :
-        if currentFitPoint >= 0 :
-            results = [ key ]
-            fitPoint = 0
-            #hasFullFit = True
-            break
-        elif currentFitPoint > fitPoint :
-            results = [ key ]
-            fitPoint = currentFitPoint
-        elif currentFitPoint == fitPoint :
-            results.append( key )
+    QStringList list( key.split( "'" ) ) ;
+    for ( int i = 0 ; i < list.length() && flag ; i++ ) {
+        const QString& s = string->at(i) ;
+        const QString& k = list.at(i) ;
+        if ( s == k )
+            ;
+        else {
+            (*fit_point)-- ;
+            if ( s.length() > k.length() )
+                *flag = false ;
+            else {
+                QString head( k ) ;
+                head.truncate( s.length() ) ;
+                if ( s != head ) 
+                    *flag = false ;
+            }
+        }
+    }
 }
 
-inline void fit( QStringList* string, QList<QString*>* result, QSet<QString>* key_set, KeyMap* key_map ) {
+inline int fit( QStringList* string, QList<const QString*>* result, KeyMap* key_map ) {
     QString path ;
     foreach ( const QString& s, *string )
         path.append( s.at(0) ) ;
-
+    
     QList<QString>* keys = get_keys( key_map, path ) ;
     int highest_point = -0x1000 ;
-    bool flag = true ;
-    foreach( const QString& key, keys ) {
-        int fit_point = 0 ;
-        QStringList l( key.split( "'" ) ) ;
-        for ( int i = 0 ; i < l.length() ; i++ ) {
-            if ( l.at(i) == string_list.at(i) )
-                ;
-            else {
-                fit_point-- ;
-                if ( string_list.at(i).length() > l.at(i).length() ) {
-                    flag = false ;
+
+    if ( keys ) {
+        //qDebug() << *string << *keys ;
+        foreach( const QString& key, *keys ) {
+            int fit_point = 0 ;
+            bool flag = true ;
+            check_string( string, key, &flag, &fit_point ) ;
+            //qDebug() << *string << key << flag << fit_point ;
+            if ( flag ) {
+                if ( fit_point >= 0 ) {
+                    result->clear() ;
+                    result->append( &key ) ;
+                    highest_point = 0 ;
                     break ;
                 }
-                else if ( key_set->contains( string_list.at(i) ) && i < l.length() - 1 ) {
-                    if ( string_list
-
-                        //if pinyinString[i] in self.extraSet :
-                            //if s[i][:l] != pinyinString[i][:l] :
-                                //flag = False
-                                //break
-                        //else :
-                            //flag = False
-                            //break
-                    //else :
-                        //#print s[i][:l], pinyinString[i][:l]
-                        //if s[i][:l] != pinyinString[i][:l] :
-                            //flag = False
-                            //break
-            //#print currentFitPoint, key, flag
-            //if flag :
-                //if currentFitPoint >= 0 :
-                    //results = [ key ]
-                    //fitPoint = 0
-                    //#hasFullFit = True
-                    //break
-                //elif currentFitPoint > fitPoint :
-                    //results = [ key ]
-                    //fitPoint = currentFitPoint
-                //elif currentFitPoint == fitPoint :
-                    //results.append( key )
-        //#print "-----end-----"
-        //return fitPoint, results
-//#endif
+                else if ( fit_point > highest_point ) {
+                    result->clear() ;
+                    result->append( &key ) ;
+                    highest_point = fit_point ;
+                }
+                else if ( fit_point == highest_point ) 
+                    result->append( &key ) ;
+            }
+        }
+    }
+    return highest_point ;
 }
 
 }

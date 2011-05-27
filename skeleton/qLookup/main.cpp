@@ -94,8 +94,13 @@ int main( int argc, char** argv ) {
         
         for ( int i = 0 ; i < s.length() ; i++ ) 
             spliter.appendCode( s[i] ) ;
-        for ( int i = 0 ; i < spliter.stringList.length() ; i++ )
-            qDebug() << spliter.stringList[i] ;
+        QList<const QString*> result ;
+        for ( int i = 0 ; i < spliter.stringList.length() ; i++ ) {
+            int fit_point = fit::fit( &(spliter.stringList[i].first), &result, &map  ) ;
+            foreach( const QString* s, result )
+                qDebug() << *s << fit_point << spliter.stringList[i].first ;
+            result.clear() ;
+       }
         while ( !spliter.code.isEmpty() )
             spliter.popCode() ;
 
