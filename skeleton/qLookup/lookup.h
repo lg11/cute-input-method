@@ -11,6 +11,8 @@
 #include "pick.h"
 #include "dict.h"
 
+//#include <QDebug>
+
 namespace lookup {
 
 typedef QPair<const QString*, const QString*> KeyPair ;
@@ -34,8 +36,10 @@ public :
     QList<Candidate> candList ;
 
     inline Lookup() : dictionary(), spliter(), keyMap(), pickCache(), lookupCache(), preeditCache(), candCacheIndex(0), candStartIndex(0), candList() {}
+    //inline const QString* code() { return &(this->spliter.code) ; }
 
     inline void appendCode( QChar code ) {
+        this->pickCache.clear() ;
         this->spliter.appendCode( code ) ;
         this->lookupCache.append( LookupPair() ) ;
         this->preeditCache.append( QList<QString>() ) ;
@@ -68,11 +72,25 @@ public :
                 }
             }
         }
-        this->pickCache.clear() ;
         pick::set( &(this->pickCache), key, preedit, &(this->dictionary.hash) ) ;
         this->candList.clear() ;
         this->candCacheIndex = this->lookupCache.length() - 1 ;
         this->candStartIndex = 0 ;
+    }
+    inline void popCode() {
+        this->pickCache.clear() ;
+        this->spliter.popCode() ;
+        this->lookupCache.removeLast() ;
+        this->preeditCache.removeLast() ;
+
+        if ( !this->lookupCache.isEmpty() ) {
+            QList<const QString*>* key = &(this->lookupCache.last().second.first)  ;
+            QList<const QString*>* preedit = &(this->lookupCache.last().second.second)  ;
+            pick::set( &(this->pickCache), key, preedit, &(this->dictionary.hash) ) ;
+            this->candList.clear() ;
+            this->candCacheIndex = this->lookupCache.length() - 1 ;
+            this->candStartIndex = 0 ;
+        }
     }
 };
 

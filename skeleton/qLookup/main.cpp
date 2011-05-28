@@ -89,6 +89,7 @@ int main( int argc, char** argv ) {
         
         for ( int i = 0 ; i < s.length() ; i++ ) 
             lup.appendCode( s[i] ) ;
+        //lup.popCode() ;
         for ( int i = 0 ; i < 10 ; i ++ ) {
             const QString* k ;
             const QString* p ;
@@ -98,9 +99,8 @@ int main( int argc, char** argv ) {
             if ( k )
                 qDebug() << *k << *p << w->toUtf8() << freq ;
         }
-        //while ( !spliter.code.isEmpty() )
-            //lup.popCode() ;
-            ;
+        while ( !lup.spliter.code.isEmpty() )
+            lup.popCode() ;
 
         //QVector<QString> keys ;
         //t.goTo(s) ;
