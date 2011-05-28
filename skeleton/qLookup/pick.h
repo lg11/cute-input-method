@@ -4,6 +4,7 @@
 #include <QPair>
 #include <QString>
 #include <QList>
+#include <QHash>
 
 namespace pick {
 
@@ -19,8 +20,10 @@ inline void set_index( PickPair* pair, int index ) { pair->second.second = index
 inline const QString* get_word( PickPair* pair ) { return &(get_list( pair )->at(get_index( pair )).first) ; }
 inline qreal get_freq( PickPair* pair ) { return get_list( pair )->at(get_index( pair )).second ; }
 
-
-
+inline void set( QList<PickPair>* list, QList<const QString*>* key, QList<const QString*>* preedit, QHash< QString, QList< QPair<QString, qreal> > >* hash ) {
+    for ( int i = 0 ; i < key->length() ; i ++ )
+        list->append( PickPair( KeyPair( key->at(i), preedit->at(i) ), WordPair( &((*hash)[*(key->at(i))]), 0 ) ) ) ;
+}
 
 inline void pick( QList<PickPair>* list, const QString* key, const QString* preedit, const QString* word, qreal* freq ) {
     qreal highest_freq = -0x1000 ;
