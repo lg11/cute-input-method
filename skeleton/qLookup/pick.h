@@ -5,18 +5,19 @@
 #include <QString>
 #include <QList>
 #include <QHash>
+#include <QSet>
 
 //#include <QDebug>
 
 namespace pick {
 
 typedef QPair< const QString*, const QString* > KeyPair ;
-typedef QPair< QList< QPair<QString, qreal> >*, int > RecordPair ;
+typedef QPair< const QList< QPair<QString, qreal> >*, int > RecordPair ;
 typedef QPair< KeyPair, RecordPair > PickPair ;
 
 inline const QString* get_key( PickPair* pair ) { return pair->first.first ; }
 inline const QString* get_preedit( PickPair* pair ) { return pair->first.second ; }
-inline QList< QPair<QString, qreal> >* get_list( PickPair* pair ) { return pair->second.first ; }
+inline const QList< QPair<QString, qreal> >* get_list( PickPair* pair ) { return pair->second.first ; }
 inline int get_index( PickPair* pair ) { return pair->second.second ; }
 inline void set_index( PickPair* pair, int index ) { pair->second.second = index ; }
 inline const QString* get_word( PickPair* pair ) { return &(get_list( pair )->at(get_index( pair )).first) ; }
@@ -27,12 +28,19 @@ inline void set( QList<PickPair>* list, QList<const QString*>* key, QList<const 
         list->append( PickPair( KeyPair( key->at(i), preedit->at(i) ), RecordPair( &((*hash)[*(key->at(i))]), 0 ) ) ) ;
 }
 
+inline void set( QList<PickPair>* list, QList<const QString*>* key, QList<const QString*>* preedit, QHash< QString, QList< QPair<QString, qreal> > >* hash, QSet<QString>* usedKeySet ) {
+    for ( int i = 0 ; i < key->length() ; i ++ ) {
+        if ( !usedKeySet->contains( *(key->at(i))  ) ) 
+            list->append( PickPair( KeyPair( key->at(i), preedit->at(i) ), RecordPair( &((*hash)[*(key->at(i))]), 0 ) ) ) ;
+    }
+}
+
 inline void pick( QList<PickPair>* list, const QString** key, const QString** preedit, const QString** word, qreal* freq ) {
     qreal highest_freq = -0x1000 ;
     int highest_index = -0x1000 ;
     for ( int i = 0 ; i < list->length() ; i++ ) {
         PickPair* pair = &((*list)[i]) ;
-        QList< QPair<QString, qreal> >* record_list = get_list( pair ) ;
+        const QList< QPair<QString, qreal> >* record_list = get_list( pair ) ;
         int index = get_index( pair ) ;
         //qDebug() << index << record_list->length() ;
         if ( index < record_list->length() ) {

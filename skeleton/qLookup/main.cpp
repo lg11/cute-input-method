@@ -30,18 +30,14 @@ QDebug operator<<( QDebug dbg, const split::KeyString& string ) {
     return dbg.space();
 }
 
-//QDebug operator<<( QDebug dbg, const CandidateItem& item ) {
-    //dbg.nospace() << "( " ;
-    //dbg.nospace() <<  item.key << ", " << item.word.toUtf8() << ", " << item.freq ;
-//#ifdef Q_WS_MAEMO_5
-    //dbg.nospace() <<  item.key << ", " << item.word << ", " << item.freq ;
-//#else
-    //dbg.nospace() <<  item.key << ", " << item.word.toUtf8() << ", " << item.freq ;
-//#endif
-    //dbg.nospace() << " )" ;
-    //return dbg.space();
-//}
-
+QDebug operator<<( QDebug dbg, const lookup::Candidate& cand ) {
+#ifdef Q_WS_MAEMO_5
+    dbg.nospace() << *(cand.first.first.first) << " " << *(cand.first.first.second) << " " << *(cand.first.second.first) << " " << cand.first.second.second << " " << cand.second ;
+#else
+    dbg.nospace() << *(cand.first.first.first) << " " << *(cand.first.first.second) << " " << cand.first.second.first->toUtf8() << " " << cand.first.second.second << " " << cand.second ;
+#endif
+    return dbg.space();
+}
 
 void load( dict::Dictionary* d, QString file_path ) {
     QFile file( file_path ) ;
@@ -90,14 +86,11 @@ int main( int argc, char** argv ) {
         for ( int i = 0 ; i < s.length() ; i++ ) 
             lup.appendCode( s[i] ) ;
         //lup.popCode() ;
-        for ( int i = 0 ; i < 10 ; i ++ ) {
-            const QString* k ;
-            const QString* p ;
-            const QString* w ;
-            qreal freq ;
-            pick::pick( &(lup.pickCache), &k, &p, &w, &freq ) ;
-            if ( k )
-                qDebug() << *k << *p << w->toUtf8() << freq ;
+        for ( int i = 0 ; i < 10000 ; i ++ ) {
+            const lookup::Candidate* cand = lup.getCand( i ) ;
+            if ( cand )
+                //;
+                qDebug() << *cand ;
         }
         while ( !lup.spliter.code.isEmpty() )
             lup.popCode() ;
