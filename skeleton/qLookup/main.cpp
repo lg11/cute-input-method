@@ -122,8 +122,17 @@ int main( int argc, char** argv ) {
                 }
             }
         }
-        for ( int i = 0 ; i < result.length() ; i ++ )
-            qDebug() << *(preedit.at(i)) << *(result.at(i)) << highest_point ;
+        QList<pick::PickPair> list ;
+        pick::set( &list, &result, &preedit, &(d.hash) ) ;
+        const QString* k ;
+        const QString* p ;
+        const QString* w ;
+        qreal freq ;
+        for ( int i = 0 ; i < 10 ; i ++ ) {
+            pick::pick( &list, &k, &p, &w, &freq ) ;
+            if ( k )
+                qDebug() << *k << *p << w->toUtf8() << freq ;
+        }
         while ( !spliter.code.isEmpty() )
             spliter.popCode() ;
 

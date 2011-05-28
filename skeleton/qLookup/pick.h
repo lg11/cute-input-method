@@ -6,6 +6,8 @@
 #include <QList>
 #include <QHash>
 
+//#include <QDebug>
+
 namespace pick {
 
 typedef QPair< const QString*, const QString* > KeyPair ;
@@ -25,33 +27,34 @@ inline void set( QList<PickPair>* list, QList<const QString*>* key, QList<const 
         list->append( PickPair( KeyPair( key->at(i), preedit->at(i) ), WordPair( &((*hash)[*(key->at(i))]), 0 ) ) ) ;
 }
 
-inline void pick( QList<PickPair>* list, const QString* key, const QString* preedit, const QString* word, qreal* freq ) {
+inline void pick( QList<PickPair>* list, const QString** key, const QString** preedit, const QString** word, qreal* freq ) {
     qreal highest_freq = -0x1000 ;
     int highest_index = -0x1000 ;
     for ( int i = 0 ; i < list->length() ; i++ ) {
         PickPair* pair = &((*list)[i]) ;
         QList< QPair<QString, qreal> >* record_list = get_list( pair ) ;
         int index = get_index( pair ) ;
+        //qDebug() << index << record_list->length() ;
         if ( index < record_list->length() ) {
             qreal freq = record_list->at(index).second ;
             if ( freq > highest_freq ) {
                 highest_freq = freq ;
-                highest_index = index ;
+                highest_index = i ;
             }
         }
     }
     if ( highest_index >= 0 ) {
         PickPair* pair = &((*list)[highest_index]) ;
-        key = get_key( pair ) ;
-        preedit = get_preedit( pair ) ;
-        word = get_word( pair ) ;
+        *key = get_key( pair ) ;
+        *preedit = get_preedit( pair ) ;
+        *word = get_word( pair ) ;
         *freq = get_freq( pair ) ;
         set_index( pair, get_index( pair ) + 1 ) ;
     }
     else {
-        key = NULL ;
-        preedit = NULL ;
-        word = NULL ;
+        *key = NULL ;
+        *preedit = NULL ;
+        *word = NULL ;
         *freq = 0 ;
     }
 }
