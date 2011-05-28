@@ -11,8 +11,8 @@
 namespace pick {
 
 typedef QPair< const QString*, const QString* > KeyPair ;
-typedef QPair< QList< QPair<QString, qreal> >*, int > WordPair ;
-typedef QPair< KeyPair, WordPair > PickPair ;
+typedef QPair< QList< QPair<QString, qreal> >*, int > RecordPair ;
+typedef QPair< KeyPair, RecordPair > PickPair ;
 
 inline const QString* get_key( PickPair* pair ) { return pair->first.first ; }
 inline const QString* get_preedit( PickPair* pair ) { return pair->first.second ; }
@@ -24,7 +24,7 @@ inline qreal get_freq( PickPair* pair ) { return get_list( pair )->at(get_index(
 
 inline void set( QList<PickPair>* list, QList<const QString*>* key, QList<const QString*>* preedit, QHash< QString, QList< QPair<QString, qreal> > >* hash ) {
     for ( int i = 0 ; i < key->length() ; i ++ )
-        list->append( PickPair( KeyPair( key->at(i), preedit->at(i) ), WordPair( &((*hash)[*(key->at(i))]), 0 ) ) ) ;
+        list->append( PickPair( KeyPair( key->at(i), preedit->at(i) ), RecordPair( &((*hash)[*(key->at(i))]), 0 ) ) ) ;
 }
 
 inline void pick( QList<PickPair>* list, const QString** key, const QString** preedit, const QString** word, qreal* freq ) {

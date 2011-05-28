@@ -1,8 +1,4 @@
-#include "dict.h"
-#include "split.h"
-#include "fit.h"
-#include "pick.h"
-//#include "lookup.h"
+#include "lookup.h"
 
 #include <QDebug>
 #include <QFile>
@@ -68,15 +64,13 @@ void load( dict::Dictionary* d, QString file_path ) {
 
 
 int main( int argc, char** argv ) {
-    dict::Dictionary d ;
-    split::Spliter spliter ;
-    fit::KeyMap map ;
-    load( &d, argv[argc-1] ) ;
+    lookup::Lookup lup ;
+    load( &(lup.dictionary), argv[argc-1] ) ;
     qDebug() << "loaded" ;
-    foreach ( const QString& key, d.hash.keys() ) {
+    foreach ( const QString& key, lup.dictionary.hash.keys() ) {
         if ( key.count( "'" ) <= 0 )
-            split::add_key( &(spliter.keySet), key ) ;
-        fit::add_key( &(map), key ) ;
+            split::add_key( &(lup.spliter.keySet), key ) ;
+        fit::add_key( &(lup.keyMap), key ) ;
     }
     //qDebug() << spliter.keySet.first.first ;
     //qDebug() << spliter.keySet.first.second ;
@@ -94,47 +88,19 @@ int main( int argc, char** argv ) {
         //qDebug() <<  *(fit::get_keys( &map, s )) ;
         
         for ( int i = 0 ; i < s.length() ; i++ ) 
-            spliter.appendCode( s[i] ) ;
-        QList<QString> stack ;
-        QList<const QString*> buffer ;
-        QList<const QString*> result ;
-        QList<const QString*> preedit ;
-        int highest_point = -0x1000 ;
-        for ( int i = 0 ; i < spliter.stringList.length() ; i++ ) {
-            int fit_point ;
-            fit::fit( &(spliter.stringList[i].first), &buffer, &fit_point, &map ) ;
-            if ( fit_point > highest_point ) {
-                highest_point = fit_point ;
-                stack.clear() ;
-                result.clear() ;
-                preedit.clear() ;
-                stack.append( spliter.stringList[i].first.join( "'" ) ) ;
-                foreach( const QString* s, buffer ) {
-                    result.append( s ) ;
-                    preedit.append( &(stack.last()) ) ;
-                }
-            }
-            else if ( fit_point == highest_point ) {
-                stack.append( spliter.stringList[i].first.join( "'" ) ) ;
-                foreach( const QString* s, buffer ) {
-                    result.append( s ) ;
-                    preedit.append( &(stack.last()) ) ;
-                }
-            }
-        }
-        QList<pick::PickPair> list ;
-        pick::set( &list, &result, &preedit, &(d.hash) ) ;
-        const QString* k ;
-        const QString* p ;
-        const QString* w ;
-        qreal freq ;
+            lup.appendCode( s[i] ) ;
         for ( int i = 0 ; i < 10 ; i ++ ) {
-            pick::pick( &list, &k, &p, &w, &freq ) ;
+            const QString* k ;
+            const QString* p ;
+            const QString* w ;
+            qreal freq ;
+            pick::pick( &(lup.pickCache), &k, &p, &w, &freq ) ;
             if ( k )
                 qDebug() << *k << *p << w->toUtf8() << freq ;
         }
-        while ( !spliter.code.isEmpty() )
-            spliter.popCode() ;
+        //while ( !spliter.code.isEmpty() )
+            //lup.popCode() ;
+            ;
 
         //QVector<QString> keys ;
         //t.goTo(s) ;
