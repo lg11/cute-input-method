@@ -61,9 +61,9 @@ void load( dict::Dictionary* d, QString file_path ) {
 
 int main( int argc, char** argv ) {
     lookup::Lookup lup ;
-    load( &(lup.dictionary), argv[argc-1] ) ;
+    load( &(lup.dict), argv[argc-1] ) ;
     qDebug() << "loaded" ;
-    foreach ( const QString& key, lup.dictionary.hash.keys() ) {
+    foreach ( const QString& key, lup.dict.hash.keys() ) {
         if ( key.count( "'" ) <= 0 )
             split::add_key( &(lup.spliter.keySet), key ) ;
         fit::add_key( &(lup.keyMap), key ) ;
@@ -83,17 +83,18 @@ int main( int argc, char** argv ) {
             //qDebug() << *l ;
         //qDebug() <<  *(fit::get_keys( &map, s )) ;
         
-        for ( int i = 0 ; i < s.length() ; i++ ) 
-            lup.appendCode( s[i] ) ;
-        //lup.popCode() ;
+        //for ( int i = 0 ; i < s.length() ; i++ ) 
+            //lup.appendCode( s[i] ) ;
+        lup.setCode( s ) ;
         for ( int i = 0 ; i < 10000 ; i ++ ) {
             const lookup::Candidate* cand = lup.getCand( i ) ;
             if ( cand )
                 //;
                 qDebug() << *cand ;
         }
-        while ( !lup.spliter.code.isEmpty() )
-            lup.popCode() ;
+        //while ( !lup.spliter.code.isEmpty() )
+            //lup.popCode() ;
+        lup.reset() ;
 
         //QVector<QString> keys ;
         //t.goTo(s) ;

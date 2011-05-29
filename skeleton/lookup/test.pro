@@ -3,6 +3,7 @@ TARGET = test
 ;DEPENDPATH += .
 ;INCLUDEPATH += .
 
+OBJECTS_DIR = tmp
 CONFIG += release
 ;CONFIG += debug
 QT += core

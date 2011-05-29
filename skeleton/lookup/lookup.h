@@ -30,7 +30,7 @@ typedef QPair< int, QPair< QList<const QString*>, QList<const QString*> > > Look
 
 class Lookup {
 public :
-    dict::Dictionary dictionary ;
+    dict::Dictionary dict ;
     split::Spliter spliter ;
     fit::KeyMap keyMap ;
     QList<pick::PickPair> pickCache ;
@@ -41,7 +41,7 @@ public :
     int candStartIndex ;
     QList<Candidate> candList ;
 
-    inline Lookup() : dictionary(), spliter(), keyMap(), pickCache(), lookupCache(), preeditCache(), usedKeySet(), candCacheIndex(0), candStartIndex(0), candList() {}
+    inline Lookup() : dict(), spliter(), keyMap(), pickCache(), lookupCache(), preeditCache(), usedKeySet(), candCacheIndex(0), candStartIndex(0), candList() {}
 
     inline void appendCode( QChar code ) {
         this->pickCache.clear() ;
@@ -79,7 +79,7 @@ public :
             }
         }
         this->lookupCache.last().first = highestPoint ;
-        pick::set( &(this->pickCache), key, preedit, &(this->dictionary.hash) ) ;
+        pick::set( &(this->pickCache), key, preedit, &(this->dict.hash) ) ;
         foreach( const QString* k, *key )
             this->usedKeySet.insert( *k ) ;
         this->candList.clear() ;
@@ -96,13 +96,27 @@ public :
         if ( !this->lookupCache.isEmpty() ) {
             QList<const QString*>* key = &(this->lookupCache.last().second.first)  ;
             QList<const QString*>* preedit = &(this->lookupCache.last().second.second)  ;
-            pick::set( &(this->pickCache), key, preedit, &(this->dictionary.hash), &(this->usedKeySet) ) ;
+            pick::set( &(this->pickCache), key, preedit, &(this->dict.hash), &(this->usedKeySet) ) ;
             foreach( const QString* k, *key )
                 this->usedKeySet.insert( *k ) ;
             this->candList.clear() ;
             this->candCacheIndex = this->lookupCache.length() - 1 ;
             this->candStartIndex = 0 ;
         }
+    }
+    inline void reset() {
+        this->pickCache.clear() ;
+        this->usedKeySet.clear() ;
+        this->spliter.clear() ;
+        this->lookupCache.clear() ;
+        this->preeditCache.clear() ;
+        this->candCacheIndex = 0 ;
+        this->candStartIndex = 0 ;
+    }
+    inline void setCode( const QString& code ) {
+        this->reset() ;
+        for( int i = 0 ; i < code.length() ; i++ )
+            this->appendCode( code.at(i) ) ;
     }
     inline bool checkCache() {
         bool flag = false ;
@@ -129,7 +143,7 @@ public :
             }
             if ( flag ) {
                 this->lookupCache[this->candCacheIndex].first = fitPoint ;
-                pick::set( &(this->pickCache), key, preedit, &(this->dictionary.hash) ) ;
+                pick::set( &(this->pickCache), key, preedit, &(this->dict.hash) ) ;
             }
         }
         return flag ;
