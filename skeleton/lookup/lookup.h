@@ -26,6 +26,18 @@ inline const QString* get_preedit( Candidate* cand ) { return cand->first.first.
 inline const QString* get_word( Candidate* cand ) { return cand->first.second.first ; }
 inline qreal get_freq( Candidate* cand ) { return cand->first.second.second ; }
 
+inline void check_cand( QList<Candidate>* cand_list, int length ) {
+    if ( length >= cand_list->length() ) 
+        cand_list->append( Candidate( CandPair( KeyPair( NULL, NULL ), WordPair( NULL, 0 ) ), 0 ) ) ;
+}
+inline void set_cand( Candidate* cand, const QString* key, const QString* preedit, const QString* word, qreal freq, int start_index ) {
+    cand->first.first.first = key ;
+    cand->first.first.second = preedit ;
+    cand->first.second.first = word ;
+    cand->first.second.second = freq ;
+    cand->second = start_index ;
+}
+
 typedef QPair< int, QPair< QList<const QString*>, QList<const QString*> > > LookupPair ;
 
 class Lookup {
@@ -40,8 +52,9 @@ public :
     int candCacheIndex ;
     int candStartIndex ;
     QList<Candidate> candList ;
+    int candLength ;
 
-    inline Lookup() : dict(), spliter(), keyMap(), pickCache(), lookupCache(), preeditCache(), usedKeySet(), candCacheIndex(0), candStartIndex(0), candList() {}
+    inline Lookup() : dict(), spliter(), keyMap(), pickCache(), lookupCache(), preeditCache(), usedKeySet(), candCacheIndex(0), candStartIndex(0), candList(), candLength(0) {}
 
     inline void appendCode( QChar code ) {
         this->pickCache.clear() ;
@@ -82,7 +95,8 @@ public :
         pick::set( &(this->pickCache), key, preedit, &(this->dict.hash) ) ;
         foreach( const QString* k, *key )
             this->usedKeySet.insert( *k ) ;
-        this->candList.clear() ;
+        //this->candList.clear() ;
+        this->candLength = 0 ;
         this->candCacheIndex = this->lookupCache.length() - 1 ;
         this->candStartIndex = 0 ;
     }
@@ -99,7 +113,8 @@ public :
             pick::set( &(this->pickCache), key, preedit, &(this->dict.hash), &(this->usedKeySet) ) ;
             foreach( const QString* k, *key )
                 this->usedKeySet.insert( *k ) ;
-            this->candList.clear() ;
+            //this->candList.clear() ;
+            this->candLength = 0 ;
             this->candCacheIndex = this->lookupCache.length() - 1 ;
             this->candStartIndex = 0 ;
         }
@@ -150,14 +165,20 @@ public :
     }
     inline const Candidate* getCand( int index ) {
         bool flag = true ;
-        while ( flag && this->candList.length() <= index ) {
+        //while ( flag && this->candList.length() <= index ) {
+        while ( flag && this->candLength <= index ) {
             const QString* key ; const QString* preedit ; const QString* word ; qreal freq ;
             pick::pick( &(this->pickCache), &key, &preedit, &word, &freq ) ;
-            if ( key ) 
-                this->candList.append( Candidate( CandPair( KeyPair( key, preedit ), WordPair( word, freq ) ), this->candStartIndex ) ) ;
+            if ( key ) {
+                //this->candList.append( Candidate( CandPair( KeyPair( key, preedit ), WordPair( word, freq ) ), this->candStartIndex ) ) ;
+                check_cand( &(this->candList), this->candLength ) ;
+                set_cand( &(this->candList[this->candLength]), key, preedit, word, freq, this->candStartIndex ) ;
+                this->candLength++ ;
+            }
             else {
                 flag = this->checkCache() ;
-                this->candStartIndex = this->candList.length() ;
+                //this->candStartIndex = this->candList.length() ;
+                this->candStartIndex = this->candLength ;
             }
         }
         if ( flag ) 
