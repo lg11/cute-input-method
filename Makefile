@@ -1,4 +1,4 @@
-DIRS = plugin python data
+DIRS = src/plugin python data
 
 ALL : runtime
 	#qmake -makefile src/backend.pro -o src/Makefile
@@ -15,10 +15,10 @@ install :
 	mkdir -p $(DESTDIR)/opt/cim/python
 	mkdir -p $(DESTDIR)/opt/cim/plugin
 	mkdir -p $(DESTDIR)/opt/cim/data
-	cp plugin/gconf.sh $(DESTDIR)/opt/cim/plugin 
-	cp plugin/recover.sh $(DESTDIR)/opt/cim/plugin 
-	cp plugin/inputpad_plugin.so $(DESTDIR)/usr/lib/hildon-input-method/ 
-	cp plugin/me.maemo.chinese.inputpad.service $(DESTDIR)/usr/share/dbus-1/services/ 
+	cp src/plugin/gconf.sh $(DESTDIR)/opt/cim/plugin 
+	cp src/plugin/recover.sh $(DESTDIR)/opt/cim/plugin 
+	cp src/plugin/inputpad_plugin.so $(DESTDIR)/usr/lib/hildon-input-method/ 
+	cp src/plugin/me.maemo.chinese.inputpad.service $(DESTDIR)/usr/share/dbus-1/services/ 
 	cp data/formated $(DESTDIR)/opt/cim/data
 	cp -r python/* $(DESTDIR)/opt/cim/python
 	cp -r bin $(DESTDIR)/opt/cim/

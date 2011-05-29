@@ -5,6 +5,7 @@
 #include <QList>
 #include <QTime>
 #include <QPoint>
+//#include <QDebug>
 
 class MouseTrack : public QObject {
     Q_OBJECT
@@ -39,10 +40,12 @@ public:
             qreal lastY = this->y.at(index) ;
             int lastT = this->t.at(index) ;
             bool flag = false ;
-            int i = index ;
-            for ( ; i >= 0 && !flag ; i-- ) {
+            int i = index - 1 ;
+            while ( i >= 0 && !flag ) {
                 if ( lastT - this->t.at(i) > 90 ) 
                     flag = true ;
+                else
+                    i-- ;
             }
             if ( flag ) {
                 qreal prevX = this->x.at(i) ; qreal prevY = this->y.at(i) ; int prevT = this->t.at(i) ;
@@ -58,10 +61,8 @@ public:
             }
             else {
                 qreal prevX = this->x.at(0) ; qreal prevY = this->y.at(0) ;
-                qreal x = ( prevX + lastX ) / 2 ;
-                qreal y = ( prevY + lastY ) / 2 ;
-                endX = x ;
-                endY = y ;
+                endX = ( prevX + lastX ) / 2 ;
+                endY = ( prevY + lastY ) / 2 ;
             }
         }
         else if ( this->length > 0 ) {
@@ -73,8 +74,14 @@ public:
         this->push( endX, endY ) ;
     }
     Q_INVOKABLE inline QPoint get() {
-        int index = this->length - 1 ;
-        return QPoint( this->x.at(index), this->y.at(index) ) ;
+        if ( this->length > 0 ) {
+            int index = this->length - 1 ;
+            qreal x = this->x.at(index) ;
+            qreal y = this->y.at(index) ;
+            return QPoint( x, y ) ;
+        }
+        else
+            return QPoint( 0, 0 ) ;
     }
 } ;
 

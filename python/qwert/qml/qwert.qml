@@ -102,7 +102,7 @@ Item {
     }
     RealMouseArea {
         anchors.fill : parent
-        useMouseTracker : true
+        /*useMouseTracker : true*/
         ProxyMouseArea {
             anchors.fill : parent
             target : mouseLayer

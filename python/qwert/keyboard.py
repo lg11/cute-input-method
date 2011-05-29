@@ -1,5 +1,5 @@
 from QtImport import QtGui, QtCore, QtDeclarative
-from mouseTracker import Tracker
+#from mouseTracker import Tracker
 
 class Clipboard( QtCore.QObject ) :
     textChanged = QtCore.Signal( str )
@@ -30,7 +30,6 @@ class Keyboard( QtDeclarative.QDeclarativeView ) :
         self.setPalette( palette )
 
         self.root = None
-        self.mouseTracker = Tracker()
         self.sceneResized.connect( self.keepSize )
 
         self.desktop = QtGui.QApplication.desktop()
@@ -45,7 +44,6 @@ class Keyboard( QtDeclarative.QDeclarativeView ) :
                 context.setContextProperty( "imEngine", self.engine )
             else :
                 context.setContextProperty( engineName, self.engine )
-        context.setContextProperty( "mouseTracker", self.mouseTracker )
         context.setContextProperty( "clipboard", self.clipboard )
         root = self.rootObject()
         self.setText = root.setText
