@@ -92,27 +92,23 @@ public:
             this->candidate = NULL ;
         else 
             this->candidate = this->lookup.getCand( pageIndex * 5 + index ) ;
+        //if ( this->candidate ) 
+            //qDebug() << *(lookup::get_key( this->candidate )) << *(lookup::get_preedit( this->candidate )) << *(lookup::get_word( this->candidate )) << lookup::get_freq( this->candidate ) ;
     }
     
 
     Q_INVOKABLE inline QString getCode() const { return this->lookup.spliter.code ; }
     
     Q_INVOKABLE inline QString getWord() const {
-        if ( this->candidate ) {
-            //qDebug() << "check" << lookup::get_word( this->candidate ) ;
+        if ( this->candidate ) 
             return *(lookup::get_word( this->candidate )) ;
-        }
-        else {
-            //qDebug() << "check no" ;
+        else 
             return "" ;
-        }
     }
     
     Q_INVOKABLE inline QString getPreedit() const {
-        if ( this->candidate ) {
-            //qDebug() << this->candidate ;
+        if ( this->candidate ) 
             return *(lookup::get_preedit( this->candidate )) ;
-        }
         else
             return "" ;
     }
@@ -136,6 +132,10 @@ public:
                 int halfIndex = ( candidate->second + index ) / 2 ;
                 const lookup::Candidate* candidate = this->lookup.getCand( halfIndex ) ;
                 freq = lookup::get_freq( candidate ) ;
+                if ( freq <= 1.1 ) 
+                    freq = 1.1 ;
+                else 
+                    freq += 1.0 / freq ;
             }
             
             const QString* word = lookup::get_word( candidate ) ;
@@ -200,8 +200,11 @@ public:
             for ( int i = 0 ; i < this->selected.length() ; i++ )
                 key.append( this->selected.at(i).first.first ) ;
             QString k = key.join( "'" ) ;
-            //qreal freq = this->selected.last().second.second ;
-            //this->lookup.update( k, this->selectedWord, freq ) ;
+            qreal freq = this->selected.last().second.second ;
+            this->lookup.dict.update( k, this->selectedWord, freq ) ;
+            if ( k.count( "'" ) <= 0 )
+                split::add_key( &(this->lookup.spliter.keySet), k ) ;
+            fit::add_key( &(this->lookup.keyMap), k ) ;
             this->reset() ;
         }
     }
