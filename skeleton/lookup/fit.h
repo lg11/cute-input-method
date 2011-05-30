@@ -23,11 +23,11 @@ inline void add_key( KeyMap* map, const QString& key ) {
     //qDebug() << key << path ;
 }
 
-inline QList<QString>* get_keys( KeyMap* map, const QString& path ) {
+inline const QList<QString>* get_keys( KeyMap* map, const QString& path ) {
     return map->contains( path ) ? &((*map)[path]) : NULL ;
 }
 
-inline void check_string( QStringList* string, const QString& key, bool* flag, int* fit_point ) {
+inline void check_string( const QStringList* string, const QString& key, bool* flag, int* fit_point ) {
     QStringList list( key.split( "'" ) ) ;
     for ( int i = 0 ; i < list.length() && flag ; i++ ) {
         const QString& s = string->at(i) ;
@@ -48,12 +48,12 @@ inline void check_string( QStringList* string, const QString& key, bool* flag, i
     }
 }
 
-inline void fit( QStringList* string, QList<const QString*>* buffer, int* fit_point, KeyMap* key_map ) {
+inline void fit( const QStringList* string, QList<const QString*>* buffer, int* fit_point, KeyMap* key_map ) {
     QString path ;
     foreach ( const QString& s, *string )
         path.append( s.at(0) ) ;
     
-    QList<QString>* keys = get_keys( key_map, path ) ;
+    const QList<QString>* keys = get_keys( key_map, path ) ;
     int highest_point = -0x1000 ;
 
     if ( keys ) {

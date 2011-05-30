@@ -15,20 +15,20 @@ typedef QPair< const QString*, const QString* > KeyPair ;
 typedef QPair< const QList< QPair<QString, qreal> >*, int > RecordPair ;
 typedef QPair< KeyPair, RecordPair > PickPair ;
 
-inline const QString* get_key( PickPair* pair ) { return pair->first.first ; }
-inline const QString* get_preedit( PickPair* pair ) { return pair->first.second ; }
-inline const QList< QPair<QString, qreal> >* get_list( PickPair* pair ) { return pair->second.first ; }
-inline int get_index( PickPair* pair ) { return pair->second.second ; }
+inline const QString* get_key( const PickPair* pair ) { return pair->first.first ; }
+inline const QString* get_preedit( const PickPair* pair ) { return pair->first.second ; }
+inline const QList< QPair<QString, qreal> >* get_list( const PickPair* pair ) { return pair->second.first ; }
+inline int get_index( const PickPair* pair ) { return pair->second.second ; }
 inline void set_index( PickPair* pair, int index ) { pair->second.second = index ; }
-inline const QString* get_word( PickPair* pair ) { return &(get_list( pair )->at(get_index( pair )).first) ; }
-inline qreal get_freq( PickPair* pair ) { return get_list( pair )->at(get_index( pair )).second ; }
+inline const QString* get_word( const PickPair* pair ) { return &(get_list( pair )->at(get_index( pair )).first) ; }
+inline qreal get_freq( const PickPair* pair ) { return get_list( pair )->at(get_index( pair )).second ; }
 
-inline void set( QList<PickPair>* list, QList<const QString*>* key, QList<const QString*>* preedit, QHash< QString, QList< QPair<QString, qreal> > >* hash ) {
+inline void set( QList<PickPair>* list, const QList<const QString*>* key, const QList<const QString*>* preedit, QHash< QString, QList< QPair<QString, qreal> > >* hash ) {
     for ( int i = 0 ; i < key->length() ; i ++ )
         list->append( PickPair( KeyPair( key->at(i), preedit->at(i) ), RecordPair( &((*hash)[*(key->at(i))]), 0 ) ) ) ;
 }
 
-inline void set( QList<PickPair>* list, QList<const QString*>* key, QList<const QString*>* preedit, QHash< QString, QList< QPair<QString, qreal> > >* hash, QSet<QString>* usedKeySet ) {
+inline void set( QList<PickPair>* list, const QList<const QString*>* key, const QList<const QString*>* preedit, QHash< QString, QList< QPair<QString, qreal> > >* hash, const QSet<QString>* usedKeySet ) {
     for ( int i = 0 ; i < key->length() ; i ++ ) {
         if ( !usedKeySet->contains( *(key->at(i))  ) ) 
             list->append( PickPair( KeyPair( key->at(i), preedit->at(i) ), RecordPair( &((*hash)[*(key->at(i))]), 0 ) ) ) ;

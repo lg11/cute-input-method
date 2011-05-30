@@ -26,13 +26,13 @@ inline void add_key( KeySet* set, const QString& key ) {
     }
 }
 
-inline bool check_complete( KeySet* set, const QString& key ) { return set->first.first.contains( key ) ; } 
-inline bool check_head( KeySet* set, QChar head ) { return set->first.second.contains( head ) ; } 
-inline bool check_vaild( KeySet* set, const QString& key ) { return set->first.first.contains( key ) ? true : set->second.contains( key ) ; } 
+inline bool check_complete( const KeySet* set, const QString& key ) { return set->first.first.contains( key ) ; } 
+inline bool check_head( const KeySet* set, QChar head ) { return set->first.second.contains( head ) ; } 
+inline bool check_vaild( const KeySet* set, const QString& key ) { return set->first.first.contains( key ) ? true : set->second.contains( key ) ; } 
 
 typedef QPair< QStringList, QPair<int,int> > KeyString ;
 
-inline void append_code( KeyString* string, QChar code, KeySet* keySet, QList<KeyString>* stringList ) {
+inline void append_code( KeyString* string, QChar code, const KeySet* keySet, QList<KeyString>* stringList ) {
     KeyString* new_string ;
     QString orig_tail( string->first.last() ) ;
     QString new_tail( orig_tail ) ;
