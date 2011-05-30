@@ -42,10 +42,10 @@ Item {
         key_1_2.candString = imEngine.getWord()
     }
     function commit() {
-        if ( imEngine.getSelectedLength() > 0 ) {
-            root.textview.insert( imEngine.getSelectedWord() )
-            imEngine.commit()
-        }
+        /*if ( imEngine.getSelectedLength() > 0 ) {*/
+        root.textview.insert( imEngine.getSelectedWord() )
+        imEngine.commit()
+        /*}*/
     }
     property bool needClearShift : false
     property bool needClearAlt : false
@@ -177,7 +177,7 @@ Item {
             if ( imEngine.getCodeLength() > 0 ) {
                 imEngine.select( 0 )
                 updateCandString()
-                if ( imEngine.getInvaildCodeLength() <= 0 && imEngine.getSelectedLength() > 0 ) {
+                if ( imEngine.getCodeLength() <= 0 && imEngine.getInvaildCodeLength() <= 0 && imEngine.getSelectedLength() > 0 ) {
                     commit()
                     updateCandString()
                 }
@@ -192,7 +192,7 @@ Item {
                 index = Utils.candIndex[index]
                 imEngine.select( index )
                 updateCandString()
-                if ( imEngine.getInvaildCodeLength() <= 0 && imEngine.getSelectedLength() > 0 ) {
+                if ( imEngine.getCodeLength() <= 0 && imEngine.getInvaildCodeLength() <= 0 && imEngine.getSelectedLength() > 0 ) {
                     commit()
                     updateCandString()
                 }

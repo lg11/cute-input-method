@@ -88,7 +88,10 @@ public:
     Q_INVOKABLE inline int getSelectedWordLength() const { return this->selectedWord.length() ; }
    
     Q_INVOKABLE inline void updateCandidate( int index ) {
-        this->candidate = this->lookup.getCand( pageIndex * 5 + index ) ;
+        if ( this->lookup.spliter.code.isEmpty() )
+            this->candidate = NULL ;
+        else 
+            this->candidate = this->lookup.getCand( pageIndex * 5 + index ) ;
     }
     
 
@@ -115,10 +118,10 @@ public:
     }
 
     Q_INVOKABLE inline QString getInvaildCode() const {
-        if ( this->candidate )
-            return this->lookup.spliter.code.right( this->getInvaildCodeLength() ) ;
-        else
+        if ( this->lookup.spliter.code.isEmpty() )
             return "" ;
+        else
+            return this->lookup.spliter.code.right( this->getInvaildCodeLength() ) ;
     }
 
     Q_INVOKABLE inline QString getSelectedWord() const { return this->selectedWord ; }
@@ -153,6 +156,7 @@ public:
             this->candidate = candidate ;
             if ( this->getInvaildCodeLength() > 0 ) {
                 QString code( this->getInvaildCode() ) ;
+                //qDebug() << "r" << code ; 
                 this->lookup.reset() ;
                 this->lookup.setCode( code ) ;
                 this->pageIndex = 0 ;
