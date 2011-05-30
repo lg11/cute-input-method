@@ -21,10 +21,10 @@ typedef QPair<const QString*, qreal > WordPair ;
 typedef QPair<KeyPair, WordPair> CandPair ;
 typedef QPair<CandPair, int> Candidate ;
 
-inline const QString* get_key( Candidate* cand ) { return cand->first.first.first ; }
-inline const QString* get_preedit( Candidate* cand ) { return cand->first.first.second ; }
-inline const QString* get_word( Candidate* cand ) { return cand->first.second.first ; }
-inline qreal get_freq( Candidate* cand ) { return cand->first.second.second ; }
+inline const QString* get_key( const Candidate* cand ) { return cand->first.first.first ; }
+inline const QString* get_preedit( const Candidate* cand ) { return cand->first.first.second ; }
+inline const QString* get_word( const Candidate* cand ) { return cand->first.second.first ; }
+inline qreal get_freq( const Candidate* cand ) { return cand->first.second.second ; }
 
 inline void check_cand( QList<Candidate>* cand_list, int length ) {
     if ( length >= cand_list->length() ) 

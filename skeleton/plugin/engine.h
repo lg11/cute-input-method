@@ -12,7 +12,9 @@ class IMEngine : public QObject {
     Q_OBJECT
 public:
     lookup::Lookup lookup ;
-    inline IMEngine( QObject* parent = NULL ) : QObject( parent ), lookup() {}
+    const lookup::Candidate* candidate ;
+    int pageIndex ;
+    inline IMEngine( QObject* parent = NULL ) : QObject( parent ), lookup(), pageIndex(0), candidate(NULL) {}
     Q_INVOKABLE inline void load( const QString& path ) {
         QFile file( path ) ;
         if ( file.open( QIODevice::ReadOnly | QIODevice::Text ) ) {
@@ -36,6 +38,25 @@ public:
 
             }
         }
+    }
+    Q_INVOKABLE inline void prevPage() {
+        if ( this->pageIndex > 0 )
+            this->pageIndex-- ;
+    }
+    Q_INVOKABLE inline void nextPage() {
+        int pageIndex = this->pageIndex + 1 ;
+        const lookup::Candidate* candidate = this->lookup.getCand( pageIndex * 5 ) ;
+        if ( candidate )
+            this->pageIndex = pageIndex ;
+    }
+    Q_INVOKABLE inline void updateCandidate( int index ) {
+        this->candidate = this->lookup.getCand( pageIndex * 5 + index ) ;
+    }
+    Q_INVOKABLE inline QString getWord() {
+        if ( this->candidate )
+            return *(lookup::get_word( this->candidate )) ;
+        else
+            return "" ;
     }
 } ;
 
