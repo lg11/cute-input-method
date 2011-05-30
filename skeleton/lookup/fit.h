@@ -4,12 +4,13 @@
 #include <QHash>
 #include <QString>
 #include <QList>
+#include <QSet>
 
 //#include <QDebug>
 
 namespace fit {
 
-typedef QHash< QString, QList<QString>  > KeyMap ;
+typedef QHash< QString, QSet<QString>  > KeyMap ;
 
 inline void add_key( KeyMap* map, const QString& key ) {
     QString path( key.at(0) ) ;
@@ -19,11 +20,11 @@ inline void add_key( KeyMap* map, const QString& key ) {
         path.append( key.at(i) ) ;
         i = key.indexOf( "'", i ) ;
     }
-    (*map)[path].append( key ) ;
+    (*map)[path].insert( key ) ;
     //qDebug() << key << path ;
 }
 
-inline const QList<QString>* get_keys( KeyMap* map, const QString& path ) {
+inline const QSet<QString>* get_keys( KeyMap* map, const QString& path ) {
     return map->contains( path ) ? &((*map)[path]) : NULL ;
 }
 
@@ -53,7 +54,7 @@ inline void fit( const QStringList* string, QList<const QString*>* buffer, int* 
     foreach ( const QString& s, *string )
         path.append( s.at(0) ) ;
     
-    const QList<QString>* keys = get_keys( key_map, path ) ;
+    const QSet<QString>* keys = get_keys( key_map, path ) ;
     int highest_point = -0x1000 ;
 
     if ( keys ) {

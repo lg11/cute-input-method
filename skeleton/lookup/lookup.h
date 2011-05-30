@@ -91,6 +91,8 @@ public :
                 }
             }
         }
+        //foreach( const QString* k, *key )
+            //qDebug() << *k ;
         this->lookupCache.last().first = highestPoint ;
         pick::set( &(this->pickCache), key, preedit, &(this->dict.hash) ) ;
         foreach( const QString* k, *key )
