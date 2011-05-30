@@ -1,4 +1,5 @@
 #include "lookup.h"
+#include "trie.h"
 
 #include <QDebug>
 #include <QFile>
@@ -61,53 +62,38 @@ void load( dict::Dictionary* d, QString file_path ) {
 
 int main( int argc, char** argv ) {
     lookup::Lookup lup ;
+    trie::Tree tree ;
     load( &(lup.dict), argv[argc-1] ) ;
     qDebug() << "loaded" ;
     foreach ( const QString& key, lup.dict.hash.keys() ) {
         if ( key.count( "'" ) <= 0 )
             split::add_key( &(lup.spliter.keySet), key ) ;
         fit::add_key( &(lup.keyMap), key ) ;
+        tree.addKey( key ) ;
     }
-    //qDebug() << spliter.keySet.first.first ;
-    //qDebug() << spliter.keySet.first.second ;
-    //qDebug() << spliter.keySet.second ;
     qDebug() << "built" ;
-    //NumberLookup lookup( &d ) ;
 
     while( 1 ) {
         QTextStream cin( stdin, QIODevice::ReadOnly ) ;
         QString s ;
         cin >> s ;
-        //WordRecordList* l = d.get(s) ;
-        //if ( l )
-            //qDebug() << *l ;
-        //qDebug() <<  *(fit::get_keys( &map, s )) ;
         
+        QList<const QString*> keys ;
+        tree.getKeys( s, &keys ) ;
+        foreach( const QString* k, keys )
+            qDebug() << *k ;
+
         //for ( int i = 0 ; i < s.length() ; i++ ) 
             //lup.appendCode( s[i] ) ;
-        lup.setCode( s ) ;
-        for ( int i = 0 ; i < 10000 ; i ++ ) {
-            const lookup::Candidate* cand = lup.getCand( i ) ;
-            if ( cand )
-                //;
-                qDebug() << *cand ;
-        }
+        //lup.setCode( s ) ;
+        //for ( int i = 0 ; i < 10000 ; i ++ ) {
+            //const lookup::Candidate* cand = lup.getCand( i ) ;
+            //if ( cand )
+                //qDebug() << *cand ;
+        //}
         //while ( !lup.spliter.code.isEmpty() )
             //lup.popCode() ;
-        lup.reset() ;
+        //lup.reset() ;
 
-        //QVector<QString> keys ;
-        //t.goTo(s) ;
-        //t.getKeys( keys ) ;
-        //qDebug() << keys ;
-        //for ( int i = 0 ; i < s.length() ; i++ ) 
-            //lookup.pushCode( s[i] ) ;
-        //for ( int i = 0 ; i < 600 ; i++ ) {
-            //const CandidateItem* item ;
-            //item = lookup.getCandidate( i ) ;
-            //if ( item )
-                //qDebug() << i << *item ;
-        //}
-        //lookup.clear() ;
     }
 }

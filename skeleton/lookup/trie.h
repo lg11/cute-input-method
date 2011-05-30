@@ -3,191 +3,126 @@
 
 #include <QString>
 #include <QStack>
-#include <QDebug>
+#include <QList>
+#include <QPair>
 
-class TrieNode {
-public :
-    QChar tag ;
-    QVector<QString> keys ;
-    QVector<TrieNode> children ;
-    inline TrieNode( QChar tag = 0 ) : tag(tag), keys(), children() {}
-    inline TrieNode* findChild( QChar tag ) { 
-        for ( int i = 0 ; i < this->children.count() ; i++ ) {
-            if ( tag == this->children.at(i).tag )
-                return &this->children[i] ;
-        }
-        return 0 ;
-    }
-    inline TrieNode* appendChild( QChar tag ) {
-        TrieNode* node = this->findChild( tag ) ;
-        if ( !node ) {
-            this->children.append( TrieNode(tag) ) ;
-            node = &this->children.last() ;
-        }
-        return node ;
-    }
-    inline void removeChild( QChar tag ) {
-        for ( int i = 0 ; i < this->children.count() ; i++ ) {
-            if ( tag == this->children.at(i).tag ) {
-                this->children.remove(i) ;
-                break ;
-            }
-        }
-    }
-    inline int findKey ( const QString& key ) const {
-        for ( int i = 0 ; i < this->keys.count() ; i++ ) {
-            if ( key == this->keys.at(i) )
-                return i ;
-        }
-        return -1 ;
-    }
-    inline void appendKey( const QString& key ) {
-        int i = this->findKey( key ) ;
-        if ( i < 0 ) {
-            this->keys.append( key ) ;
-        }
-    } ;
-    inline void removeKey( const QString& key ) {
-        int i = this->findKey( key ) ;
-        if ( i >= 0 ) {
-            this->keys.remove(i) ;
-        }
-    }
-    inline bool hasKeys() const { return !this->keys.isEmpty() ; }
-    inline bool hasChildren() const { return !this->children.isEmpty() ; }
-    inline bool useful() const { return this->hasKeys() && this->hasChildren() ; }
-    inline int getKeys( QVector<QString>* keys ) const {
-        *keys += this->keys ;
-        return this->keys.count() ;
-    }
-    inline int getChildren( QVector<const TrieNode*>* children ) const {
-        for ( int i = 0 ; i < this->children.count() ; i++ )
-            children->append( &this->children[i] ) ;
-        return this->children.count() ;
-    }
-    inline int seekKeys( QVector<QString>* keys ) const {
-        int count = this->getKeys( keys ) ;
-        if ( count <= 0 && this->hasChildren() ) {
-            QStack<const TrieNode*> current ;
-            QStack<const TrieNode*> deeper ;
-            this->getChildren( &current ) ;
-            while( current.count() > 0 && count <= 0 ) {
-                while( current.count() > 0 ) {
-                    const TrieNode* node = current.pop() ;
-                    count += node->getKeys( keys ) ;
-                    if ( count <= 0 )
-                        node->getChildren( &deeper ) ;
-                }
-                //qDebug() << current << deeper ;
-                current = deeper ;
-                deeper.clear() ;
-            }
-        }
-        return count ;
-    }
-} ;
+//#include <QDebug>
 
-class TrieTree {
+namespace trie {
+
+
+typedef QPair< QSet<QString>, QList<int> > NodePair ;
+typedef QPair< QChar, NodePair > Node ;
+
+inline Node* get_child( QList<Node>* stack, Node* node, QChar tag ) { 
+    for ( int i = 0 ; i < node->second.second.length() ; i++ ) {
+        Node* child = &((*stack)[node->second.second.at(i)]) ;
+        if ( tag == child->first )
+            return child ;
+    }
+    return NULL ;
+}
+
+inline Node* add_child( QList<Node>* stack, Node* node, QChar tag ) {
+    Node* child = get_child( stack, node, tag ) ;
+    if ( !child ) {
+        node->second.second.append( stack->length() ) ;
+        stack->append( Node( tag, NodePair() ) ) ;
+        child = &(stack->last()) ;
+    }
+    return child ;
+}
+
+inline void get_children( const QList<Node>* stack, const Node* node, QList<const Node*>* children ) {
+    foreach( int i, node->second.second )
+        children->append( &(stack->at(i)) ) ;
+}
+
+inline void get_keys( const Node* node, QList<const QString*>* keys ) {
+    for ( QSet<QString>::const_iterator i = node->second.first.begin() ; i != node->second.first.end() ; i++ )
+        keys->append( &(*i) ) ;
+}
+
+inline void add_key( Node* node, const QString& key ) {
+    node->second.first.insert( key ) ;
+}
+
+inline void get_keys( const QList<Node>* stack, const Node* node, QList<const QString*>* keys ) {
+    get_keys( node, keys ) ;
+    if ( keys->isEmpty() && !node->second.second.isEmpty() ) {
+        QList<const Node*> current ;
+        QList<const Node*> deeper ;
+        get_children( stack, node, &current ) ;
+        while( !current.isEmpty() && keys->isEmpty() ) {
+            while( !current.isEmpty() ) {
+                const Node* node = current.takeLast() ;
+                get_keys( node, keys ) ;
+                if ( keys->isEmpty() )
+                    get_children( stack, node, &deeper ) ;
+            }
+            current.append( deeper ) ;
+            deeper.clear() ;
+        }
+    }
+}
+
+class Tree {
 public :
-    TrieNode root ;
-    QStack<TrieNode*> stack ;
-    QHash<QChar, QChar> hash ;
-    inline TrieTree() : root(), stack(), hash() {
-        this->stack.push( &this->root ) ;
-        this->hash['a'] = '2' ;
-        this->hash['b'] = '2' ;
-        this->hash['c'] = '2' ;
-        this->hash['d'] = '3' ;
-        this->hash['e'] = '3' ;
-        this->hash['f'] = '3' ;
-        this->hash['g'] = '4' ;
-        this->hash['h'] = '4' ;
-        this->hash['i'] = '4' ;
-        this->hash['j'] = '5' ;
-        this->hash['k'] = '5' ;
-        this->hash['l'] = '5' ;
-        this->hash['m'] = '6' ;
-        this->hash['n'] = '6' ;
-        this->hash['o'] = '6' ;
-        this->hash['p'] = '7' ;
-        this->hash['q'] = '7' ;
-        this->hash['r'] = '7' ;
-        this->hash['s'] = '7' ;
-        this->hash['t'] = '8' ;
-        this->hash['u'] = '8' ;
-        this->hash['v'] = '8' ;
-        this->hash['w'] = '9' ;
-        this->hash['x'] = '9' ;
-        this->hash['y'] = '9' ;
-        this->hash['z'] = '9' ;
+    QList<Node> stack ;
+    Node* root ;
+    QChar trans[26] ;
+    inline Tree() : stack() {
+        this->stack.append( Node( 0x00, NodePair() ) ) ;
+        this->root = &(this->stack.last()) ;
+        this->trans[ 'a' - 'a' ] = '2' ;
+        this->trans[ 'b' - 'a' ] = '2' ;
+        this->trans[ 'c' - 'a' ] = '2' ;
+        this->trans[ 'd' - 'a' ] = '3' ;
+        this->trans[ 'e' - 'a' ] = '3' ;
+        this->trans[ 'f' - 'a' ] = '3' ;
+        this->trans[ 'g' - 'a' ] = '4' ;
+        this->trans[ 'h' - 'a' ] = '4' ;
+        this->trans[ 'i' - 'a' ] = '4' ;
+        this->trans[ 'j' - 'a' ] = '5' ;
+        this->trans[ 'k' - 'a' ] = '5' ;
+        this->trans[ 'l' - 'a' ] = '5' ;
+        this->trans[ 'm' - 'a' ] = '6' ;
+        this->trans[ 'n' - 'a' ] = '6' ;
+        this->trans[ 'o' - 'a' ] = '6' ;
+        this->trans[ 'p' - 'a' ] = '7' ;
+        this->trans[ 'q' - 'a' ] = '7' ;
+        this->trans[ 'r' - 'a' ] = '7' ;
+        this->trans[ 's' - 'a' ] = '7' ;
+        this->trans[ 't' - 'a' ] = '8' ;
+        this->trans[ 'u' - 'a' ] = '8' ;
+        this->trans[ 'v' - 'a' ] = '8' ;
+        this->trans[ 'w' - 'a' ] = '9' ;
+        this->trans[ 'x' - 'a' ] = '9' ;
+        this->trans[ 'y' - 'a' ] = '9' ;
+        this->trans[ 'z' - 'a' ] = '9' ;
     }
-    inline bool goStep( QChar tag ) {
-        TrieNode* node = this->stack.top()->findChild( tag ) ;
-        if ( node ) {
-            this->stack.push( node ) ;
-            return true ;
-        }
-        else 
-            return false ;
-    }
-    inline bool backStep() {
-        if ( this->stack.count() > 1 ) {
-            this->stack.pop() ;
-            return true ;
-        }
-        else
-            return false ;
-    }
-    inline void backRoot() {
-        this->stack.clear() ;
-        this->stack.push( &this->root ) ;
-    }
-    inline void goTo( const QString& path ) {
-        this->backRoot() ;
-        for ( int i = 0 ; i < path.length() ; i++ ) {
-            //qDebug() << this->stack.top()->tag ;
-            if ( !this->goStep( path[i] ) )
-                break ;
-        }
-    }
-    inline void buildTag( QChar tag ) {
-        if ( this->hash.contains( tag ) )
-            this->stack.push( this->stack.top()->appendChild( this->hash.value(tag) ) ) ;
-    }
-    inline void buildPath( const QString& path ) {
-        this->backRoot() ;
-        for ( int i = 0 ; i < path.length() ; i++ )
-            this->buildTag( path[i] ) ;
-    }
-    inline void attachKey( const QString& key ) { this->stack.top()->appendKey( key ) ; }
     inline void addKey( const QString& key ) {
-        this->buildPath( key ) ;
-        this->attachKey( key ) ;
-    }
-    inline bool removeEnd() { 
-        if ( !this->stack.top()->useful() ) {
-            QChar tag = this->stack.top()->tag ;
-            if ( this->backStep() ) {
-                this->stack.top()->removeChild( tag ) ;
-                return true ;
-            }
-            else
-                return false ;
+        //qDebug() << "1" << key ;
+        Node* node = this->root ;
+        for ( int i = 0 ; i < key.length() ; i++ ) {
+            char ch = key.at(i).toAscii() ;
+            //qDebug() << "3" << ch << node ;
+            if ( ch >= 'a' && ch <= 'z' ) 
+                node = add_child( &(this->stack), node, this->trans[ ch - 'a' ] ) ;
         }
-        else
-            return false ;
+        add_key( node, key ) ;
     }
-    inline void removeNode() {
-        while( this->removeEnd() ) ;
-    }
-    inline int getKeys( QVector<QString>* keys ) {
-        //qDebug() << this->stack.top()->tag ;
-        return this->stack.top()->seekKeys( keys ) ;
-    }
-    inline bool hasKeys() const {
-        return this->stack.top()->hasKeys() ;
+    inline void getKeys( const QString& path, QList<const QString*>* keys ) {
+        Node* node = this->root ;
+        for ( int i = 0 ; i < path.length() && node ; i++ ) {
+            node = get_child( &(this->stack), node, path.at(i) ) ;
+        }
+        if ( node )
+            get_keys( &(this->stack), node, keys ) ;
     }
 } ;
+
+}
 
 #endif
 
