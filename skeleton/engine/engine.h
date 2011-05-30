@@ -11,6 +11,8 @@
 
 #include "../lookup/lookup.h"
 
+//#include <QDebug>
+
 namespace engine {
 
 typedef QPair<QString, QString> KeyPair ;
@@ -43,6 +45,7 @@ public:
                 QString key = list.at(0) ;
                 QString word = list.at(1) ;
                 qreal freq = list.at(2).toFloat() ;
+                //qDebug() << key << word << freq ;
                 if ( !this->lookup.dict.hash.contains( key ) )
                     newKeySet.insert( key ) ;
                 this->lookup.dict.insert( key, word, freq ) ;
@@ -79,23 +82,34 @@ public:
     }
     
     Q_INVOKABLE inline int getInvaildCodeLength() const { return this->getCodeLength() - this->getPreeditLength() ; }
+
+    Q_INVOKABLE inline int getSelectedLength() const { return this->selected.length() ; }
+
+    Q_INVOKABLE inline int getSelectedWordLength() const { return this->selectedWord.length() ; }
    
     Q_INVOKABLE inline void updateCandidate( int index ) {
         this->candidate = this->lookup.getCand( pageIndex * 5 + index ) ;
     }
     
+
     Q_INVOKABLE inline QString getCode() const { return this->lookup.spliter.code ; }
     
     Q_INVOKABLE inline QString getWord() const {
-        if ( this->candidate )
+        if ( this->candidate ) {
+            //qDebug() << "check" << lookup::get_word( this->candidate ) ;
             return *(lookup::get_word( this->candidate )) ;
-        else
+        }
+        else {
+            //qDebug() << "check no" ;
             return "" ;
+        }
     }
     
     Q_INVOKABLE inline QString getPreedit() const {
-        if ( this->candidate )
+        if ( this->candidate ) {
+            //qDebug() << this->candidate ;
             return *(lookup::get_preedit( this->candidate )) ;
+        }
         else
             return "" ;
     }
@@ -106,6 +120,9 @@ public:
         else
             return "" ;
     }
+
+    Q_INVOKABLE inline QString getSelectedWord() const { return this->selectedWord ; }
+
     Q_INVOKABLE inline void select( int index ) {
         index = this->pageIndex * 5 + index ;
         const lookup::Candidate* candidate = this->lookup.getCand( index ) ;
@@ -165,8 +182,8 @@ public:
         this->selectedWord.clear() ;
         this->pageIndex = 0 ;
     }
-    Q_INVOKABLE inline void appendCode( QChar code ) {
-        this->lookup.appendCode( code ) ;
+    Q_INVOKABLE inline void appendCode( const QString& code ) {
+        this->lookup.appendCode( code.at(0) ) ;
         this->pageIndex = 0 ;
     }
     Q_INVOKABLE inline void popCode() {

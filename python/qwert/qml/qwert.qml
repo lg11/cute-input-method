@@ -24,6 +24,10 @@ Item {
     property int keyboardModeRecord : 0
     property alias t9Text : t9SwitcherText.text
 
+    IMEngine {
+        id : imEngine
+    }
+
     Palette { id : palette }
     Config { id : config }
     Rectangle {
@@ -123,7 +127,7 @@ Item {
         textview.selectionEndPos = 0
         textview.selectEnd()
         textview.set( text )
-        imEngine.clear()
+        imEngine.reset()
         keyboard.updateCandString()
     }
     function getText() {
@@ -242,6 +246,9 @@ Item {
         } 
      }
     Component.onCompleted : {
+        console.log( "load start" ) 
+        imEngine.load( "../../data/formated" )
+        console.log( "load end" ) 
         t9Mode = true
     }
 }

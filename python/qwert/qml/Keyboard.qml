@@ -25,26 +25,25 @@ Item {
     property int mode : 0
 
     function updateCandString() {
-        imEngine.updateCandString( 0 )
-        key_5_6.candString = imEngine.candString
+        imEngine.updateCandidate( 0 )
+        key_5_6.candString = imEngine.getWord()
 
-        imEngine.updatePreeditString( 0 )
-        preedit.preeditString = imEngine.preeditString
-        preedit.invaildCode = imEngine.invaildCode
-        preedit.selectedWord = imEngine.selectedWord
+        preedit.preeditString = imEngine.getPreedit()
+        preedit.invaildCode = imEngine.getInvaildCode()
+        preedit.selectedWord = imEngine.getSelectedWord()
 
-        imEngine.updateCandString( 1 )
-        key_3_4.candString = imEngine.candString
-        imEngine.updateCandString( 2 )
-        key_7_8.candString = imEngine.candString
-        imEngine.updateCandString( 3 )
-        key_9_0.candString = imEngine.candString
-        imEngine.updateCandString( 4 )
-        key_1_2.candString = imEngine.candString
+        imEngine.updateCandidate( 1 )
+        key_3_4.candString = imEngine.getWord()
+        imEngine.updateCandidate( 2 )
+        key_7_8.candString = imEngine.getWord()
+        imEngine.updateCandidate( 3 )
+        key_9_0.candString = imEngine.getWord()
+        imEngine.updateCandidate( 4 )
+        key_1_2.candString = imEngine.getWord()
     }
     function commit() {
-        if ( imEngine.hasSelected ) {
-            root.textview.insert( imEngine.selectedWord )
+        if ( imEngine.getSelectedLength() > 0 ) {
+            root.textview.insert( imEngine.getSelectedWord() )
             imEngine.commit()
         }
     }
@@ -53,7 +52,7 @@ Item {
     function keyPress( key ) {
         var keycode = key.keycode
         if ( keycode == Utils.keycode_space ) {
-            if ( !imEngine.hasCode ) {
+            if ( imEngine.getCodeLength() <= 0 ) {
                 if ( mask == Utils.keymask_null ) {
                     clearMask()
                     key_space.keepDown = true
@@ -62,7 +61,7 @@ Item {
             }
         }
         else if ( keycode == Utils.keycode_shift_l || keycode == Utils.keycode_shift_r ) {
-            if ( !imEngine.hasCode ) {
+            if ( imEngine.getCodeLength() <= 0 ) {
                 if ( mask != Utils.keymask_shift ) {
                     clearMask()
                     key_shift_l.keepDown = true
@@ -74,7 +73,7 @@ Item {
             }
         }
         else if ( keycode == Utils.keycode_alt_l || keycode == Utils.keycode_alt_r ) {
-            if ( !imEngine.hasCode ) {
+            if ( imEngine.getCodeLength() <= 0 ) {
                 if ( mask != Utils.keymask_alt ) {
                     clearMask()
                     key_alt_l.keepDown = true
@@ -99,7 +98,7 @@ Item {
     }
     function switchMode() {
         if ( mode == Utils.mode_CN ) {
-            if ( !imEngine.hasCode ) {
+            if ( imEngine.getCodeLength() <= 0 ) {
                 mode = Utils.mode_EN 
             }
         }
@@ -109,16 +108,15 @@ Item {
     }
     function backspace() {
         if ( !key_backspace.paused ) {
-            if ( imEngine.hasSelected ) {
+            if ( imEngine.getSelectedLength() > 0 ) {
                 imEngine.cancel()
                 updateCandString()
             }
-            else if ( imEngine.hasCode ) {
-                imEngine.backspace()
+            else if ( imEngine.getCodeLength() > 0 ) {
+                imEngine.popCode()
                 updateCandString()
-                if ( !imEngine.hasCode ) {
+                if ( imEngine.getCodeLength() <= 0 ) 
                     key_backspace.pauseAutoRepeat()
-                }
             }
             else {
                 root.textview.backspace()
@@ -142,33 +140,33 @@ Item {
             backspace()
         }
         else if ( keycode == Utils.keycode_shift_l ) {
-            if ( imEngine.hasCode ) {
+            if ( imEngine.getCodeLength() > 0 ) {
                 imEngine.prevPage()
                 updateCandString()
             }
         }
         else if ( keycode == Utils.keycode_shift_r ) {
-            if ( imEngine.hasCode ) {
+            if ( imEngine.getCodeLength() > 0 ) {
                 imEngine.nextPage()
                 updateCandString()
             }
         }
         else if ( keycode == Utils.keycode_alt_l ) {
-            if ( imEngine.hasCode ) {
+            if ( imEngine.getCodeLength() > 0 ) {
                 imEngine.prevPage()
                 updateCandString()
             }
         }
         else if ( keycode == Utils.keycode_alt_r ) {
-            if ( imEngine.hasCode ) {
+            if ( imEngine.getCodeLength() > 0 ) {
                 imEngine.nextPage()
                 updateCandString()
             }
         }
         else if ( keycode == Utils.keycode_enter ) {
-            if ( imEngine.hasCode ) {
+            if ( imEngine.getCodeLength() > 0 ) {
                 root.textview.insert( imEngine.code )
-                imEngine.clear()
+                imEngine.reset()
                 updateCandString()
             }
             else {
@@ -176,10 +174,10 @@ Item {
             }
         }
         else if ( keycode == Utils.keycode_space ) {
-            if ( imEngine.hasCode ) {
+            if ( imEngine.getCodeLength() > 0 ) {
                 imEngine.select( 0 )
                 updateCandString()
-                if ( imEngine.needCommit ) {
+                if ( imEngine.getInvaildCodeLength() <= 0 && imEngine.getSelectedLength() > 0 ) {
                     commit()
                     updateCandString()
                 }
@@ -189,12 +187,12 @@ Item {
             }
         }
         else if ( keycode >= Utils.keycode_0 && keycode <= Utils.keycode_9 ) {
-            if ( imEngine.hasCode ) {
+            if ( imEngine.getCodeLength() > 0 ) {
                 var index = keycode - Utils.keycode_0
                 index = Utils.candIndex[index]
                 imEngine.select( index )
                 updateCandString()
-                if ( imEngine.needCommit ) {
+                if ( imEngine.getInvaildCodeLength() <= 0 && imEngine.getSelectedLength() > 0 ) {
                     commit()
                     updateCandString()
                 }

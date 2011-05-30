@@ -37,9 +37,9 @@ class Keyboard( QtDeclarative.QDeclarativeView ) :
         self.clipboard = Clipboard()
     def set( self, qmlSourcePath, engine = None, engineName = "" ) :
         self.setSource( QtCore.QUrl( qmlSourcePath ) ) ;
+        context = self.rootContext()
         if engine :
             self.engine = engine
-            context = self.rootContext()
             if engineName == "" :
                 context.setContextProperty( "imEngine", self.engine )
             else :
@@ -79,13 +79,14 @@ class Keyboard( QtDeclarative.QDeclarativeView ) :
 
 if __name__ == "__main__" :
     import sys
-    from engine import IMEngine
+    #from engine import IMEngine
     app = QtGui.QApplication( sys.argv )
 
     #view = Keyboard( daemonFlag = True )
     view = Keyboard( daemonFlag = False )
-    engine = IMEngine()
-    view.set( "./qml/qwert.qml", engine )
+    #engine = IMEngine()
+    #view.set( "./qml/qwert.qml", engine )
+    view.set( "./qml/qwert.qml" )
     #view.setAttribute( QtCore.Qt.WA_Maemo5PortraitOrientation, True )
 
     path = "../../data/formated"

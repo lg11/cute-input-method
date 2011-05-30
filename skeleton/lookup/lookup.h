@@ -164,7 +164,8 @@ public :
         return flag ;
     }
     inline const Candidate* getCand( int index ) {
-        bool flag = true ;
+        //bool flag = true ;
+        bool flag = !this->pickCache.isEmpty() ;
         //while ( flag && this->candList.length() <= index ) {
         while ( flag && this->candLength <= index ) {
             const QString* key ; const QString* preedit ; const QString* word ; qreal freq ;
