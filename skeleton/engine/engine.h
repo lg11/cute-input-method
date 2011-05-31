@@ -104,16 +104,31 @@ public:
     Q_INVOKABLE inline int getSelectedWordLength() const { return this->selectedWord.length() ; }
    
     Q_INVOKABLE inline void updateCandidate( int index ) {
-        if ( this->lookup.spliter.code.isEmpty() )
-            this->candidate = NULL ;
-        else 
-            this->candidate = this->lookup.getCand( pageIndex * 5 + index ) ;
+        if ( this->mode == 0 ) {
+            if ( this->lookup.spliter.code.isEmpty() )
+                this->candidate = NULL ;
+            else 
+                this->candidate = this->lookup.getCand( pageIndex * 5 + index ) ;
+        }
+        else if ( this->mode == 1 ) {
+            if ( this->t9lookup.code.isEmpty() )
+                this->candidate = NULL ;
+            else 
+                this->candidate = this->t9lookup.getCand( pageIndex * 6 + index ) ;
+        }
         //if ( this->candidate ) 
             //qDebug() << *(lookup::get_key( this->candidate )) << *(lookup::get_preedit( this->candidate )) << *(lookup::get_word( this->candidate )) << lookup::get_freq( this->candidate ) ;
     }
     
 
-    Q_INVOKABLE inline QString getCode() const { return this->lookup.spliter.code ; }
+    Q_INVOKABLE inline QString getCode() const {
+        if ( this->mode == 0 ) 
+            return this->lookup.spliter.code ;
+        else if ( this->mode == 1 ) 
+            return this->t9lookup.code ;
+        else
+            return "" ;
+    }
     
     Q_INVOKABLE inline QString getWord() const {
         if ( this->candidate ) 
@@ -130,59 +145,117 @@ public:
     }
 
     Q_INVOKABLE inline QString getInvaildCode() const {
-        if ( this->lookup.spliter.code.isEmpty() )
-            return "" ;
+        if ( this->mode == 0 ) {
+            if ( this->lookup.spliter.code.isEmpty() )
+                return "" ;
+            else
+                return this->lookup.spliter.code.right( this->getInvaildCodeLength() ) ;
+        }
+        else if ( this->mode == 1 ) {
+            if ( this->t9lookup.code.isEmpty() )
+                return "" ;
+            else
+                return this->t9lookup.code.right( this->getInvaildCodeLength() ) ;
+        }
         else
-            return this->lookup.spliter.code.right( this->getInvaildCodeLength() ) ;
+            return "" ;
     }
 
     Q_INVOKABLE inline QString getSelectedWord() const { return this->selectedWord ; }
 
     Q_INVOKABLE inline void select( int index ) {
-        index = this->pageIndex * 5 + index ;
-        const lookup::Candidate* candidate = this->lookup.getCand( index ) ;
+        if ( this->mode == 0 ) {
+            index = this->pageIndex * 5 + index ;
+            const lookup::Candidate* candidate = this->lookup.getCand( index ) ;
 
-        if ( candidate ) {
-            qreal freq = -0x1000 ;
-            if ( this->selected.isEmpty() ) {
-                int halfIndex = ( candidate->second + index ) / 2 ;
-                const lookup::Candidate* candidate = this->lookup.getCand( halfIndex ) ;
-                freq = lookup::get_freq( candidate ) ;
-                if ( freq <= 1.1 ) 
-                    freq = 1.1 ;
-                else 
-                    freq += 1.0 / freq ;
-            }
-            
-            const QString* word = lookup::get_word( candidate ) ;
-            if ( word->length() > 1 ) {
-                QStringList key = lookup::get_key( candidate )->split( '\'' ) ;
-                QStringList preedit = lookup::get_preedit( candidate )->split( '\'' ) ;
-                for ( int i = 0 ; i < word->length() ; i++ )
-                    this->selected.append( SelectedPair( KeyPair( key.at(i), preedit.at(i) ), WordPair( word->at(i), -0x1000 ) ) ) ;
-            }
-            else {
-                const QString* key = lookup::get_key( candidate ) ;
-                const QString* preedit = lookup::get_preedit( candidate ) ;
-                this->selected.append( SelectedPair( KeyPair( *key, *preedit ), WordPair( word->at(0), -0x1000 ) ) ) ;
-            }
-            this->selectedWord.append( *word ) ;
-            this->selected.last().second.second = freq ;
+            if ( candidate ) {
+                qreal freq = -0x1000 ;
+                if ( this->selected.isEmpty() ) {
+                    int halfIndex = ( candidate->second + index ) / 2 ;
+                    const lookup::Candidate* candidate = this->lookup.getCand( halfIndex ) ;
+                    freq = lookup::get_freq( candidate ) ;
+                    if ( freq <= 1.1 ) 
+                        freq = 1.1 ;
+                    else 
+                        freq += 1.0 / freq ;
+                }
+                
+                const QString* word = lookup::get_word( candidate ) ;
+                if ( word->length() > 1 ) {
+                    QStringList key = lookup::get_key( candidate )->split( '\'' ) ;
+                    QStringList preedit = lookup::get_preedit( candidate )->split( '\'' ) ;
+                    for ( int i = 0 ; i < word->length() ; i++ )
+                        this->selected.append( SelectedPair( KeyPair( key.at(i), preedit.at(i) ), WordPair( word->at(i), -0x1000 ) ) ) ;
+                }
+                else {
+                    const QString* key = lookup::get_key( candidate ) ;
+                    const QString* preedit = lookup::get_preedit( candidate ) ;
+                    this->selected.append( SelectedPair( KeyPair( *key, *preedit ), WordPair( word->at(0), -0x1000 ) ) ) ;
+                }
+                this->selectedWord.append( *word ) ;
+                this->selected.last().second.second = freq ;
 
-            this->candidate = candidate ;
-            if ( this->getInvaildCodeLength() > 0 ) {
-                QString code( this->getInvaildCode() ) ;
-                //qDebug() << "r" << code ; 
-                this->lookup.reset() ;
-                this->lookup.setCode( code ) ;
-                this->pageIndex = 0 ;
+                this->candidate = candidate ;
+                if ( this->getInvaildCodeLength() > 0 ) {
+                    QString code( this->getInvaildCode() ) ;
+                    //qDebug() << "r" << code ; 
+                    this->lookup.reset() ;
+                    this->lookup.setCode( code ) ;
+                    this->pageIndex = 0 ;
+                }
+                else {
+                    this->lookup.reset() ;
+                    this->pageIndex = 0 ;
+                }
             }
-            else {
-                this->lookup.reset() ;
-                this->pageIndex = 0 ;
-            }
+            //else ;
         }
-        //else ;
+        else if ( this->mode == 1 ) {
+            index = this->pageIndex * 6 + index ;
+            const lookup::Candidate* candidate = this->t9lookup.getCand( index ) ;
+
+            if ( candidate ) {
+                qreal freq = -0x1000 ;
+                if ( this->selected.isEmpty() ) {
+                    int halfIndex = ( candidate->second + index ) / 2 ;
+                    const lookup::Candidate* candidate = this->t9lookup.getCand( halfIndex ) ;
+                    freq = lookup::get_freq( candidate ) ;
+                    if ( freq <= 1.1 ) 
+                        freq = 1.1 ;
+                    else 
+                        freq += 1.0 / freq ;
+                }
+                
+                const QString* word = lookup::get_word( candidate ) ;
+                if ( word->length() > 1 ) {
+                    QStringList key = lookup::get_key( candidate )->split( '\'' ) ;
+                    QStringList preedit = lookup::get_preedit( candidate )->split( '\'' ) ;
+                    for ( int i = 0 ; i < word->length() ; i++ )
+                        this->selected.append( SelectedPair( KeyPair( key.at(i), preedit.at(i) ), WordPair( word->at(i), -0x1000 ) ) ) ;
+                }
+                else {
+                    const QString* key = lookup::get_key( candidate ) ;
+                    const QString* preedit = lookup::get_preedit( candidate ) ;
+                    this->selected.append( SelectedPair( KeyPair( *key, *preedit ), WordPair( word->at(0), -0x1000 ) ) ) ;
+                }
+                this->selectedWord.append( *word ) ;
+                this->selected.last().second.second = freq ;
+
+                this->candidate = candidate ;
+                if ( this->getInvaildCodeLength() > 0 ) {
+                    QString code( this->getInvaildCode() ) ;
+                    //qDebug() << "r" << code ; 
+                    this->t9lookup.reset() ;
+                    this->t9lookup.setCode( code ) ;
+                    this->pageIndex = 0 ;
+                }
+                else {
+                    this->t9lookup.reset() ;
+                    this->pageIndex = 0 ;
+                }
+            }
+            //else ;
+        }
     }
     Q_INVOKABLE inline void cancel() {
         if ( !this->selected.isEmpty() ) {
@@ -190,24 +263,43 @@ public:
             this->selected.removeLast() ;
             this->selectedWord.chop(1) ;
 
-            code.append( this->lookup.spliter.code ) ;
-            this->lookup.reset() ;
-            this->lookup.setCode( code ) ;
-            this->pageIndex = 0 ;
+            if ( this-> mode == 0 ) {
+                code.append( this->lookup.spliter.code ) ;
+                this->lookup.reset() ;
+                this->lookup.setCode( code ) ;
+                this->pageIndex = 0 ;
+            }
+            else if ( this-> mode == 1 ) {
+                for ( int i = 0 ; i < code.length() ; i++ ) 
+                    code[i] = this->t9lookup.tree.trans[ code.at(i).toAscii() - 'a' ] ;
+                code.append( this->t9lookup.code ) ;
+                this->t9lookup.reset() ;
+                this->t9lookup.setCode( code ) ;
+                this->pageIndex = 0 ;
+            }
         }
     }
     Q_INVOKABLE inline void reset() {
-        this->lookup.reset() ;
+        if ( this-> mode == 0 ) 
+            this->lookup.reset() ;
+        else if ( this-> mode == 1 ) 
+            this->t9lookup.reset() ;
         this->selected.clear() ;
         this->selectedWord.clear() ;
         this->pageIndex = 0 ;
     }
     Q_INVOKABLE inline void appendCode( const QString& code ) {
-        this->lookup.appendCode( code.at(0) ) ;
+        if ( this-> mode == 0 ) 
+            this->lookup.appendCode( code.at(0) ) ;
+        else if ( this-> mode == 1 ) 
+            this->t9lookup.appendCode( code.at(0) ) ;
         this->pageIndex = 0 ;
     }
     Q_INVOKABLE inline void popCode() {
-        this->lookup.popCode() ;
+        if ( this-> mode == 0 ) 
+            this->lookup.popCode() ;
+        else if ( this-> mode == 1 ) 
+            this->t9lookup.popCode() ;
         this->pageIndex = 0 ;
     }
     Q_INVOKABLE inline void commit() {
@@ -221,10 +313,15 @@ public:
             if ( k.count( '\'' ) <= 0 )
                 split::add_key( &(this->lookup.spliter.keySet), k ) ;
             fit::add_key( &(this->lookup.keyMap), k ) ;
+            this->t9lookup.tree.addKey( k ) ;
             this->reset() ;
         }
     }
-    Q_INVOKABLE inline void setMode( int index ) {
+    Q_INVOKABLE inline void setMode( int flag ) {
+        if ( flag != this->mode ) {
+            this->reset() ;
+            this->mode = flag ;
+        }
     }
 
 } ;

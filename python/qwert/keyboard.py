@@ -34,7 +34,7 @@ class Keyboard( QtDeclarative.QDeclarativeView ) :
 
         self.desktop = QtGui.QApplication.desktop()
         self.desktop.resized.connect( self.checkRotate )
-        self.clipboard = Clipboard()
+        #self.clipboard = Clipboard()
     def set( self, qmlSourcePath, engine = None, engineName = "" ) :
         self.setSource( QtCore.QUrl( qmlSourcePath ) ) ;
         context = self.rootContext()
@@ -44,7 +44,7 @@ class Keyboard( QtDeclarative.QDeclarativeView ) :
                 context.setContextProperty( "imEngine", self.engine )
             else :
                 context.setContextProperty( engineName, self.engine )
-        context.setContextProperty( "clipboard", self.clipboard )
+        #context.setContextProperty( "clipboard", self.clipboard )
         root = self.rootObject()
         self.setText = root.setText
         self.getText = root.getText

@@ -247,8 +247,9 @@ Item {
      }
     Component.onCompleted : {
         console.log( "load start" ) 
-        imEngine.load( "../../data/formated" )
+        imEngine.load( "../data/formated" )
         console.log( "load end" ) 
         t9Mode = true
+        /*rotateFlag = 1*/
     }
 }
