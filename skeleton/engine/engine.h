@@ -172,6 +172,8 @@ public:
                 qreal freq = -0x1000 ;
                 if ( this->selected.isEmpty() ) {
                     int halfIndex = ( candidate->second + index ) / 2 ;
+                    if ( halfIndex < 3 ) 
+                        halfIndex = 0 ;
                     const lookup::Candidate* candidate = this->lookup.getCand( halfIndex ) ;
                     freq = lookup::get_freq( candidate ) ;
                     if ( freq <= 1.1 ) 
@@ -218,6 +220,8 @@ public:
                 qreal freq = -0x1000 ;
                 if ( this->selected.isEmpty() ) {
                     int halfIndex = ( candidate->second + index ) / 2 ;
+                    if ( halfIndex < 3 ) 
+                        halfIndex = 0 ;
                     const lookup::Candidate* candidate = this->t9lookup.getCand( halfIndex ) ;
                     freq = lookup::get_freq( candidate ) ;
                     if ( freq <= 1.1 ) 
