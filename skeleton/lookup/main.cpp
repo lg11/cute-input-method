@@ -98,7 +98,7 @@ int main( int argc, char** argv ) {
         //for ( int i = 0 ; i < s.length() ; i++ ) 
             //lup.appendCode( s[i] ) ;
         lup.setCode( s ) ;
-        for ( int i = 0 ; i < 10 ; i ++ ) {
+        for ( int i = 0 ; i < 1000 ; i ++ ) {
             const lookup::Candidate* cand = lup.getCand( i ) ;
             if ( cand )
                 qDebug() << *cand ;

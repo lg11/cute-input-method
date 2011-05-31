@@ -30,18 +30,18 @@ FakeMouseArea {
         } 
     }
 
-    transitions {
-        Transition {
-            from : "" ; to : "DOWN" ; reversible : true
-            ParallelAnimation {
-                ColorAnimation { target : plat ; duration : 128 }
-            }
-        } 
-        Transition {
-            from : "DOWN" ; to : "" ; reversible : false
-            ParallelAnimation {
-                ColorAnimation { target : plat ; duration : 192 }
-            }
-        } 
-    }
+    /*transitions {*/
+        /*Transition {*/
+            /*from : "" ; to : "DOWN" ; reversible : true*/
+            /*ParallelAnimation {*/
+                /*ColorAnimation { target : plat ; duration : 128 }*/
+            /*}*/
+        /*} */
+        /*Transition {*/
+            /*from : "DOWN" ; to : "" ; reversible : false*/
+            /*ParallelAnimation {*/
+                /*ColorAnimation { target : plat ; duration : 192 }*/
+            /*}*/
+        /*} */
+    /*}*/
 }

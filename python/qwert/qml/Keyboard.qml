@@ -165,7 +165,7 @@ Item {
         }
         else if ( keycode == Utils.keycode_enter ) {
             if ( imEngine.getCodeLength() > 0 ) {
-                root.textview.insert( imEngine.code )
+                root.textview.insert( imEngine.getCode() )
                 imEngine.reset()
                 updateCandString()
             }

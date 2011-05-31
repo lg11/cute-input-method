@@ -16,6 +16,9 @@ Item {
             textview.selectTo( pos )
     }
 
+    Clipboard {
+        id :clipboard
+    }
     Column {
         id : controlPad
         Row {
@@ -27,7 +30,7 @@ Item {
                         textview.selectStart()
                     }
                     else if ( mode == 1 ) {
-                        clipboard.text = textview.getSelectedString()
+                        clipboard.set( textview.getSelectedString() )
                         /*clipedString = textview.getSelectedString()*/
                         /*console.log( clipedString )*/
                         mode = 0
@@ -48,11 +51,11 @@ Item {
                 id : key_paste_cut ; text : "P" ; width : keyWidth ; height : keyHeight ; color : palette.controlPadKeyNormalColor ; textColor : palette.controlPadKeyTextColor
                 onMouseReleased : {
                     if ( mode == 0 ) {
-                        textview.insert( clipboard.text )
+                        textview.insert( clipboard.get() )
                         /*textview.insert( clipedString )*/
                     }
                     else if ( mode == 1 ) {
-                        clipboard.text = textview.getSelectedString() 
+                        clipboard.set( textview.getSelectedString() )
                         /*clipedString = textview.getSelectedString()*/
                         /*console.log( clipedString )*/
                         textview.setSelectedString( "" )
