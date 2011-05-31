@@ -112,7 +112,7 @@ public :
         if ( !this->lookupCache.isEmpty() ) {
             QList<const QString*>* key = &(this->lookupCache.last().second.first)  ;
             QList<const QString*>* preedit = &(this->lookupCache.last().second.second)  ;
-            pick::set( &(this->pickCache), key, preedit, &(this->dict.hash), &(this->usedKeySet) ) ;
+            pick::set( &(this->pickCache), key, preedit, &(this->dict.hash) ) ;
             foreach( const QString* k, *key )
                 this->usedKeySet.insert( *k ) ;
             //this->candList.clear() ;
@@ -129,12 +129,17 @@ public :
         this->preeditCache.clear() ;
         this->candCacheIndex = 0 ;
         this->candStartIndex = 0 ;
+        this->candLength = 0 ;
     }
     inline void setCode( const QString& code ) {
         this->reset() ;
         for( int i = 0 ; i < code.length() ; i++ )
             this->appendCode( code.at(i) ) ;
     }
+    //inline void appendCode( const QString& code ) {
+        //for( int i = 0 ; i < code.length() ; i++ )
+            //this->appendCode( code.at(i) ) ;
+    //}
     inline bool checkCache() {
         bool flag = false ;
         if ( this->candCacheIndex >= 0 ) {
