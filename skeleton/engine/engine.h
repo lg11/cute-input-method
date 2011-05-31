@@ -8,6 +8,9 @@
 #include <QSet>
 #include <QFile>
 #include <QTextStream>
+#include <QDir>
+
+#include <unistd.h>
 
 #include "../lookup/lookup.h"
 #include "../lookup/t9.h"
@@ -33,11 +36,59 @@ public:
     int pageIndex ;
     const lookup::Candidate* candidate ;
     int mode ;
+    QFile* logFile ;
+    QTextStream* textStream ;
 
-    inline IMEngine( QObject* parent = NULL ) : QObject( parent ), lookup(), t9lookup(&(lookup.dict)), selected(), selectedWord() { this->pageIndex = 0 ; this->candidate = NULL ; mode = 0 ; }
+    inline IMEngine( QObject* parent = NULL ) : QObject( parent ), lookup(), t9lookup(&(lookup.dict)), selected(), selectedWord() {
+        this->pageIndex = 0 ;
+        this->candidate = NULL ;
+        this->mode = 0 ;
+        this->logFile = NULL ;
+        this->textStream = NULL ;
+    }
+
+    Q_INVOKABLE inline void startLog( const QString& path ) {
+        QString p( QDir::homePath() ) ;
+        p.append( path.right( path.length() - 1 ) ) ;
+        this->logFile = new QFile( p ) ;
+        if ( this->logFile->exists() ) {
+            //this->logFile->open( QIODevice::WriteOnly | QIODevice::Append ) ;
+            this->logFile->open( QIODevice::WriteOnly | QIODevice::Append | QIODevice::Unbuffered ) ;
+            this->textStream = new QTextStream( this->logFile ) ;
+            this->textStream->setCodec( "utf-8" ) ;
+        }
+        else {
+            delete this->logFile ;
+            this->logFile = NULL ;
+        }
+    }
+
+    Q_INVOKABLE inline void stopLog() {
+        if ( this->logFile ) {
+            delete this->textStream ;
+            this->logFile->close() ;
+            delete this->logFile ;
+            this->logFile = NULL ;
+            this->textStream = NULL ;
+        }
+    }
+
+    Q_INVOKABLE inline void flushLog() {
+        if ( this->logFile ) {
+            this->logFile->flush() ;
+            fsync( this->logFile->handle() ) ;
+        }
+    }
     
     Q_INVOKABLE inline void load( const QString& path ) {
-        QFile file( path ) ;
+        QString p ;
+        if ( path.at(0) == QChar( '~' ) ) {
+            p.append( QDir::homePath() ) ;
+            p.append( path.right( path.length() - 1 ) ) ;
+        }
+        else
+            p.append( path ) ;
+        QFile file( p ) ;
         if ( file.open( QIODevice::ReadOnly | QIODevice::Text ) ) {
             QSet<QString> newKeySet ;
             QTextStream in( &file ) ;
@@ -45,13 +96,15 @@ public:
             while( !in.atEnd() ) {
                 QString line = in.readLine() ;
                 QStringList list = line.split( " " ) ;
-                QString key = list.at(0) ;
-                QString word = list.at(1) ;
-                qreal freq = list.at(2).toFloat() ;
-                //qDebug() << key << word << freq ;
-                if ( !this->lookup.dict.hash.contains( key ) )
-                    newKeySet.insert( key ) ;
-                this->lookup.dict.insert( key, word, freq ) ;
+                if ( list.length() == 3 ) {
+                    QString key = list.at(0) ;
+                    QString word = list.at(1) ;
+                    qreal freq = list.at(2).toDouble() ;
+                    //qDebug() << key << word << freq ;
+                    if ( !this->lookup.dict.hash.contains( key ) )
+                        newKeySet.insert( key ) ;
+                    this->lookup.dict.insert( key, word, freq ) ;
+                }
             }
             foreach( const QString& key, newKeySet ) {
                 if ( key.count( '\'' ) <= 0 )
@@ -179,7 +232,7 @@ public:
                     if ( freq <= 1.1 ) 
                         freq = 1.1 ;
                     else 
-                        freq += 1.0 / freq + 1 ;
+                        freq += 1.0 / freq ;
                 }
                 
                 const QString* word = lookup::get_word( candidate ) ;
@@ -227,7 +280,7 @@ public:
                     if ( freq <= 1.1 ) 
                         freq = 1.1 ;
                     else 
-                        freq += 1.0 / freq + 1 ;
+                        freq += 1.0 / freq ;
                 }
                 
                 const QString* word = lookup::get_word( candidate ) ;
@@ -308,17 +361,23 @@ public:
     }
     Q_INVOKABLE inline void commit() {
         if ( !this->selected.isEmpty() ) {
-            QStringList key ;
-            for ( int i = 0 ; i < this->selected.length() ; i++ )
-                key.append( this->selected.at(i).first.first ) ;
-            QString k = key.join( QChar( '\'' ) ) ;
-            qreal freq = this->selected.last().second.second ;
-            this->lookup.dict.update( k, this->selectedWord, freq ) ;
-            if ( k.count( '\'' ) <= 0 )
-                split::add_key( &(this->lookup.spliter.keySet), k ) ;
-            fit::add_key( &(this->lookup.keyMap), k ) ;
-            this->t9lookup.tree.addKey( k ) ;
-            this->reset() ;
+            if ( this->selectedWord.length() < 6 ) {
+                QStringList key ;
+                for ( int i = 0 ; i < this->selected.length() ; i++ )
+                    key.append( this->selected.at(i).first.first ) ;
+                QString k = key.join( QChar( '\'' ) ) ;
+                qreal freq = this->selected.last().second.second ;
+                freq = this->lookup.dict.update( k, this->selectedWord, freq ) ;
+                if ( k.count( '\'' ) <= 0 )
+                    split::add_key( &(this->lookup.spliter.keySet), k ) ;
+                fit::add_key( &(this->lookup.keyMap), k ) ;
+                this->t9lookup.tree.addKey( k ) ;
+                if ( this->logFile ) {
+                    (*this->textStream) << k << QChar( ' ' ) << selectedWord << QChar( ' ' ) << freq << QChar( '\n' ) ;
+                    this->flushLog() ;
+                }
+                this->reset() ;
+            }
         }
     }
     Q_INVOKABLE inline void setMode( int flag ) {

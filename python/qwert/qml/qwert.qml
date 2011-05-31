@@ -131,6 +131,7 @@ Item {
         keyboard.updateCandString()
     }
     function getText() {
+        imEngine.flushLog()
         return textview.get()
     }
     function setRotate( flag ) {
@@ -248,8 +249,14 @@ Item {
     Component.onCompleted : {
         console.log( "load start" ) 
         imEngine.load( "../data/formated" )
+        imEngine.load( "~/.config/mcip/userdict.log" )
         console.log( "load end" ) 
+        imEngine.startLog( "~/.config/mcip/userdict.log" )
         t9Mode = true
         /*rotateFlag = 1*/
+    }
+    Component.onDestruction : {
+        console.log( "destruction" ) 
+        imEngine.stopLog()
     }
 }
