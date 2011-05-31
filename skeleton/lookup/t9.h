@@ -42,6 +42,30 @@ inline void set_cand( Candidate* cand, const QString* key, const QString* preedi
 //typedef QPair< int, QPair< QList<const QString*>, QList<const QString*> > > LookupPair ;
 typedef QPair< QList<const QString*>, QList<const QString*> > LookupPair ;
 
+inline void convert_preedit( const QString& key, const QString& src, QString* dest ) {
+    int count = key.count( '\'' ) ;
+    if ( count > 0 ) {
+        int i = 0 ;
+        int length = 0 ;
+        while ( i < src.length() ) {
+            if ( key.at( i + length ) == '\'' )
+                length++ ;
+            else 
+                i++ ;
+        }
+        length += i ;
+        *dest = key.left( length ) ;
+        //qDebug() << length << key << src << *dest ;
+        count = count - dest->count( '\'' ) ;
+        if ( count > 0 ) {
+            for ( int i = 0 ; i < count ; i++ )
+                dest->append( '\'' ) ;
+        }
+    }
+    else
+        *dest = key.left( src.length() ) ;
+}
+
 class T9Lookup {
 public :
     dict::Dictionary* dict ;
@@ -73,9 +97,12 @@ public :
         QList<QString>* preeditCache = &(this->preeditCache.last())  ;
         
         this->tree.getKeys( this->code, key ) ;
-        preeditCache->append( this->code ) ;
+        foreach( const QString* k, *key ) {
+            preeditCache->append( QString() ) ;
+            convert_preedit( *k, this->code, &(preeditCache->last()) ) ;
+        }
         for ( int i = 0 ; i < key->length(); i++ )
-            preedit->append( &(preeditCache->last()) ) ;
+            preedit->append( &(preeditCache->at(i)) ) ;
 
         //foreach( const QString* k, *key )
             //qDebug() << *k ;

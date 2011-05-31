@@ -21,7 +21,7 @@ QDebug operator<<( QDebug dbg, const dict::WordRecordList& l ) {
 }
 
 QDebug operator<<( QDebug dbg, const split::KeyString& string ) {
-    QString s = string.first.join( "'" ) ;
+    QString s = string.first.join( QChar( '\'' ) ) ;
 #ifdef Q_WS_MAEMO_5
     dbg.nospace() << s << ", " ;
 #else
@@ -66,7 +66,7 @@ int main( int argc, char** argv ) {
     load( &(lup.dict), argv[argc-1] ) ;
     qDebug() << "loaded" ;
     foreach ( const QString& key, lup.dict.hash.keys() ) {
-        if ( key.count( "'" ) <= 0 )
+        if ( key.count( '\'' ) <= 0 )
             split::add_key( &(lup.spliter.keySet), key ) ;
         fit::add_key( &(lup.keyMap), key ) ;
         t9lup.tree.addKey( key ) ;
@@ -85,24 +85,24 @@ int main( int argc, char** argv ) {
 
         //for ( int i = 0 ; i < s.length() ; i++ ) 
             //t9lup.appendCode( s[i] ) ;
-        //t9lup.setCode( s ) ;
-        //for ( int i = 0 ; i < 10000 ; i ++ ) {
-            //const lookup::Candidate* cand = t9lup.getCand( i ) ;
-            //if ( cand )
-                //qDebug() << *cand ;
-        //}
+        t9lup.setCode( s ) ;
+        for ( int i = 0 ; i < 10 ; i ++ ) {
+            const lookup::Candidate* cand = t9lup.getCand( i ) ;
+            if ( cand )
+                qDebug() << *cand ;
+        }
         //while ( !t9lup.code.isEmpty() )
             //t9lup.popCode() ;
         //lup.reset() ;
 
         //for ( int i = 0 ; i < s.length() ; i++ ) 
             //lup.appendCode( s[i] ) ;
-        lup.setCode( s ) ;
-        for ( int i = 0 ; i < 1000 ; i ++ ) {
-            const lookup::Candidate* cand = lup.getCand( i ) ;
-            if ( cand )
-                qDebug() << *cand ;
-        }
+        //lup.setCode( s ) ;
+        //for ( int i = 0 ; i < 1000 ; i ++ ) {
+            //const lookup::Candidate* cand = lup.getCand( i ) ;
+            //if ( cand )
+                //qDebug() << *cand ;
+        //}
         //while ( !lup.spliter.code.isEmpty() )
             //lup.popCode() ;
         //lup.reset() ;

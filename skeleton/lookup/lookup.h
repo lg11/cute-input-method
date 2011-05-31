@@ -79,14 +79,14 @@ public :
                     preeditCache->clear() ;
                     key->clear() ;
                     preedit->clear() ;
-                    preeditCache->append( string->first.join( "'" ) ) ;
+                    preeditCache->append( string->first.join( QChar( '\'' ) ) ) ;
                     foreach( const QString* s, buffer ) {
                         key->append( s ) ;
                         preedit->append( &(preeditCache->last()) ) ;
                     }
                 }
                 else if ( fitPoint == highestPoint ) {
-                    preeditCache->append( string->first.join( "'" ) ) ;
+                    preeditCache->append( string->first.join( QChar( '\'' ) ) ) ;
                     foreach( const QString* s, buffer ) {
                         key->append( s ) ;
                         preedit->append( &(preeditCache->last()) ) ;

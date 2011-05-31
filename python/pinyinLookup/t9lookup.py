@@ -100,11 +100,14 @@ class T9Fitter() :
 def __gen_code( code, key ) :
     count = key.count( "'" )
     if count > 0 :
+        i = 0
         index = 0
-        for i in range( len( code ) ) :
-            if key[index] == "'" :
+        while i < len( code )  :
+            if key[ i + index ] == "'" :
                 index += 1
-            index += 1
+            else :
+                i += 1
+        index += i
         head = key[:index]
         d = count - head.count( "'" )
         for i in range( d ) :
@@ -166,11 +169,11 @@ if __name__ == "__main__" :
             #print lookup.cache[-1]
             lookup.append( c )
         #print lookup.cache[-1]
-        for i in range( 1006 ) :
+        for i in range( 10 ) :
             cand = lookup.getCand( i )
             if cand :
                 key, word, freq, i, j = cand
-                print key, word, freq
+                print key, word, freq, i
         for c in code :
             lookup.pop()
             #print lookup.cache[-1]

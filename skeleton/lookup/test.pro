@@ -19,5 +19,5 @@ QT += core
 ;LIBS += -L/usr/lib/python2.5 -lpython2.5
 
 # Input
-HEADERS += dict.h split.h fit.h pick.h lookup.h trie.h
+HEADERS += dict.h split.h fit.h pick.h lookup.h trie.h t9.h
 SOURCES += main.cpp

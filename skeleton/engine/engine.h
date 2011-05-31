@@ -32,8 +32,9 @@ public:
     QString selectedWord ;
     int pageIndex ;
     const lookup::Candidate* candidate ;
+    int mode ;
 
-    inline IMEngine( QObject* parent = NULL ) : QObject( parent ), lookup(), t9lookup(&(lookup.dict)), selected(), selectedWord() { this->pageIndex = 0 ; this->candidate = NULL ; }
+    inline IMEngine( QObject* parent = NULL ) : QObject( parent ), lookup(), t9lookup(&(lookup.dict)), selected(), selectedWord() { this->pageIndex = 0 ; this->candidate = NULL ; mode = 0 ; }
     
     Q_INVOKABLE inline void load( const QString& path ) {
         QFile file( path ) ;
@@ -53,10 +54,10 @@ public:
                 this->lookup.dict.insert( key, word, freq ) ;
             }
             foreach( const QString& key, newKeySet ) {
-                if ( key.count( "'" ) <= 0 )
+                if ( key.count( '\'' ) <= 0 )
                     split::add_key( &(this->lookup.spliter.keySet), key ) ;
                 fit::add_key( &(this->lookup.keyMap), key ) ;
-
+                this->t9lookup.tree.addKey( key ) ;
             }
         }
     }
@@ -68,17 +69,30 @@ public:
     
     Q_INVOKABLE inline void nextPage() {
         int pageIndex = this->pageIndex + 1 ;
-        const lookup::Candidate* candidate = this->lookup.getCand( pageIndex * 5 ) ;
+        const lookup::Candidate* candidate ;
+        if ( this->mode == 0 )
+            candidate = this->lookup.getCand( pageIndex * 5 ) ;
+        else if ( this->mode == 1 )
+            candidate = this->t9lookup.getCand( pageIndex * 6 ) ;
+        else
+            candidate = NULL ;
         if ( candidate )
             this->pageIndex = pageIndex ;
     }
     
-    Q_INVOKABLE inline int getCodeLength() const { return this->lookup.spliter.code.length() ; }
+    Q_INVOKABLE inline int getCodeLength() const {
+        if ( this->mode == 0 )
+            return this->lookup.spliter.code.length() ;
+        else if ( this->mode == 1 )
+            return this->t9lookup.code.length() ;
+        else
+            return 0 ;
+    }
     
     Q_INVOKABLE inline int getPreeditLength() const {
         if ( this->candidate ) {
             const QString* preedit = lookup::get_preedit( this->candidate ) ;
-            return preedit->length() - preedit->count( "'" ) ;
+            return preedit->length() - preedit->count( '\'' ) ;
         }
         return 0 ;
     }
@@ -142,8 +156,8 @@ public:
             
             const QString* word = lookup::get_word( candidate ) ;
             if ( word->length() > 1 ) {
-                QStringList key = lookup::get_key( candidate )->split( "'" ) ;
-                QStringList preedit = lookup::get_preedit( candidate )->split( "'" ) ;
+                QStringList key = lookup::get_key( candidate )->split( '\'' ) ;
+                QStringList preedit = lookup::get_preedit( candidate )->split( '\'' ) ;
                 for ( int i = 0 ; i < word->length() ; i++ )
                     this->selected.append( SelectedPair( KeyPair( key.at(i), preedit.at(i) ), WordPair( word->at(i), -0x1000 ) ) ) ;
             }
@@ -201,10 +215,10 @@ public:
             QStringList key ;
             for ( int i = 0 ; i < this->selected.length() ; i++ )
                 key.append( this->selected.at(i).first.first ) ;
-            QString k = key.join( "'" ) ;
+            QString k = key.join( QChar( '\'' ) ) ;
             qreal freq = this->selected.last().second.second ;
             this->lookup.dict.update( k, this->selectedWord, freq ) ;
-            if ( k.count( "'" ) <= 0 )
+            if ( k.count( '\'' ) <= 0 )
                 split::add_key( &(this->lookup.spliter.keySet), k ) ;
             fit::add_key( &(this->lookup.keyMap), k ) ;
             this->reset() ;

@@ -14,11 +14,11 @@ typedef QHash< QString, QSet<QString>  > KeyMap ;
 
 inline void add_key( KeyMap* map, const QString& key ) {
     QString path( key.at(0) ) ;
-    int i = key.indexOf( "'" ) ;
+    int i = key.indexOf( '\'' ) ;
     while ( i > 0 ) {
         i++ ;
         path.append( key.at(i) ) ;
-        i = key.indexOf( "'", i ) ;
+        i = key.indexOf( '\'', i ) ;
     }
     (*map)[path].insert( key ) ;
     //qDebug() << key << path ;
@@ -29,7 +29,7 @@ inline const QSet<QString>* get_keys( KeyMap* map, const QString& path ) {
 }
 
 inline void check_string( const QStringList* string, const QString& key, bool* flag, int* fit_point ) {
-    QStringList list( key.split( "'" ) ) ;
+    QStringList list( key.split( '\'' ) ) ;
     for ( int i = 0 ; i < list.length() && flag ; i++ ) {
         const QString& s = string->at(i) ;
         const QString& k = list.at(i) ;
