@@ -51,8 +51,8 @@ public :
         this->highestFreq = freq > this->highestFreq ? freq : highestFreq ;
         insert_record( &(this->hash[key]), word, freq ) ;
     }
-    inline void update( const QString& key, const QString& word, qreal freq ) {
-        if ( freq >= 0 )
+    inline qreal update( const QString& key, const QString& word, qreal freq ) {
+        if ( freq >= 0 ) 
             this->insert( key, word, freq ) ;
         else {
             WordRecordList* list = &(this->hash[key]) ; 
@@ -65,10 +65,13 @@ public :
                     freq = list->at(3).second + ( list->at(2).second - list->at(3).second ) / 2 ;
                 if ( freq < 1.1 ) 
                     freq = 1.1 ;
+                else
+                    freq += 1 ;
                 this->highestFreq = freq > this->highestFreq ? freq : highestFreq ;
                 insert_record( list, word, freq ) ;
             }
         }
+        return freq ;
         //qDebug() << key << word << freq << highestFreq ;
     }
 } ;

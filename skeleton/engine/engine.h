@@ -172,14 +172,14 @@ public:
                 qreal freq = -0x1000 ;
                 if ( this->selected.isEmpty() ) {
                     int halfIndex = ( candidate->second + index ) / 2 ;
-                    if ( halfIndex < 3 ) 
+                    if ( halfIndex < 2 ) 
                         halfIndex = 0 ;
                     const lookup::Candidate* candidate = this->lookup.getCand( halfIndex ) ;
                     freq = lookup::get_freq( candidate ) ;
                     if ( freq <= 1.1 ) 
                         freq = 1.1 ;
                     else 
-                        freq += 1.0 / freq ;
+                        freq += 1.0 / freq + 1 ;
                 }
                 
                 const QString* word = lookup::get_word( candidate ) ;
@@ -220,14 +220,14 @@ public:
                 qreal freq = -0x1000 ;
                 if ( this->selected.isEmpty() ) {
                     int halfIndex = ( candidate->second + index ) / 2 ;
-                    if ( halfIndex < 3 ) 
+                    if ( halfIndex < 2 ) 
                         halfIndex = 0 ;
                     const lookup::Candidate* candidate = this->t9lookup.getCand( halfIndex ) ;
                     freq = lookup::get_freq( candidate ) ;
                     if ( freq <= 1.1 ) 
                         freq = 1.1 ;
                     else 
-                        freq += 1.0 / freq ;
+                        freq += 1.0 / freq + 1 ;
                 }
                 
                 const QString* word = lookup::get_word( candidate ) ;
