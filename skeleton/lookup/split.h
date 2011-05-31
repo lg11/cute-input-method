@@ -33,22 +33,22 @@ inline bool check_vaild( const KeySet* set, const QString& key ) { return set->f
 typedef QPair< QStringList, QPair<int,int> > KeyString ;
 
 inline void append_code( KeyString* string, QChar code, const KeySet* keySet, QList<KeyString>* stringList ) {
-    KeyString* new_string ;
-    QString orig_tail( string->first.last() ) ;
-    QString new_tail( orig_tail ) ;
-    new_tail.append( code ) ;
-    if ( check_vaild( keySet, new_tail ) ) {
-        if ( check_complete( keySet, orig_tail ) && check_head( keySet, code ) ) {
+    QString* tail = &(string->first.last()) ;
+    bool flag = check_complete( keySet, *tail ) && check_head( keySet, code ) ;
+    tail->append( code ) ;
+    if ( check_vaild( keySet, *tail ) ) {
+        if ( flag ) {
             stringList->append( *string ) ;
-            new_string = &(stringList->last()) ;
+            KeyString* new_string = &(stringList->last()) ;
+            new_string->first.last().chop( 1 ) ;
             new_string->first.append( code ) ;
             new_string->second.first++ ;
             new_string->second.second = string->second.first ;
         }
-        string->first.last() = new_tail ;
         string->second.first++ ;
     }
     else {
+        tail->chop( 1 ) ;
         if ( check_head( keySet, code ) ) {
             string->first.append( code ) ;
             string->second.first++ ;
