@@ -10,6 +10,7 @@
 #include <QTextStream>
 
 #include "../lookup/lookup.h"
+#include "../lookup/t9.h"
 
 //#include <QDebug>
 
@@ -26,12 +27,13 @@ class IMEngine : public QObject {
     Q_OBJECT
 public:
     lookup::Lookup lookup ;
+    t9::T9Lookup t9lookup ;
     QList<SelectedPair> selected ;
     QString selectedWord ;
     int pageIndex ;
     const lookup::Candidate* candidate ;
 
-    inline IMEngine( QObject* parent = NULL ) : QObject( parent ), lookup(), selected(), selectedWord() { this->pageIndex = 0 ; this->candidate = NULL ; }
+    inline IMEngine( QObject* parent = NULL ) : QObject( parent ), lookup(), t9lookup(&(lookup.dict)), selected(), selectedWord() { this->pageIndex = 0 ; this->candidate = NULL ; }
     
     Q_INVOKABLE inline void load( const QString& path ) {
         QFile file( path ) ;

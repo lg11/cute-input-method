@@ -69,25 +69,28 @@ public :
         
         int highestPoint = -0x1000 ;
         for ( int i = 0 ; i < spliter.stringList.length() ; i++ ) {
-            int fitPoint ;
-            QList<const QString*> buffer ;
-            fit::fit( &(this->spliter.stringList[i].first), &buffer, &fitPoint, &(this->keyMap) ) ;
-            if ( fitPoint > highestPoint ) {
-                highestPoint = fitPoint ;
-                preeditCache->clear() ;
-                key->clear() ;
-                preedit->clear() ;
-                preeditCache->append( this->spliter.stringList[i].first.join( "'" ) ) ;
-                foreach( const QString* s, buffer ) {
-                    key->append( s ) ;
-                    preedit->append( &(preeditCache->last()) ) ;
+            const split::KeyString* string = &(this->spliter.stringList[i]) ;
+            if ( string->second.first == this->spliter.code.length() ) {
+                int fitPoint ;
+                QList<const QString*> buffer ;
+                fit::fit( &(string->first), &buffer, &fitPoint, &(this->keyMap) ) ;
+                if ( fitPoint > highestPoint ) {
+                    highestPoint = fitPoint ;
+                    preeditCache->clear() ;
+                    key->clear() ;
+                    preedit->clear() ;
+                    preeditCache->append( string->first.join( "'" ) ) ;
+                    foreach( const QString* s, buffer ) {
+                        key->append( s ) ;
+                        preedit->append( &(preeditCache->last()) ) ;
+                    }
                 }
-            }
-            else if ( fitPoint == highestPoint ) {
-                preeditCache->append( this->spliter.stringList[i].first.join( "'" ) ) ;
-                foreach( const QString* s, buffer ) {
-                    key->append( s ) ;
-                    preedit->append( &(preeditCache->last()) ) ;
+                else if ( fitPoint == highestPoint ) {
+                    preeditCache->append( string->first.join( "'" ) ) ;
+                    foreach( const QString* s, buffer ) {
+                        key->append( s ) ;
+                        preedit->append( &(preeditCache->last()) ) ;
+                    }
                 }
             }
         }
