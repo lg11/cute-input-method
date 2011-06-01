@@ -170,7 +170,7 @@ public :
                     this->candCacheIndex-- ;
             }
             if ( flag )
-                pick::set( &(this->pickCache), key, preedit, &(this->dict->hash) ) ;
+                pick::set( &(this->pickCache), key, preedit, &(this->dict->hash), &(this->usedKeySet) ) ;
         }
         return flag ;
     }

@@ -10,7 +10,7 @@ sys.path.append( "./utils" )
 from interface import Interface
 #from inputpad import InputPad
 from keyboard import Keyboard
-from engine import IMEngine
+#from engine import IMEngine
 
 import dbus
 import dbus.service
@@ -35,10 +35,10 @@ from PySide import QtCore, QtGui
         #event.ignore()
 
 class Checker( QtCore.QObject ) :
-    def __init__( self, engine, iface, parent = None ) :
+    def __init__( self, iface, parent = None ) :
         QtCore.QObject.__init__( self, parent )
         self.port = None
-        self.engine = engine
+        #self.engine = engine
         self.iface = iface
         self.keyboard = self.createKeyboard()
         self.commitTimer = QtCore.QTimer()
@@ -47,7 +47,7 @@ class Checker( QtCore.QObject ) :
         self.commitText = ""
     def createKeyboard( self ) :
         keyboard = Keyboard( daemonFlag = True )
-        keyboard.set( "./qml/qwert.qml", self.engine, "imEngine" )
+        keyboard.set( "./qml/qwert.qml" )
         keyboard.setAttribute( QtCore.Qt.WA_Maemo5AutoOrientation, True )
         keyboard.commit.connect( self.checkCommit )
         return keyboard
@@ -82,14 +82,14 @@ if __name__ == "__main__" :
     name = dbus.service.BusName( "me.maemo.input.chinese", session_bus )
     #pad = InputPad( True )
 
-    engine = IMEngine()
-    engine.load( "./data/formated" )
-    engine.load( "/home/user/.config/mcip/userdict.log" )
-    engine.lookup[0].dict.logOn()
+    #engine = IMEngine()
+    #engine.load( "./data/formated" )
+    #engine.load( "/home/user/.config/mcip/userdict.log" )
+    #engine.lookup[0].dict.logOn()
 
     iface = Interface( session_bus )
     
-    checker = Checker( engine, iface )
+    checker = Checker( iface )
     iface.active = checker.active
 
     desktop = app.desktop()

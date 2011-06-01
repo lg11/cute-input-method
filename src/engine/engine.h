@@ -77,7 +77,9 @@ public:
 
     Q_INVOKABLE inline void flushLog() {
         if ( this->logFile ) {
-            this->logFile->flush() ;
+            //this->logFile->flush() ;
+            this->logFile->close() ;
+            this->logFile->open( QIODevice::WriteOnly | QIODevice::Append ) ;
             //fsync( this->logFile->handle() ) ;
         }
     }
@@ -378,8 +380,8 @@ public:
                     (*this->textStream) << k << QChar( ' ' ) << selectedWord << QChar( ' ' ) << freq << QChar( '\n' ) ;
                     //this->flushLog() ;
                 }
-                this->reset() ;
             }
+            this->reset() ;
         }
     }
     Q_INVOKABLE inline void setMode( int flag ) {
