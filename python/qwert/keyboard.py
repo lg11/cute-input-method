@@ -62,7 +62,7 @@ class Keyboard( QtDeclarative.QDeclarativeView ) :
                 self.resize( keepedWidth, keepedHeight )
     def closeEvent( self, event ) :
         if self.daemonFlag :
-            self.engine.lookup[0].dict.flush()
+            #self.engine.lookup[0].dict.flush()
             #self.hide()
             text = self.getText()
             self.commit.emit( text )
