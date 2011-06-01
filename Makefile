@@ -14,6 +14,7 @@ runtime :
 
 clean :
 	set -e ; for d in $(DIRS) ; do $(MAKE) -C $$d clean ; done
+	set -e ; for d in $(QML_PLUGIN_DIRS) ; do $(MAKE) -C $$d clean ; done
 
 install :
 	mkdir -p $(DESTDIR)/opt/cim
