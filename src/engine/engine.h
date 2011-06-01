@@ -10,7 +10,7 @@
 #include <QTextStream>
 #include <QDir>
 
-#include <unistd.h>
+//#include <unistd.h>
 
 #include "../lookup/lookup.h"
 #include "../lookup/t9.h"
@@ -52,10 +52,12 @@ public:
         p.append( path.right( path.length() - 1 ) ) ;
         this->logFile = new QFile( p ) ;
         if ( this->logFile->exists() ) {
-            //this->logFile->open( QIODevice::WriteOnly | QIODevice::Append ) ;
-            this->logFile->open( QIODevice::WriteOnly | QIODevice::Append | QIODevice::Unbuffered ) ;
+            this->logFile->open( QIODevice::WriteOnly | QIODevice::Append ) ;
+            //this->logFile->open( QIODevice::WriteOnly | QIODevice::Append | QIODevice::Unbuffered ) ;
             this->textStream = new QTextStream( this->logFile ) ;
             this->textStream->setCodec( "utf-8" ) ;
+            this->textStream->setRealNumberNotation( QTextStream::SmartNotation ) ;
+            this->textStream->setRealNumberPrecision( 16 ) ;
         }
         else {
             delete this->logFile ;
@@ -76,7 +78,7 @@ public:
     Q_INVOKABLE inline void flushLog() {
         if ( this->logFile ) {
             this->logFile->flush() ;
-            fsync( this->logFile->handle() ) ;
+            //fsync( this->logFile->handle() ) ;
         }
     }
     
@@ -229,10 +231,10 @@ public:
                         halfIndex = 0 ;
                     const lookup::Candidate* candidate = this->lookup.getCand( halfIndex ) ;
                     freq = lookup::get_freq( candidate ) ;
-                    if ( freq <= 1.1 ) 
+                    if ( freq <= 0.1 ) 
                         freq = 1.1 ;
                     else 
-                        freq += 1.0 / freq ;
+                        freq += 1 ;
                 }
                 
                 const QString* word = lookup::get_word( candidate ) ;
@@ -277,10 +279,10 @@ public:
                         halfIndex = 0 ;
                     const lookup::Candidate* candidate = this->t9lookup.getCand( halfIndex ) ;
                     freq = lookup::get_freq( candidate ) ;
-                    if ( freq <= 1.1 ) 
+                    if ( freq <= 0.1 ) 
                         freq = 1.1 ;
                     else 
-                        freq += 1.0 / freq ;
+                        freq += 1 ;
                 }
                 
                 const QString* word = lookup::get_word( candidate ) ;
@@ -374,7 +376,7 @@ public:
                 this->t9lookup.tree.addKey( k ) ;
                 if ( this->logFile ) {
                     (*this->textStream) << k << QChar( ' ' ) << selectedWord << QChar( ' ' ) << freq << QChar( '\n' ) ;
-                    this->flushLog() ;
+                    //this->flushLog() ;
                 }
                 this->reset() ;
             }

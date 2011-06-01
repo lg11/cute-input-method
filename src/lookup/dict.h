@@ -58,23 +58,26 @@ public :
             WordRecordList* list = &(this->hash[key]) ; 
             if ( list->isEmpty() ) {
                 freq = highestFreq / 2 ;
-                if ( freq < 1.1 ) 
+                if ( freq <= 0.1 ) 
                     freq = 1.1 ;
+                else
+                    freq += 1 ;
                 insert_record( list, word, freq ) ;
             }
             else {
                 if ( list->length() < 4 ) 
                     freq = list->last().second / 2 ;
                 else
-                    freq = list->at(3).second + ( list->at(2).second - list->at(3).second ) / 2 ;
-                if ( freq < 1.1 ) 
+                    freq = list->at(3).second ;
+                    //freq = list->at(3).second + ( list->at(2).second - list->at(3).second ) / 2 ;
+                if ( freq <= 0.1 ) 
                     freq = 1.1 ;
-                //else
-                    //freq += 1 ;
-                this->highestFreq = freq > this->highestFreq ? freq : highestFreq ;
+                else
+                    freq += 1 ;
                 insert_record( list, word, freq ) ;
             }
         }
+        this->highestFreq = freq > this->highestFreq ? freq : highestFreq ;
         //qDebug() << key << word << freq << highestFreq ;
         return freq ;
     }
