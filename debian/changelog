@@ -1,6 +1,26 @@
+mcip (0.3.0-maemo5-1) fremantle; urgency=low
+  * rewrite Chinese input engine with c++, import as a qml plugin.
+ -- liang <sd.foolegg@gmail.com>  Wed,  1 Jun 2011 17:00:00 +0800
+ 
+mcip (0.2.7.2-maemo5-1) fremantle; urgency=low
+  * fix 36wk issue
+ -- liang <sd.foolegg@gmail.com>  Wed,  25 May 2011 19:00:00 +0800
+ 
+mcip (0.2.7.1-maemo5-1) fremantle; urgency=low
+  * fix t9 rotate in seclectMode issue
+ -- liang <sd.foolegg@gmail.com>  Wed,  25 May 2011 01:00:00 +0800
+
+mcip (0.2.7-maemo5-1) fremantle; urgency=low
+  * add T9 keyboard and T9 pinyinLookup
+  * fix ProxyMouseArea exit process
+ -- liang <sd.foolegg@gmail.com>  Tue,  24 May 2011 08:50:00 +0800
+ 
+mcip (0.2.6.2-maemo5-2) fremantle; urgency=low
+  * repackage
+ -- liang <sd.foolegg@gmail.com>  Sat,  21 May 2011 08:50:00 +0800
+ 
 mcip (0.2.6.2-maemo5-1) fremantle; urgency=low
-  * fix system clipboard problem. It shoud call
-QtGui.QApplication.clipboard(), should not create object
+  * fix system clipboard problem. It shoud call with QtGui.QApplication.clipboard(), not create object
   * fix preedit position in portrait mode
  -- liang <sd.foolegg@gmail.com>  Fri,  20 May 2011 01:00:00 +0800
 
