@@ -31,7 +31,7 @@ Rectangle {
 
     Preedit {
         id : preedit
-        anchors.horizontalCenter : parent.horizontalCenteR
+        anchors.horizontalCenter : parent.horizontalCenter
         y : 480
     }
     Rectangle {
