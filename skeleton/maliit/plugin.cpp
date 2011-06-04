@@ -8,7 +8,7 @@ QString MPlugin::name() const {
 }
 
 QString MPlugin::qmlFileName() const {
-    return "qml/qwert.qml" ;
+    return "qml/keyboard.qml" ;
 }
 
 Q_EXPORT_PLUGIN2( mplugin, MPlugin ) ;

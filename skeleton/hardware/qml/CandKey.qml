@@ -31,10 +31,11 @@ Item {
 
     Rectangle {
         id : plat
-        x : 1
-        y : 1
-        width : parent.width - 1
-        height : parent.height - 1
+        anchors.centerIn : parent
+        /*x : 1 ; y : 1*/
+        width : parent.width - config.keyHMargin
+        height : parent.height - config.keyVMargin
+        radius : config.keyRadius
         color : "#00000000"
         Text {
             id : candText

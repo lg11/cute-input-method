@@ -12,12 +12,13 @@ Item {
         color : palette.tooltipBorderColor
         width : parent.width
         height : parent.height * 0.8
+        radius : config.keyRadius
     }
     Rectangle {
         color : palette.tooltipBorderColor
         anchors.centerIn : parent
-        anchors.verticalCenterOffset : parent.height * 0.3
-        width : parent.height * 0.15
+        anchors.verticalCenterOffset : parent.height * 0.25
+        width : parent.height * 0.2
         height : width
         rotation : 45
         Rectangle {
@@ -33,6 +34,7 @@ Item {
         anchors.centerIn : platBackground
         width : platBackground.width - 2
         height : platBackground.height - 2
+        radius : config.keyRadius
     }
     Text {
         id : title

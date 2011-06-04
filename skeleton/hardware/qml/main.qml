@@ -2,15 +2,18 @@ import Qt 4.7
 import "utils.js" as Utils
 
 Rectangle {
-    id : root
+    id : canvas
     transformOrigin: Item.Center
-    width: MInputMethodQuick.screenWidth
-    height: MInputMethodQuick.screenHeight
+    width: inputmethod.screenWidth
+    height: inputmethod.screenHeight
+    /*width: 1440*/
+    /*height: 1080*/
     color: "transparent"
     opacity: 1
 
     property int rotateFlag : 0
-    property int keyboardOffset
+    property bool t9Mode : false
+
     property alias keyWidth : keyboard.keyWidth
     property alias keyHeight : keyboard.keyHeight
     property alias numKeyWidth : keyboard.numKeyWidth
@@ -18,7 +21,6 @@ Rectangle {
     property alias t9KeyWidth : t9Keyboard.keyWidth
     property alias t9KeyHeight : t9Keyboard.keyHeight
     property alias useIKey_l : keyboard.useIKey_l
-    property bool t9Mode : false
     property int keyboardModeRecord : 0
     property alias t9Text : t9SwitcherText.text
 
@@ -32,21 +34,27 @@ Rectangle {
     Preedit {
         id : preedit
         anchors.horizontalCenter : parent.horizontalCenter
-        y : 480
+        y : root.y - height - 20
     }
     Rectangle {
-        id : r
-        x : 320
-        y : 600
-        width : 800
-        height : 424
+        anchors.centerIn : root
+        width : canvas.width
+        height : root.height + 10
+        color : "#99FFFFFF"
+    }
+    Rectangle {
+        id : root
+        anchors.horizontalCenter : parent.horizontalCenter
+        width : keyboard.width
+        height : keyboard.height 
+        y : canvas.height - height - 70
         clip : true
         color: "transparent"
         opacity: 1
-        Rectangle {
-            anchors.fill : parent
-            color : palette.backgroundColor
-        }
+        /*Rectangle {*/
+            /*anchors.fill : parent*/
+            /*color : palette.backgroundColor*/
+        /*}*/
         /*Image {*/
             /*id : backgroundImage*/
             /*anchors.fill : parent*/
@@ -60,15 +68,17 @@ Rectangle {
             anchors.fill : parent
             Keyboard {
                 id : keyboard
-                width : keyWidth * 11
+                anchors.horizontalCenter : parent.horizontalCenter
+                anchors.top : parent.top
+                width : keyWidth * 13
                 height : numKeyHeight + keyHeight * 4
-                x : keyboardOffset
-                y : 0
             }
             T9Keyboard {
                 id : t9Keyboard
-                x : keyboardOffset
-                y : 0
+                anchors.horizontalCenter : parent.horizontalCenter
+                anchors.top : parent.top
+                width : keyWidth * 11
+                height : numKeyHeight + keyHeight * 4
             }
             Item {
                 id : t9Switcher
@@ -173,32 +183,24 @@ Rectangle {
         State {
             name : "LAND" ; when : rotateFlag == 0
             PropertyChanges {
-                target : root
-                width : 800
-                height : 424
-                keyboardOffset : -30
-                textviewPartHeight : 75
-                sideSpacing : 80
-                keyWidth : 800 / 10 * 0.975
-                keyHeight : keyWidth * 0.975
+                target : canvas
+                /*width : 800*/
+                /*height : 424*/
+                keyWidth : canvas.width / config.ppcm * 3.5
+                keyHeight : keyWidth * 0.875
                 numKeyWidth : keyWidth
-                numKeyHeight : numKeyWidth * 0.925
+                numKeyHeight : numKeyWidth * 0.875
                 useIKey_l : true
                 t9KeyWidth : 0
                 t9KeyHeight : 0
-                rightProxyTarget : keyboard.backspaceKey
-                rightProxyOffset : 550
-                modeTextVisible : true
             }
         } 
         State {
             name : "PORT_FULL" ; when : rotateFlag == 1 && t9Mode == false
             PropertyChanges {
-                target : root
-                width : 480
-                height : 700
-                keyboardOffset : -18
-                textviewPartHeight : 160
+                target : canvas
+                /*width : 480*/
+                /*height : 700*/
                 sideSpacing : 50
                 keyWidth : 480 / 10 * 0.975 * 1.045
                 keyHeight : keyWidth * 1.75
@@ -207,21 +209,16 @@ Rectangle {
                 useIKey_l : false
                 t9KeyWidth : 0
                 t9KeyHeight : 0
-                rightProxyTarget : keyboard.backspaceKey
-                rightProxyOffset : 290
-                modeTextVisible : true
                 t9Text : "t9"
             }
         } 
         State {
             name : "PORT_T9" ; when : rotateFlag == 1 && t9Mode == true
             PropertyChanges {
-                target : root
-                width : 480
-                height : 700
-                keyboardOffset : 15 - t9KeyWidth
+                target : canvas
+                /*width : 480*/
+                /*height : 700*/
                 textviewPartHeight : 160
-                sideSpacing : 50
                 keyWidth : 0
                 keyHeight : 0
                 numKeyWidth : keyWidth 
@@ -229,9 +226,6 @@ Rectangle {
                 useIKey_l : false
                 t9KeyWidth : 140
                 t9KeyHeight : 100
-                rightProxyTarget : t9Keyboard.backspaceKey
-                rightProxyOffset : 290
-                modeTextVisible : false
                 t9Text : "qwert"
             }
         } 
@@ -242,9 +236,9 @@ Rectangle {
         imEngine.load( "~/.config/mcip/userdict.log" )
         console.log( "load end" ) 
         imEngine.startLog( "~/.config/mcip/userdict.log" )
-        t9Mode = true
+        /*t9Mode = true*/
         rotateFlag = 0
-        MInputMethodQuick.setInputMethodArea( Qt.rect( 320, 600, 800, 424 ) )
+        inputmethod.setInputMethodArea( Qt.rect( root.x, root.y, root.width, root.height ) )
     }
     Component.onDestruction : {
         console.log( "destruction" ) 

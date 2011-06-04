@@ -4,8 +4,8 @@ import "utils.js" as Utils
 /*RootMouseArea {*/
 Item {
     id : keyboard
-    width : 800
-    height : 480
+    /*width : 800*/
+    /*height : 480*/
     clip : true
     /*color : "#00FF0000"*/
 
@@ -263,15 +263,17 @@ Item {
     Column {
         anchors.fill : parent
         Row {
+            Item { width : numKeyWidth ; height : numKeyHeight }
             CandKey { id : key_1_2 ; keycode_l : Utils.keycode_1 ; keycode_r : Utils.keycode_2 ; width : numKeyWidth * 2.0 ; height : numKeyHeight ; color_l : palette.keyNormalColor ; color_r : palette.keyNormalColor }
             CandKey { id : key_3_4 ; keycode_l : Utils.keycode_3 ; keycode_r : Utils.keycode_4 ; width : numKeyWidth * 2.0 ; height : numKeyHeight ; color_l : palette.keyNormalColor ; color_r : palette.keyNormalColor }
             CandKey { id : key_5_6 ; keycode_l : Utils.keycode_5 ; keycode_r : Utils.keycode_6 ; width : numKeyWidth * 2.0 ; height : numKeyHeight ; color_l : palette.keyNormalColor ; color_r : palette.keyNormalColor }
             CandKey { id : key_7_8 ; keycode_l : Utils.keycode_7 ; keycode_r : Utils.keycode_8 ; width : numKeyWidth * 2.0 ; height : numKeyHeight ; color_l : palette.keyNormalColor ; color_r : palette.keyNormalColor }
             CandKey { id : key_9_0 ; keycode_l : Utils.keycode_9 ; keycode_r : Utils.keycode_0 ; width : numKeyWidth * 2.0 ; height : numKeyHeight ; color_l : palette.keyNormalColor ; color_r : palette.keyNormalColor }
-            AutoRepeatKey { id : key_backspace ; keycode : Utils.keycode_backspace ; width : numKeyWidth ; height : numKeyHeight ; color : Qt.darker( palette.keyNormalColor, 1.25 ) ; onRepeated : backspace() }
+            AutoRepeatKey { id : key_backspace ; keycode : Utils.keycode_backspace ; width : numKeyWidth * 1.5 ; height : numKeyHeight ; color : Qt.darker( palette.keyNormalColor, 1.25 ) ; onRepeated : backspace() }
         }
         Row {
             Item { width : keyWidth * 0.25 ; height : keyHeight }
+            Item { width : numKeyWidth ; height : numKeyHeight }
             Key { id : key_q ; keycode : Utils.keycode_q ; width : keyWidth ; height : keyHeight ; color : palette.keyNormalColor }
             Key { id : key_w ; keycode : Utils.keycode_w ; width : keyWidth ; height : keyHeight ; color : palette.keyNormalColor }
             Key { id : key_e ; keycode : Utils.keycode_e ; width : keyWidth ; height : keyHeight ; color : palette.keyNormalColor }
@@ -286,6 +288,7 @@ Item {
             ProxyMouseArea { id : ikey_p ; width : keyWidth ; height : keyHeight }
         }
         Row {
+            Item { width : numKeyWidth ; height : numKeyHeight }
             ProxyMouseArea { id : ikey_a ; width : keyWidth * 0.5 ; height : keyHeight }
             Key { id : key_a ; keycode : Utils.keycode_a ; width : keyWidth ; height : keyHeight ; color : palette.keyNormalColor }
             Key { id : key_s ; keycode : Utils.keycode_s ; width : keyWidth ; height : keyHeight ; color : palette.keyNormalColor }
@@ -299,6 +302,7 @@ Item {
             Key { id : key_enter ; keycode : Utils.keycode_enter ; width : keyWidth * 2.0 ; height : keyHeight ; color : Qt.darker( palette.keyNormalColor, 1.25 ) }
         }
         Row {
+            Item { width : numKeyWidth ; height : numKeyHeight }
             ProxyMouseArea { id : ikey_shift_l ; width : keyWidth ; height : keyHeight }
             Key { id : key_z ; keycode : Utils.keycode_z ; width : keyWidth ; height : keyHeight ; color : palette.keyNormalColor }
             Key { id : key_x ; keycode : Utils.keycode_x ; width : keyWidth ; height : keyHeight ; color : palette.keyNormalColor }
@@ -312,11 +316,12 @@ Item {
             ProxyMouseArea { id : ikey_shift_r ; width : keyWidth ; height : keyHeight }
         }
         Row {
+            Item { width : numKeyWidth * 0.5 ; height : numKeyHeight }
             Key { id : key_shift_l ; keycode : Utils.keycode_shift_l ; width : keyWidth * 2.0 ; height : keyHeight ; color : palette.keyNormalColor }
             ProxyMouseArea { id : ikey_shift_l_2 ; width : keyWidth * 0.25 ; height : keyHeight }
             Key { id : key_alt_l ; keycode : Utils.keycode_alt_l ; width : keyWidth * 1.5 ; height : keyHeight ; color : Qt.darker( palette.keyNormalColor, 1.25 ) }
             ProxyMouseArea { id : ikey_alt_l ; width : keyWidth * 0.25 ; height : keyHeight }
-            Key { id : key_space ; keycode : Utils.keycode_space ; width : keyWidth * 3.0 ; height : keyHeight ; color : palette.keyNormalColor }
+            Key { id : key_space ; keycode : Utils.keycode_space ; width : keyWidth * 4.0 ; height : keyHeight ; color : palette.keyNormalColor }
             ProxyMouseArea { id : ikey_alt_r ; width : keyWidth * 0.25 ; height : keyHeight }
             Key { id : key_alt_r ; keycode : Utils.keycode_alt_r ; width : keyWidth * 1.5 ; height : keyHeight ; color : Qt.darker( palette.keyNormalColor, 1.25 ) }
             ProxyMouseArea { id : ikey_shift_r_2 ; width : keyWidth * 0.25 ; height : keyHeight }
