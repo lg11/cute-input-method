@@ -1,11 +1,15 @@
 #include "context.h"
 #include "adaptor.h"
 
+#include <QDBusConnection>
+
 #include <QDebug>
 
 namespace context {
 
 Context::Context( QObject* parent ) : QInputContext( parent ), adaptor( new adaptor::Adaptor( this ) ), eventStack() {
+    //QDBusConnection::sessionBus().registerService( "me.inputmethod" ) ;
+    QDBusConnection::sessionBus().registerObject( "/context", this ) ;
 }
 
 bool Context::filterEvent( const QEvent* event ) {

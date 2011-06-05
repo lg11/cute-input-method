@@ -24,8 +24,8 @@ int main( int argc, char** argv ) {
     context::Context* context = new context::Context() ;
     app.setInputContext( context ) ;
 
-    QDBusConnection::sessionBus().registerService( "me.inputmethod" ) ;
-    QDBusConnection::sessionBus().registerObject( "/context", context ) ;
+    //QDBusConnection::sessionBus().registerService( "me.inputmethod" ) ;
+    //QDBusConnection::sessionBus().registerObject( "/context", context ) ;
 
     qDebug() << QDBusConnection::sessionBus().isConnected() ;
 
