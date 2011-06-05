@@ -43,7 +43,7 @@ Item {
     }
     function commit() {
         /*if ( imEngine.getSelectedLength() > 0 ) {*/
-        MInputMethodQuick.sendCommit( imEngine.getSelectedWord() )
+        inputmethod.sendCommit( imEngine.getSelectedWord() )
         imEngine.commit()
         /*}*/
     }
@@ -119,7 +119,7 @@ Item {
                     key_backspace.pauseAutoRepeat()
             }
             else {
-                MInputMethodQuick.sendCommit( "\b" )
+                inputmethod.sendCommit( "\b" )
             }
         }
     }
@@ -133,7 +133,7 @@ Item {
                 updateCandString()
             }
             else {
-                /*MInputMethodQuick.sendCommit( keysym[mask] )*/
+                /*inputmethod.sendCommit( keysym[mask] )*/
             }
         }
         else if ( keycode == Utils.keycode_backspace ) {
@@ -165,12 +165,12 @@ Item {
         }
         else if ( keycode == Utils.keycode_enter ) {
             if ( imEngine.getCodeLength() > 0 ) {
-                MInputMethodQuick.sendCommit( imEngine.getCode() )
+                inputmethod.sendCommit( imEngine.getCode() )
                 imEngine.reset()
                 updateCandString()
             }
             else {
-                MInputMethodQuick.sendCommit( "\n" )
+                inputmethod.sendCommit( "\n" )
             }
         }
         else if ( keycode == Utils.keycode_space ) {
@@ -183,7 +183,7 @@ Item {
                 }
             }
             else {
-                MInputMethodQuick.sendCommit( keysym[mask] )
+                inputmethod.sendCommit( keysym[mask] )
             }
         }
         else if ( keycode >= Utils.keycode_0 && keycode <= Utils.keycode_9 ) {
@@ -198,11 +198,11 @@ Item {
                 }
             }
             else {
-                MInputMethodQuick.sendCommit( keysym[mask] )
+                inputmethod.sendCommit( keysym[mask] )
             }
         }
         else if ( keycode != Utils.keycode_ctrl && keycode != Utils.keycode_alt_l && keycode != Utils.keycode_alt_r ) {
-            MInputMethodQuick.sendCommit( keysym[mask] )
+            inputmethod.sendCommit( keysym[mask] )
         }
         tooltip.text = ""
         if ( keycode == Utils.keycode_shift_l || keycode == Utils.keycode_shift_r ) {

@@ -8,12 +8,12 @@ CONFIG += meegoimquick
 
 QT = core gui declarative
 
-TARGET = mcip
+TARGET = inputmethod
 
 OBJECTS_DIR = tmp
 MOC_DIR = tmp
 
 #INCLUDEPATH += /usr/include/meegoimquick /usr/include/meegoimframework /usr/include/meego-keyboard
 
-HEADERS += plugin.h
-SOURCES += plugin.cpp
+HEADERS += plugin.h inputmethod.h
+SOURCES += plugin.cpp inputmethod.cpp

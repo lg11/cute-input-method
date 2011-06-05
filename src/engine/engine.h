@@ -349,6 +349,13 @@ public:
         this->selectedWord.clear() ;
         this->pageIndex = 0 ;
     }
+    Q_INVOKABLE inline void appendCode( const int code ) {
+        if ( this-> mode == 0 ) 
+            this->lookup.appendCode( code ) ;
+        else if ( this-> mode == 1 ) 
+            this->t9lookup.appendCode( code ) ;
+        this->pageIndex = 0 ;
+    }
     Q_INVOKABLE inline void appendCode( const QString& code ) {
         if ( this-> mode == 0 ) 
             this->lookup.appendCode( code.at(0) ) ;
