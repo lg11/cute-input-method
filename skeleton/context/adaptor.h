@@ -31,7 +31,6 @@ public :
 
 public slots :
     Q_NOREPLY void receiveMessage( const QString& message ) ;
-
 } ;
 
 }

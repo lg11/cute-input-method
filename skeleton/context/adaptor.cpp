@@ -8,7 +8,7 @@ namespace adaptor {
 Adaptor::Adaptor( context::Context* context ) : QDBusAbstractAdaptor( context ), context( context ) {}
 
 void Adaptor::receiveMessage( const QString& message ) {
-    qDebug() << message ;
+    qDebug() << "received" << message ;
 }
 
 }
