@@ -29,6 +29,8 @@ public slots :
     Q_NOREPLY void show() ;
     Q_NOREPLY void hide() ;
     Q_NOREPLY void receiveMessage( const QString& message ) ;
+    bool keyPress( int keycode, int modifiers ) ;
+    bool keyRelease( int keycode, int modifiers ) ;
 } ;
 
 }

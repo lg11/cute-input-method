@@ -15,8 +15,16 @@ void Adaptor::hide() {
     this->host->hide() ;
 }
 
+bool Adaptor::keyPress( int keycode, int modifiers ) {
+    return this->host->keyPress( keycode, modifiers ) ;
+}
+
+bool Adaptor::keyRelease( int keycode, int modifiers ) {
+    return this->host->keyRelease( keycode, modifiers ) ;
+}
+
 void Adaptor::receiveMessage( const QString& message ) {
-    qDebug() << message ;
+    qDebug() << "received" << message ;
 }
 
 }

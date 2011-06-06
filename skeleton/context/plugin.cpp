@@ -37,4 +37,4 @@ QStringList InputMethodPlugin::languages( const QString &key ) {
 
 }
 
-Q_EXPORT_PLUGIN2( inputmethodcontextplugin, plugin::InputMethodPlugin )
+Q_EXPORT_PLUGIN2( cuteinputmethod, plugin::InputMethodPlugin )

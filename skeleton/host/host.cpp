@@ -23,4 +23,14 @@ void Host::hide() {
         view->hide() ;
 }
 
+bool Host::keyPress( int keycode, int modifiers ) {
+    qDebug() << "keyPress" << keycode << modifiers ;
+    return false ;
+}
+
+bool Host::keyRelease( int keycode, int modifiers ) {
+    qDebug() << "keyRelease" << keycode << modifiers ;
+    return false ;
+}
+
 }

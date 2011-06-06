@@ -3,6 +3,7 @@
 
 #include <QInputContext>
 #include <QStack>
+#include <QDBusInterface>
 
 namespace adaptor {
 class Adaptor ;
@@ -17,6 +18,7 @@ class Context : public QInputContext {
 
 public :
     adaptor::Adaptor* adaptor ;
+    QDBusInterface* interface ;
     QStack<QEvent> eventStack ;
 
     Context( QObject* parent = NULL ) ;

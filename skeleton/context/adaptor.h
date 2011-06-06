@@ -19,6 +19,10 @@ class Adaptor : public QDBusAbstractAdaptor {
 
 signals :
     void sendMessage( const QString& message ) ;
+    void requestSoftwareInputPanel() ;
+    void closeSoftwareInputPanel() ;
+    void focusIn() ;
+    void focusOut() ;
 
 public :
     context::Context* context ;

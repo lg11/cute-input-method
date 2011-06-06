@@ -28,7 +28,8 @@ public :
 
     Q_INVOKABLE void show() ;
     Q_INVOKABLE void hide() ;
-    
+    Q_INVOKABLE bool keyPress( int keycode, int modifiers ) ;
+    Q_INVOKABLE bool keyRelease( int keycode, int modifiers ) ;
 } ;
 
 }
