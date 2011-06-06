@@ -11,10 +11,14 @@ namespace context {
 Context::Context( QObject* parent ) :
     QInputContext( parent ), 
     adaptor( new adaptor::Adaptor( this ) ),
-    interface( new QDBusInterface( "me.inputmethod.host", "/host", "inputmethod.host", QDBusConnection::sessionBus(), this ) ),
-    eventStack() {
+    interface( new QDBusInterface( "me.inputmethod.host", "/host", "inputmethod.host", QDBusConnection::sessionBus(), this ) ) {
+
     QDBusConnection::sessionBus().registerService( "me.inputmethod.context" ) ;
     QDBusConnection::sessionBus().registerObject( "/context", this ) ;
+
+    QDBusConnection::sessionBus().connect( "", "", "inputmethod.host", "sendCommit", this->adaptor, SLOT(receiveCommit( const QString& )) ) ;
+    QDBusConnection::sessionBus().connect( "", "", "inputmethod.host", "sendKeyEvent", this->adaptor, SLOT(receiveKeyEvent( int, int, int )) ) ;
+
 }
 
 bool Context::filterEvent( const QEvent* event ) {
@@ -50,7 +54,17 @@ QString Context::identifierName() {
 }
 
 bool Context::isComposing() const {
-    return QInputContext::isComposing() ;
+    return false ;
+}
+
+QString Context::language() {
+    return "" ;
+}
+
+void Context::mouseHandler( int x, QMouseEvent* event ) {
+    emit this->adaptor->sendMessage( "mouseHandler" ) ;
+    Q_UNUSED( x ) ;
+    Q_UNUSED( event ) ;
 }
 
 void Context::reset() {
@@ -61,9 +75,12 @@ void Context::setFocusWidget( QWidget* widget ) {
     emit this->adaptor->sendMessage( "setFocusWidget" ) ;
     if ( widget ) {
         //QDBusConnection::sessionBus().registerService( "me.inputmethod.context" ) ;
+        emit this->adaptor->sendMessage( "focusIn" ) ;
         emit this->adaptor->focusIn() ;
+        //this->update() ;
     }
     else {
+        emit this->adaptor->sendMessage( "focusOut" ) ;
         emit this->adaptor->focusOut() ;
         //QDBusConnection::sessionBus().unregisterService( "me.inputmethod.context" ) ;
     }
@@ -72,10 +89,18 @@ void Context::setFocusWidget( QWidget* widget ) {
 
 void Context::update() {
     emit this->adaptor->sendMessage( "update" ) ;
-}
-
-QString Context::language() {
-    return "zh_CN" ;
+    QWidget* widget = this->focusWidget() ;
+    if ( widget ) {
+        QVariant result( widget->inputMethodQuery( Qt::ImMicroFocus ) ) ;
+        if ( result.isValid() ) {
+            QRect cursorRect( result.toRect() ) ;
+            cursorRect.moveTopLeft( widget->mapToGlobal( cursorRect.topLeft() ) ) ;
+            if ( this->cursorRect != cursorRect ) {
+                this->cursorRect = cursorRect ;
+                emit this->adaptor->cursorRectUpdate( cursorRect.x(), cursorRect.y(), cursorRect.width(), cursorRect.height() ) ;
+            }
+        }
+    }
 }
 
 }

@@ -19,6 +19,10 @@ class Adaptor : public QDBusAbstractAdaptor {
  
 signals :
     void sendMessage( const QString& message ) ;
+    void sendCommit( const QString& text ) ;
+    //void sendKeyEvent( int type, int keycode, int modifiers, bool autoRepeat, const QString& text, int count ) ;
+    void sendKeyEvent( int type, int keycode, int modifiers ) ;
+    void cursorRectUpdate( int x, int y, int width, int height ) ;
 
 public :
     host::Host* host ;

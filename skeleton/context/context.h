@@ -2,7 +2,6 @@
 #define CONTEXT_H
 
 #include <QInputContext>
-#include <QStack>
 #include <QDBusInterface>
 
 namespace adaptor {
@@ -19,16 +18,17 @@ class Context : public QInputContext {
 public :
     adaptor::Adaptor* adaptor ;
     QDBusInterface* interface ;
-    QStack<QEvent> eventStack ;
+    QRect cursorRect ;
 
     Context( QObject* parent = NULL ) ;
     virtual bool filterEvent( const QEvent* event ) ;
     virtual QString identifierName() ;
     virtual bool isComposing() const ;
+    virtual QString language() ;
+    virtual void mouseHandler( int x, QMouseEvent* event ) ;
     virtual void reset() ;
     virtual void setFocusWidget( QWidget* widget ) ;
     virtual void update() ;
-    virtual QString language() ;
 } ;
 
 }

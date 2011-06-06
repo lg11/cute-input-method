@@ -23,6 +23,7 @@ signals :
     void closeSoftwareInputPanel() ;
     void focusIn() ;
     void focusOut() ;
+    void cursorRectUpdate( int x, int y, int width, int height ) ;
 
 public :
     context::Context* context ;
@@ -31,6 +32,8 @@ public :
 
 public slots :
     Q_NOREPLY void receiveMessage( const QString& message ) ;
+    Q_NOREPLY void receiveCommit( const QString& text ) ;
+    Q_NOREPLY void receiveKeyEvent( int type, int keycode, int modifiers ) ;
 } ;
 
 }

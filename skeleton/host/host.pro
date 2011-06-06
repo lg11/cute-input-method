@@ -12,11 +12,11 @@ QT += dbus declarative
 OBJECTS_DIR = tmp
 MOC_DIR = tmp
 
-;unix {
-    ;CONFIG += link_pkgconfig
-    ;PKGCONFIG += pkg-config gtk+-2.0 sunpinyin-2.0 sqlite3 
-;}
+unix {
+    CONFIG += link_pkgconfig
+    PKGCONFIG += x11 xext
+}
 
 # Input
-HEADERS += host.h view.h adaptor.h
+HEADERS += host.h view.h adaptor.h ../engine/engine.h
 SOURCES += main.cpp host.cpp view.cpp adaptor.cpp

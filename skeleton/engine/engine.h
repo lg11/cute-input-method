@@ -1,5 +1,5 @@
-#ifndef IMENGINE_H
-#define IMENGINE_H
+#ifndef ENGINE_H
+#define ENGINE_H
 
 #include <QObject>
 #include <QList>
@@ -26,7 +26,7 @@ typedef QPair<KeyPair, WordPair> SelectedPair ;
 //typedef QPair<QStringList, QStringList> KeyPair ;
 //typedef QPair< QString, QList<qreal> > WordPair ;
 
-class IMEngine : public QObject {
+class Engine : public QObject {
     Q_OBJECT
 public:
     lookup::Lookup lookup ;
@@ -39,12 +39,20 @@ public:
     QFile* logFile ;
     QTextStream* textStream ;
 
-    inline IMEngine( QObject* parent = NULL ) : QObject( parent ), lookup(), t9lookup(&(lookup.dict)), selected(), selectedWord() {
+    inline Engine( QObject* parent = NULL ) : QObject( parent ), lookup(), t9lookup(&(lookup.dict)), selected(), selectedWord() {
         this->pageIndex = 0 ;
         this->candidate = NULL ;
         this->mode = 0 ;
         this->logFile = NULL ;
         this->textStream = NULL ;
+    }
+
+    inline ~Engine() {
+        if ( this->logFile ) {
+            delete this->textStream ;
+            this->logFile->close() ;
+            delete this->logFile ;
+        }
     }
 
     Q_INVOKABLE inline void startLog( const QString& path ) {
@@ -347,6 +355,17 @@ public:
             this->t9lookup.reset() ;
         this->selected.clear() ;
         this->selectedWord.clear() ;
+        this->pageIndex = 0 ;
+    }
+    Q_INVOKABLE inline void appendCode( int code ) {
+        if ( this-> mode == 0 ) {
+            if ( code >= 'a' && code <= 'z' ) 
+                this->lookup.appendCode( code ) ;
+            else if ( code >= 'A' && code <= 'Z' ) 
+                this->lookup.appendCode( code + 'a' - 'A' ) ;
+        }
+        else if ( this-> mode == 1 ) 
+            this->t9lookup.appendCode( code ) ;
         this->pageIndex = 0 ;
     }
     Q_INVOKABLE inline void appendCode( const QString& code ) {
