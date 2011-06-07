@@ -26,7 +26,7 @@ signals :
     void update() ;
 
 public :
-    enum InputDevice { NullInputDevice = 0, HardwareInputDevice = 1, OnscreenInputDevice = 2 } ;
+    enum InputDevice { UnknownInputDevice = 0, HardwareInputDevice = 1, OnscreenInputDevice = 2 } ;
     QWidget* view ;
     QObject* engine ;
     QRect cursorRect ;

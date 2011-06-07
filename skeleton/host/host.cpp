@@ -3,7 +3,7 @@
 
 #include <QEvent>
 
-#include <QDebug>
+//#include <QDebug>
 
 namespace host {
 
@@ -11,7 +11,7 @@ Host::Host( QObject* parent ) :
     QObject( parent ),
     view( NULL ),
     engine( NULL ),
-    inputDevice( NullInputDevice ), 
+    inputDevice( UnknownInputDevice ), 
     adaptor( new adaptor::Adaptor( this ) ) {
 }
 
@@ -44,20 +44,20 @@ void Host::hide() {
 }
 
 bool Host::keyPress( int keycode, int modifiers ) {
-    qDebug() << "keyPress" << keycode << modifiers ;
+    //qDebug() << "keyPress" << keycode << modifiers ;
     bool flag = false ;
-    if ( modifiers == Qt::NoModifier && inputDevice != NullInputDevice ) {
+    if ( modifiers == Qt::NoModifier && inputDevice != UnknownInputDevice ) {
         this->processKey.invoke( this->engine, Q_RETURN_ARG( bool, flag ), Q_ARG( int, keycode ) ) ;
         if ( flag ) 
             emit this->update() ;
-        //if ( this->engine->updateCandidate( 0 ) )
-            //qDebug() << this->engine->getWord() ;
     }
     return flag ;
 }
 
 bool Host::keyRelease( int keycode, int modifiers ) {
-    qDebug() << "keyRelease" << keycode << modifiers ;
+    //qDebug() << "keyRelease" << keycode << modifiers ;
+    Q_UNUSED( keycode ) ;
+    Q_UNUSED( modifiers ) ;
     return false ;
 }
 

@@ -244,104 +244,106 @@ public:
 
     Q_INVOKABLE inline bool select( int index ) {
         bool flag = false ;
-        if ( this->keyboardLayout == FullKeyboardLayout ) {
-            index = this->pageIndex * 5 + index ;
-            const lookup::Candidate* candidate = this->lookup.getCand( index ) ;
+        if ( this->getCodeLength() > 0 ) {
+            if ( this->keyboardLayout == FullKeyboardLayout ) {
+                index = this->pageIndex * 5 + index ;
+                const lookup::Candidate* candidate = this->lookup.getCand( index ) ;
 
-            if ( candidate ) {
-                qreal freq = -0x1000 ;
-                if ( this->selected.isEmpty() ) {
-                    int halfIndex = ( candidate->second + index ) / 2 ;
-                    if ( halfIndex < 2 ) 
-                        halfIndex = 0 ;
-                    const lookup::Candidate* candidate = this->lookup.getCand( halfIndex ) ;
-                    freq = lookup::get_freq( candidate ) ;
-                    if ( freq <= 0.1 ) 
-                        freq = 1.1 ;
-                    else 
-                        freq += 1 ;
-                }
-                
-                const QString* word = lookup::get_word( candidate ) ;
-                if ( word->length() > 1 ) {
-                    QStringList key = lookup::get_key( candidate )->split( '\'' ) ;
-                    QStringList preedit = lookup::get_preedit( candidate )->split( '\'' ) ;
-                    for ( int i = 0 ; i < word->length() ; i++ )
-                        this->selected.append( SelectedPair( KeyPair( key.at(i), preedit.at(i) ), WordPair( word->at(i), -0x1000 ) ) ) ;
-                }
-                else {
-                    const QString* key = lookup::get_key( candidate ) ;
-                    const QString* preedit = lookup::get_preedit( candidate ) ;
-                    this->selected.append( SelectedPair( KeyPair( *key, *preedit ), WordPair( word->at(0), -0x1000 ) ) ) ;
-                }
-                this->selectedWord.append( *word ) ;
-                this->selected.last().second.second = freq ;
+                if ( candidate ) {
+                    qreal freq = -0x1000 ;
+                    if ( this->selected.isEmpty() ) {
+                        int halfIndex = ( candidate->second + index ) / 2 ;
+                        if ( halfIndex < 2 ) 
+                            halfIndex = 0 ;
+                        const lookup::Candidate* candidate = this->lookup.getCand( halfIndex ) ;
+                        freq = lookup::get_freq( candidate ) ;
+                        if ( freq <= 0.1 ) 
+                            freq = 1.1 ;
+                        else 
+                            freq += 1 ;
+                    }
+                    
+                    const QString* word = lookup::get_word( candidate ) ;
+                    if ( word->length() > 1 ) {
+                        QStringList key = lookup::get_key( candidate )->split( '\'' ) ;
+                        QStringList preedit = lookup::get_preedit( candidate )->split( '\'' ) ;
+                        for ( int i = 0 ; i < word->length() ; i++ )
+                            this->selected.append( SelectedPair( KeyPair( key.at(i), preedit.at(i) ), WordPair( word->at(i), -0x1000 ) ) ) ;
+                    }
+                    else {
+                        const QString* key = lookup::get_key( candidate ) ;
+                        const QString* preedit = lookup::get_preedit( candidate ) ;
+                        this->selected.append( SelectedPair( KeyPair( *key, *preedit ), WordPair( word->at(0), -0x1000 ) ) ) ;
+                    }
+                    this->selectedWord.append( *word ) ;
+                    this->selected.last().second.second = freq ;
 
-                this->candidate = candidate ;
-                if ( this->getInvaildCodeLength() > 0 ) {
-                    QString code( this->getInvaildCode() ) ;
-                    //qDebug() << "r" << code ; 
-                    this->lookup.reset() ;
-                    this->lookup.setCode( code ) ;
-                    this->pageIndex = 0 ;
-                }
-                else {
-                    this->lookup.reset() ;
-                    this->pageIndex = 0 ;
-                }
+                    this->candidate = candidate ;
+                    if ( this->getInvaildCodeLength() > 0 ) {
+                        QString code( this->getInvaildCode() ) ;
+                        //qDebug() << "r" << code ; 
+                        this->lookup.reset() ;
+                        this->lookup.setCode( code ) ;
+                        this->pageIndex = 0 ;
+                    }
+                    else {
+                        this->lookup.reset() ;
+                        this->pageIndex = 0 ;
+                    }
 
-                flag = true ;
+                    flag = true ;
+                }
+                //else ;
             }
-            //else ;
-        }
-        else if ( this->keyboardLayout == T9KeyboardLayout ) {
-            index = this->pageIndex * 6 + index ;
-            const lookup::Candidate* candidate = this->t9lookup.getCand( index ) ;
+            else if ( this->keyboardLayout == T9KeyboardLayout ) {
+                index = this->pageIndex * 6 + index ;
+                const lookup::Candidate* candidate = this->t9lookup.getCand( index ) ;
 
-            if ( candidate ) {
-                qreal freq = -0x1000 ;
-                if ( this->selected.isEmpty() ) {
-                    int halfIndex = ( candidate->second + index ) / 2 ;
-                    if ( halfIndex < 2 ) 
-                        halfIndex = 0 ;
-                    const lookup::Candidate* candidate = this->t9lookup.getCand( halfIndex ) ;
-                    freq = lookup::get_freq( candidate ) ;
-                    if ( freq <= 0.1 ) 
-                        freq = 1.1 ;
-                    else 
-                        freq += 1 ;
-                }
-                
-                const QString* word = lookup::get_word( candidate ) ;
-                if ( word->length() > 1 ) {
-                    QStringList key = lookup::get_key( candidate )->split( '\'' ) ;
-                    QStringList preedit = lookup::get_preedit( candidate )->split( '\'' ) ;
-                    for ( int i = 0 ; i < word->length() ; i++ )
-                        this->selected.append( SelectedPair( KeyPair( key.at(i), preedit.at(i) ), WordPair( word->at(i), -0x1000 ) ) ) ;
-                }
-                else {
-                    const QString* key = lookup::get_key( candidate ) ;
-                    const QString* preedit = lookup::get_preedit( candidate ) ;
-                    this->selected.append( SelectedPair( KeyPair( *key, *preedit ), WordPair( word->at(0), -0x1000 ) ) ) ;
-                }
-                this->selectedWord.append( *word ) ;
-                this->selected.last().second.second = freq ;
+                if ( candidate ) {
+                    qreal freq = -0x1000 ;
+                    if ( this->selected.isEmpty() ) {
+                        int halfIndex = ( candidate->second + index ) / 2 ;
+                        if ( halfIndex < 2 ) 
+                            halfIndex = 0 ;
+                        const lookup::Candidate* candidate = this->t9lookup.getCand( halfIndex ) ;
+                        freq = lookup::get_freq( candidate ) ;
+                        if ( freq <= 0.1 ) 
+                            freq = 1.1 ;
+                        else 
+                            freq += 1 ;
+                    }
+                    
+                    const QString* word = lookup::get_word( candidate ) ;
+                    if ( word->length() > 1 ) {
+                        QStringList key = lookup::get_key( candidate )->split( '\'' ) ;
+                        QStringList preedit = lookup::get_preedit( candidate )->split( '\'' ) ;
+                        for ( int i = 0 ; i < word->length() ; i++ )
+                            this->selected.append( SelectedPair( KeyPair( key.at(i), preedit.at(i) ), WordPair( word->at(i), -0x1000 ) ) ) ;
+                    }
+                    else {
+                        const QString* key = lookup::get_key( candidate ) ;
+                        const QString* preedit = lookup::get_preedit( candidate ) ;
+                        this->selected.append( SelectedPair( KeyPair( *key, *preedit ), WordPair( word->at(0), -0x1000 ) ) ) ;
+                    }
+                    this->selectedWord.append( *word ) ;
+                    this->selected.last().second.second = freq ;
 
-                this->candidate = candidate ;
-                if ( this->getInvaildCodeLength() > 0 ) {
-                    QString code( this->getInvaildCode() ) ;
-                    //qDebug() << "r" << code ; 
-                    this->t9lookup.reset() ;
-                    this->t9lookup.setCode( code ) ;
-                    this->pageIndex = 0 ;
+                    this->candidate = candidate ;
+                    if ( this->getInvaildCodeLength() > 0 ) {
+                        QString code( this->getInvaildCode() ) ;
+                        //qDebug() << "r" << code ; 
+                        this->t9lookup.reset() ;
+                        this->t9lookup.setCode( code ) ;
+                        this->pageIndex = 0 ;
+                    }
+                    else {
+                        this->t9lookup.reset() ;
+                        this->pageIndex = 0 ;
+                    }
+                    flag = true ;
                 }
-                else {
-                    this->t9lookup.reset() ;
-                    this->pageIndex = 0 ;
-                }
-                flag = true ;
+                //else ;
             }
-            //else ;
         }
         return flag ;
     }
@@ -412,6 +414,19 @@ public:
             flag = this->select( 0 ) ;
             if ( flag )
                 this->checkCommit() ;
+        }
+        else if ( keycode >= Qt::Key_1 && keycode <= Qt::Key_5 ) {
+            keycode = keycode - Qt::Key_1 ;
+            flag = this->select( keycode ) ;
+            if ( flag )
+                this->checkCommit() ;
+        }
+        else if ( keycode == Qt::Key_Return || keycode == Qt::Key_Enter ) {
+            if ( this->getCodeLength() > 0 ) {
+                emit this->sendCommit( this->getCode() ) ;
+                this->reset() ;
+                flag = true ;
+            }
         }
         return flag ;
     }
