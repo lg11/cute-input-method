@@ -16,6 +16,8 @@ signals :
     void displayWidthChanged( int width ) ;
     void displayHeightChanged( int height ) ;
     void cursorRectUpdate( const QRect& cursorRect ) ;
+    void candidateUpdate() ;
+
 public :
     int displayOffsetX ;
     int displayOffsetY ;

@@ -17,6 +17,9 @@ int main( int argc, char** argv ) {
 
     host::Host* host = new host::Host() ;
 
+    engine::Engine* engine = new engine::Engine() ;
+    host->setEngine( engine ) ;
+
     view::View* view = new view::View() ;
     host->setView( view ) ;
 
@@ -26,8 +29,8 @@ int main( int argc, char** argv ) {
     view->displayOffsetY = 25 ;
 
     view->rootContext()->setContextProperty( "host", host ) ;
-    view->rootContext()->setContextProperty( "view", host->view ) ;
-    view->rootContext()->setContextProperty( "engine", host->engine ) ;
+    view->rootContext()->setContextProperty( "view", view ) ;
+    view->rootContext()->setContextProperty( "engine", engine ) ;
 
     view->setSource( QUrl("view/root.qml") ) ;
     //view->setSource( QUrl("qml/keyboard.qml") ) ;
@@ -43,6 +46,14 @@ int main( int argc, char** argv ) {
     QDBusConnection::sessionBus().connect( "", "", "inputmethod.context", "cursorRectUpdate", host->adaptor, SIGNAL(cursorRectUpdate( int, int, int, int )) ) ;
 
     QObject::connect( host->adaptor, SIGNAL(cursorRectUpdate( int, int, int, int )), view, SLOT(cursorRectUpdate( int, int, int, int )) ) ;
+    QObject::connect( host, SIGNAL(update()), view, SIGNAL(candidateUpdate()) ) ;
+    QObject::connect( engine, SIGNAL(sendCommit( const QString& )), host->adaptor, SIGNAL( sendCommit( const QString& ) ) ) ;
+
+    qDebug() << "load start" ;
+    engine->load( "~/.config/mcip/sysdict" ) ;
+    engine->setKeyboardLayout( engine::Engine::FullKeyboardLayout ) ;
+    host->inputDevice = host::Host::HardwareInputDevice ;
+    qDebug() << "load end" ;
 
     return app.exec() ;
 }

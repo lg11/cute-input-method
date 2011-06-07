@@ -77,7 +77,7 @@ void Context::setFocusWidget( QWidget* widget ) {
         //QDBusConnection::sessionBus().registerService( "me.inputmethod.context" ) ;
         emit this->adaptor->sendMessage( "focusIn" ) ;
         emit this->adaptor->focusIn() ;
-        //this->update() ;
+        this->update() ;
     }
     else {
         emit this->adaptor->sendMessage( "focusOut" ) ;

@@ -28,21 +28,24 @@ typedef QPair<KeyPair, WordPair> SelectedPair ;
 
 class Engine : public QObject {
     Q_OBJECT
+signals :
+    void sendCommit( const QString& text ) ;
 public:
+    enum KeyboardLayout { UnknownKeyboardLayout = 0, FullKeyboardLayout = 1, T9KeyboardLayout = 2 } ;
     lookup::Lookup lookup ;
     t9::T9Lookup t9lookup ;
     QList<SelectedPair> selected ;
     QString selectedWord ;
     int pageIndex ;
     const lookup::Candidate* candidate ;
-    int mode ;
+    KeyboardLayout keyboardLayout ;
     QFile* logFile ;
     QTextStream* textStream ;
 
     inline Engine( QObject* parent = NULL ) : QObject( parent ), lookup(), t9lookup(&(lookup.dict)), selected(), selectedWord() {
         this->pageIndex = 0 ;
         this->candidate = NULL ;
-        this->mode = 0 ;
+        this->keyboardLayout = UnknownKeyboardLayout ;
         this->logFile = NULL ;
         this->textStream = NULL ;
     }
@@ -85,9 +88,9 @@ public:
 
     Q_INVOKABLE inline void flushLog() {
         if ( this->logFile ) {
-            //this->logFile->flush() ;
-            this->logFile->close() ;
-            this->logFile->open( QIODevice::WriteOnly | QIODevice::Append ) ;
+            this->logFile->flush() ;
+            //this->logFile->close() ;
+            //this->logFile->open( QIODevice::WriteOnly | QIODevice::Append ) ;
             //fsync( this->logFile->handle() ) ;
         }
     }
@@ -135,9 +138,9 @@ public:
     Q_INVOKABLE inline void nextPage() {
         int pageIndex = this->pageIndex + 1 ;
         const lookup::Candidate* candidate ;
-        if ( this->mode == 0 )
+        if ( this->keyboardLayout == FullKeyboardLayout )
             candidate = this->lookup.getCand( pageIndex * 5 ) ;
-        else if ( this->mode == 1 )
+        else if ( this->keyboardLayout == T9KeyboardLayout )
             candidate = this->t9lookup.getCand( pageIndex * 6 ) ;
         else
             candidate = NULL ;
@@ -146,9 +149,9 @@ public:
     }
     
     Q_INVOKABLE inline int getCodeLength() const {
-        if ( this->mode == 0 )
+        if ( this->keyboardLayout == FullKeyboardLayout )
             return this->lookup.spliter.code.length() ;
-        else if ( this->mode == 1 )
+        else if ( this->keyboardLayout == T9KeyboardLayout )
             return this->t9lookup.code.length() ;
         else
             return 0 ;
@@ -168,28 +171,29 @@ public:
 
     Q_INVOKABLE inline int getSelectedWordLength() const { return this->selectedWord.length() ; }
    
-    Q_INVOKABLE inline void updateCandidate( int index ) {
-        if ( this->mode == 0 ) {
+    Q_INVOKABLE inline bool updateCandidate( int index ) {
+        if ( this->keyboardLayout == FullKeyboardLayout ) {
             if ( this->lookup.spliter.code.isEmpty() )
                 this->candidate = NULL ;
             else 
                 this->candidate = this->lookup.getCand( pageIndex * 5 + index ) ;
         }
-        else if ( this->mode == 1 ) {
+        else if ( this->keyboardLayout == T9KeyboardLayout ) {
             if ( this->t9lookup.code.isEmpty() )
                 this->candidate = NULL ;
             else 
                 this->candidate = this->t9lookup.getCand( pageIndex * 6 + index ) ;
         }
+        return this->candidate ;
         //if ( this->candidate ) 
             //qDebug() << *(lookup::get_key( this->candidate )) << *(lookup::get_preedit( this->candidate )) << *(lookup::get_word( this->candidate )) << lookup::get_freq( this->candidate ) ;
     }
     
 
     Q_INVOKABLE inline QString getCode() const {
-        if ( this->mode == 0 ) 
+        if ( this->keyboardLayout == FullKeyboardLayout ) 
             return this->lookup.spliter.code ;
-        else if ( this->mode == 1 ) 
+        else if ( this->keyboardLayout == T9KeyboardLayout ) 
             return this->t9lookup.code ;
         else
             return "" ;
@@ -210,13 +214,13 @@ public:
     }
 
     Q_INVOKABLE inline QString getInvaildCode() const {
-        if ( this->mode == 0 ) {
+        if ( this->keyboardLayout == FullKeyboardLayout ) {
             if ( this->lookup.spliter.code.isEmpty() )
                 return "" ;
             else
                 return this->lookup.spliter.code.right( this->getInvaildCodeLength() ) ;
         }
-        else if ( this->mode == 1 ) {
+        else if ( this->keyboardLayout == T9KeyboardLayout ) {
             if ( this->t9lookup.code.isEmpty() )
                 return "" ;
             else
@@ -228,8 +232,19 @@ public:
 
     Q_INVOKABLE inline QString getSelectedWord() const { return this->selectedWord ; }
 
-    Q_INVOKABLE inline void select( int index ) {
-        if ( this->mode == 0 ) {
+    Q_INVOKABLE inline bool checkCommit() {
+        bool flag = false ;
+        if ( !this->selectedWord.isEmpty() && this->getCodeLength() <= 0 ) {
+            emit this->sendCommit( this->selectedWord ) ;
+            this->commit() ;
+            flag = true ;
+        }
+        return flag ;
+    }
+
+    Q_INVOKABLE inline bool select( int index ) {
+        bool flag = false ;
+        if ( this->keyboardLayout == FullKeyboardLayout ) {
             index = this->pageIndex * 5 + index ;
             const lookup::Candidate* candidate = this->lookup.getCand( index ) ;
 
@@ -274,10 +289,12 @@ public:
                     this->lookup.reset() ;
                     this->pageIndex = 0 ;
                 }
+
+                flag = true ;
             }
             //else ;
         }
-        else if ( this->mode == 1 ) {
+        else if ( this->keyboardLayout == T9KeyboardLayout ) {
             index = this->pageIndex * 6 + index ;
             const lookup::Candidate* candidate = this->t9lookup.getCand( index ) ;
 
@@ -322,23 +339,26 @@ public:
                     this->t9lookup.reset() ;
                     this->pageIndex = 0 ;
                 }
+                flag = true ;
             }
             //else ;
         }
+        return flag ;
     }
-    Q_INVOKABLE inline void cancel() {
+    Q_INVOKABLE inline bool deselect() {
+        bool flag = false ;
         if ( !this->selected.isEmpty() ) {
             QString code = this->selected.last().first.second ;
             this->selected.removeLast() ;
             this->selectedWord.chop(1) ;
 
-            if ( this-> mode == 0 ) {
+            if ( this->keyboardLayout == FullKeyboardLayout ) {
                 code.append( this->lookup.spliter.code ) ;
                 this->lookup.reset() ;
                 this->lookup.setCode( code ) ;
                 this->pageIndex = 0 ;
             }
-            else if ( this-> mode == 1 ) {
+            else if ( this->keyboardLayout == T9KeyboardLayout ) {
                 for ( int i = 0 ; i < code.length() ; i++ ) 
                     code[i] = this->t9lookup.tree.trans[ code.at(i).toAscii() - 'a' ] ;
                 code.append( this->t9lookup.code ) ;
@@ -346,68 +366,105 @@ public:
                 this->t9lookup.setCode( code ) ;
                 this->pageIndex = 0 ;
             }
+
+            flag = true ;
         }
+        return flag ;
     }
     Q_INVOKABLE inline void reset() {
-        if ( this-> mode == 0 ) 
+        if ( this->keyboardLayout == FullKeyboardLayout ) 
             this->lookup.reset() ;
-        else if ( this-> mode == 1 ) 
+        else if ( this->keyboardLayout == T9KeyboardLayout ) 
             this->t9lookup.reset() ;
         this->selected.clear() ;
         this->selectedWord.clear() ;
         this->pageIndex = 0 ;
     }
-    Q_INVOKABLE inline void appendCode( int code ) {
-        if ( this-> mode == 0 ) {
-            if ( code >= 'a' && code <= 'z' ) 
+    Q_INVOKABLE inline bool appendCode( QChar code ) {
+        bool flag = false ;
+        if ( this->keyboardLayout == FullKeyboardLayout ) {
+            if ( code >= 'a' && code <= 'z' ) {
                 this->lookup.appendCode( code ) ;
-            else if ( code >= 'A' && code <= 'Z' ) 
-                this->lookup.appendCode( code + 'a' - 'A' ) ;
-        }
-        else if ( this-> mode == 1 ) 
-            this->t9lookup.appendCode( code ) ;
-        this->pageIndex = 0 ;
-    }
-    Q_INVOKABLE inline void appendCode( const QString& code ) {
-        if ( this-> mode == 0 ) 
-            this->lookup.appendCode( code.at(0) ) ;
-        else if ( this-> mode == 1 ) 
-            this->t9lookup.appendCode( code.at(0) ) ;
-        this->pageIndex = 0 ;
-    }
-    Q_INVOKABLE inline void popCode() {
-        if ( this-> mode == 0 ) 
-            this->lookup.popCode() ;
-        else if ( this-> mode == 1 ) 
-            this->t9lookup.popCode() ;
-        this->pageIndex = 0 ;
-    }
-    Q_INVOKABLE inline void commit() {
-        if ( !this->selected.isEmpty() ) {
-            if ( this->selectedWord.length() < 6 ) {
-                QStringList key ;
-                for ( int i = 0 ; i < this->selected.length() ; i++ )
-                    key.append( this->selected.at(i).first.first ) ;
-                QString k = key.join( QChar( '\'' ) ) ;
-                qreal freq = this->selected.last().second.second ;
-                freq = this->lookup.dict.update( k, this->selectedWord, freq ) ;
-                if ( k.count( '\'' ) <= 0 )
-                    split::add_key( &(this->lookup.spliter.keySet), k ) ;
-                fit::add_key( &(this->lookup.keyMap), k ) ;
-                this->t9lookup.tree.addKey( k ) ;
-                if ( this->logFile ) {
-                    (*this->textStream) << k << QChar( ' ' ) << selectedWord << QChar( ' ' ) << freq << QChar( '\n' ) ;
-                    //this->flushLog() ;
-                }
+                this->pageIndex = 0 ;
+                flag = true ;
             }
-            this->reset() ;
         }
+        else if ( this->keyboardLayout == T9KeyboardLayout ) {
+            if ( code >= '2' && code <= '9' ) {
+                this->t9lookup.appendCode( code ) ;
+                this->pageIndex = 0 ;
+                flag = true ;
+            }
+        }
+        return flag ;
     }
-    Q_INVOKABLE inline void setMode( int flag ) {
-        if ( flag != this->mode ) {
-            this->reset() ;
-            this->mode = flag ;
+    Q_INVOKABLE inline bool processKey( int keycode ) {
+        bool flag = false ;
+        if ( keycode >= Qt::Key_A && keycode <= Qt::Key_Z ) {
+            keycode = keycode + 'a' - Qt::Key_A  ;
+            QChar code( keycode )  ;
+            flag = this->appendCode( code ) ;
         }
+        else if ( keycode == Qt::Key_Backspace ) {
+            flag = this->deselect() ? true : this->popCode() ;
+        }
+        else if ( keycode == Qt::Key_Space ) {
+            flag = this->select( 0 ) ;
+            if ( flag )
+                this->checkCommit() ;
+        }
+        return flag ;
+    }
+
+    Q_INVOKABLE inline bool appendCode( const QString& code ) {
+        return this->appendCode( code.at(0) ) ;
+    }
+    Q_INVOKABLE inline bool popCode() {
+        bool flag = false ;
+        if ( this->keyboardLayout == FullKeyboardLayout ) {
+            if ( !this->lookup.spliter.code.isEmpty() ) {
+                this->lookup.popCode() ;
+                this->pageIndex = 0 ;
+                flag = true ;
+            }
+        }
+        else if ( this->keyboardLayout == T9KeyboardLayout ) {
+            if ( !this->t9lookup.code.isEmpty() ) {
+                this->t9lookup.popCode() ;
+                this->pageIndex = 0 ;
+                flag = true ;
+            }
+        }
+        return flag ;
+    }
+
+    Q_INVOKABLE inline void commit() {
+        if ( this->selectedWord.length() < 6 ) {
+            QStringList key ;
+            for ( int i = 0 ; i < this->selected.length() ; i++ )
+                key.append( this->selected.at(i).first.first ) ;
+            QString k = key.join( QChar( '\'' ) ) ;
+            qreal freq = this->selected.last().second.second ;
+            freq = this->lookup.dict.update( k, this->selectedWord, freq ) ;
+            if ( k.count( '\'' ) <= 0 )
+                split::add_key( &(this->lookup.spliter.keySet), k ) ;
+            fit::add_key( &(this->lookup.keyMap), k ) ;
+            this->t9lookup.tree.addKey( k ) ;
+            if ( this->logFile ) {
+                (*this->textStream) << k << QChar( ' ' ) << selectedWord << QChar( ' ' ) << freq << QChar( '\n' ) ;
+                //this->flushLog() ;
+            }
+        }
+        this->reset() ;
+    }
+    Q_INVOKABLE inline bool setKeyboardLayout( KeyboardLayout layout ) {
+        if ( layout != this->keyboardLayout ) {
+            this->reset() ;
+            this->keyboardLayout = layout ;
+            return true ;
+        }
+        else
+            return false ;
     }
 
 } ;

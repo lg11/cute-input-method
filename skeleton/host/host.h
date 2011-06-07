@@ -3,10 +3,11 @@
 
 #include <QObject>
 #include <QWidget>
+#include <QMetaMethod>
 
-namespace engine {
-class Engine ;
-}
+//namespace engine {
+//class Engine ;
+//}
 
 namespace adaptor {
 class Adaptor ;
@@ -22,15 +23,21 @@ class Host : public QObject {
     friend class adaptor::Adaptor ;
 
 signals :
+    void update() ;
 
 public :
+    enum InputDevice { NullInputDevice = 0, HardwareInputDevice = 1, OnscreenInputDevice = 2 } ;
     QWidget* view ;
-    adaptor::Adaptor* adaptor ;
-    engine::Engine* engine ;
+    QObject* engine ;
     QRect cursorRect ;
+    InputDevice inputDevice ;
+    adaptor::Adaptor* adaptor ;
+
+    QMetaMethod processKey ;
 
     Host( QObject* parent = NULL ) ;
     void setView( QWidget* view ) ;
+    void setEngine( QObject* engine ) ;
 
     Q_INVOKABLE void show() ;
     Q_INVOKABLE void hide() ;

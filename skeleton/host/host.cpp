@@ -1,6 +1,5 @@
 #include "host.h"
 #include "adaptor.h"
-#include "../engine/engine.h"
 
 #include <QEvent>
 
@@ -8,26 +7,53 @@
 
 namespace host {
 
-Host::Host( QObject* parent ) : QObject( parent ), view( NULL ), adaptor( new adaptor::Adaptor( this ) ), engine( new engine::Engine( this ) ) {
+Host::Host( QObject* parent ) :
+    QObject( parent ),
+    view( NULL ),
+    engine( NULL ),
+    inputDevice( NullInputDevice ), 
+    adaptor( new adaptor::Adaptor( this ) ) {
 }
 
 void Host::setView( QWidget* view ) {
-    this->view = view ;
+    if ( view ) {
+        this->view = view ;
+    }
+}
+
+void Host::setEngine( QObject* engine ) {
+    if ( engine ) {
+        const QMetaObject* object = engine->metaObject() ;
+
+        int index = object->indexOfMethod( "processKey(int)" ) ;
+        if ( index >= 0 ) {
+            this->processKey = object->method( index ) ;
+            this->engine = engine ;
+        }
+    }
 }
 
 void Host::show() {
     if ( this->view )
-        view->show() ;
+        this->view->show() ;
 }
 
 void Host::hide() {
     if ( this->view )
-        view->hide() ;
+        this->view->hide() ;
 }
 
 bool Host::keyPress( int keycode, int modifiers ) {
     qDebug() << "keyPress" << keycode << modifiers ;
-    return false ;
+    bool flag = false ;
+    if ( modifiers == Qt::NoModifier && inputDevice != NullInputDevice ) {
+        this->processKey.invoke( this->engine, Q_RETURN_ARG( bool, flag ), Q_ARG( int, keycode ) ) ;
+        if ( flag ) 
+            emit this->update() ;
+        //if ( this->engine->updateCandidate( 0 ) )
+            //qDebug() << this->engine->getWord() ;
+    }
+    return flag ;
 }
 
 bool Host::keyRelease( int keycode, int modifiers ) {
