@@ -3,14 +3,15 @@
 
 #include <QApplication>
 
-#include <QDebug>
+//#include <QDebug>
 
 namespace adaptor {
 
 Adaptor::Adaptor( context::Context* context ) : QDBusAbstractAdaptor( context ), context( context ) {}
 
 void Adaptor::receiveMessage( const QString& message ) {
-    qDebug() << "received" << message ;
+    //qDebug() << "received" << message ;
+    Q_UNUSED( message ) ;
 }
 
 void Adaptor::receiveCommit( const QString& text ) {
@@ -23,7 +24,7 @@ void Adaptor::receiveCommit( const QString& text ) {
 }
 
 void Adaptor::receiveKeyEvent( int type, int keycode, int modifiers ) {
-    qDebug() << "received keyevent" << type << keycode << modifiers ;
+    //qDebug() << "received keyevent" << type << keycode << modifiers ;
     QWidget* widget = this->context->focusWidget() ;
     if ( widget ) {
         QKeyEvent event( static_cast<QEvent::Type>(type), keycode, static_cast<Qt::KeyboardModifiers>(modifiers), "", false, 1 ) ;

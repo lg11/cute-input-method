@@ -165,7 +165,7 @@ public:
         return 0 ;
     }
     
-    Q_INVOKABLE inline int getInvaildCodeLength() const { return this->getCodeLength() - this->getPreeditLength() ; }
+    Q_INVOKABLE inline int getInvalidCodeLength() const { return this->getCodeLength() - this->getPreeditLength() ; }
 
     Q_INVOKABLE inline int getSelectedLength() const { return this->selected.length() ; }
 
@@ -206,25 +206,25 @@ public:
             return "" ;
     }
     
-    Q_INVOKABLE inline QString getPreedit() const {
+    Q_INVOKABLE inline QString getPreeditCode() const {
         if ( this->candidate ) 
             return *(lookup::get_preedit( this->candidate )) ;
         else
             return "" ;
     }
 
-    Q_INVOKABLE inline QString getInvaildCode() const {
+    Q_INVOKABLE inline QString getInvalidCode() const {
         if ( this->keyboardLayout == FullKeyboardLayout ) {
             if ( this->lookup.spliter.code.isEmpty() )
                 return "" ;
             else
-                return this->lookup.spliter.code.right( this->getInvaildCodeLength() ) ;
+                return this->lookup.spliter.code.right( this->getInvalidCodeLength() ) ;
         }
         else if ( this->keyboardLayout == T9KeyboardLayout ) {
             if ( this->t9lookup.code.isEmpty() )
                 return "" ;
             else
-                return this->t9lookup.code.right( this->getInvaildCodeLength() ) ;
+                return this->t9lookup.code.right( this->getInvalidCodeLength() ) ;
         }
         else
             return "" ;
@@ -279,8 +279,8 @@ public:
                     this->selected.last().second.second = freq ;
 
                     this->candidate = candidate ;
-                    if ( this->getInvaildCodeLength() > 0 ) {
-                        QString code( this->getInvaildCode() ) ;
+                    if ( this->getInvalidCodeLength() > 0 ) {
+                        QString code( this->getInvalidCode() ) ;
                         //qDebug() << "r" << code ; 
                         this->lookup.reset() ;
                         this->lookup.setCode( code ) ;
@@ -329,8 +329,8 @@ public:
                     this->selected.last().second.second = freq ;
 
                     this->candidate = candidate ;
-                    if ( this->getInvaildCodeLength() > 0 ) {
-                        QString code( this->getInvaildCode() ) ;
+                    if ( this->getInvalidCodeLength() > 0 ) {
+                        QString code( this->getInvalidCode() ) ;
                         //qDebug() << "r" << code ; 
                         this->t9lookup.reset() ;
                         this->t9lookup.setCode( code ) ;

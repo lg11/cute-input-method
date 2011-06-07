@@ -28,7 +28,7 @@ inline void add_key( KeySet* set, const QString& key ) {
 
 inline bool check_complete( const KeySet* set, const QString& key ) { return set->first.first.contains( key ) ; } 
 inline bool check_head( const KeySet* set, QChar head ) { return set->first.second.contains( head ) ; } 
-inline bool check_vaild( const KeySet* set, const QString& key ) { return set->first.first.contains( key ) ? true : set->second.contains( key ) ; } 
+inline bool check_valid( const KeySet* set, const QString& key ) { return set->first.first.contains( key ) ? true : set->second.contains( key ) ; } 
 
 typedef QPair< QStringList, QPair<int,int> > KeyString ;
 
@@ -36,7 +36,7 @@ inline void append_code( KeyString* string, QChar code, const KeySet* keySet, QL
     QString* tail = &(string->first.last()) ;
     bool flag = check_complete( keySet, *tail ) && check_head( keySet, code ) ;
     tail->append( code ) ;
-    if ( check_vaild( keySet, *tail ) ) {
+    if ( check_valid( keySet, *tail ) ) {
         if ( flag ) {
             stringList->append( *string ) ;
             KeyString* new_string = &(stringList->last()) ;

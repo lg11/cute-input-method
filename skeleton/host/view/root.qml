@@ -9,10 +9,10 @@ Item {
         id : canvas
         anchors.fill : parent 
         color: "#00FF0000"
-        Candidate {
-            id : candidate
-            x : view.cursorRect.x
-            y : view.cursorRect.y
+        PreeditPanel {
+            id : preeditPanel
+            x : view.cursorRect.x < 0 ? 0 : view.cursorRect.x + width > view.displayWidth ? view.displayWidth - width : view.cursorRect.x
+            y : view.cursorRect.y + view.cursorRect.height + 6
         }
     }
 
@@ -20,13 +20,28 @@ Item {
         target : view
         onCandidateUpdate : {
             var flag = true
-            for ( var i = 0 ; i < 5 ; i++ ) {
+            flag = engine.updateCandidate( 0 )
+            if ( engine.getCodeLength() > 0 ) {
+                preeditPanel.preedit.selectedWord.text = engine.getSelectedWord()
+                preeditPanel.preedit.preeditCode.text = engine.getPreeditCode()
+                preeditPanel.preedit.invalidCode.text = engine.getInvalidCode()
+            }
+            else {
+                preeditPanel.preedit.selectedWord.text = ""
+                preeditPanel.preedit.preeditCode.text = ""
+                preeditPanel.preedit.invalidCode.text = ""
+            }
+            if ( flag ) 
+                preeditPanel.candidate.list[0].text = engine.getWord()
+            else 
+                preeditPanel.candidate.list[0].text = ""
+            for ( var i = 1 ; i < 5 ; i++ ) {
                 if ( flag )
                     flag = engine.updateCandidate( i ) 
                 if ( flag )
-                    candidate.list.children[i].text = engine.getWord()
+                    preeditPanel.candidate.list[i].text = engine.getWord()
                 else
-                    candidate.list.children[i].text = ""
+                    preeditPanel.candidate.list[i].text = ""
             }
         }
     }
