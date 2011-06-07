@@ -25,8 +25,8 @@ int main( int argc, char** argv ) {
 
     QDesktopWidget* desktop = QApplication::desktop() ;
     view->setGeometry( desktop->geometry() ) ;
-    //view->move( 0, 25 ) ;
-    //view->displayOffsetY = 25 ;
+    view->move( 0, 1 ) ;
+    view->displayOffsetY = 1 ;
 
     view->rootContext()->setContextProperty( "host", host ) ;
     view->rootContext()->setContextProperty( "view", view ) ;

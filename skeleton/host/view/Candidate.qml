@@ -34,7 +34,7 @@ Item {
         /*anchors.verticalCenter : parent.verticalCenter*/
         x : id_candidateItem_0.x + id_candidateItem_0.width - 1
         y : -( parent.height * 3 )
-        width : id_candidateItem_0.width > 0 && id_candidateItem_1.width > 0 ? 2 : 0 
+        width : list[0].width > 0 && list[1].width > 0  ? 2 : 0
         height : parent.height * 4
         gradient : id_gradient
     }
@@ -42,7 +42,7 @@ Item {
         /*anchors.verticalCenter : parent.verticalCenter*/
         x : id_candidateItem_1.x + id_candidateItem_1.width - 1
         y : -( parent.height * 3 )
-        width : id_candidateItem_1.width > 0 && id_candidateItem_2.width > 0 ? 2 : 0 
+        width : list[1].width > 0 && list[2].width > 0  ? 2 : 0
         height : parent.height * 4
         gradient : id_gradient
     }
@@ -50,7 +50,7 @@ Item {
         /*anchors.verticalCenter : parent.verticalCenter*/
         x : id_candidateItem_2.x + id_candidateItem_2.width - 1
         y : -( parent.height * 3 )
-        width : id_candidateItem_2.width > 0 && id_candidateItem_3.width > 0 ? 2 : 0 
+        width : list[2].width > 0 && list[3].width > 0  ? 2 : 0
         height : parent.height * 4
         gradient : id_gradient
     }
@@ -58,7 +58,7 @@ Item {
         /*anchors.verticalCenter : parent.verticalCenter*/
         x : id_candidateItem_3.x + id_candidateItem_3.width - 1
         y : -( parent.height * 3 )
-        width : id_candidateItem_3.width > 0 && id_candidateItem_4.width > 0 ? 2 : 0 
+        width : list[3].width > 0 && list[4].width > 0  ? 2 : 0
         height : parent.height * 4
         gradient : id_gradient
     }
