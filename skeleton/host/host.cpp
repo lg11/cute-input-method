@@ -49,7 +49,7 @@ bool Host::keyPress( int keycode, int modifiers ) {
     if ( modifiers == Qt::NoModifier && inputDevice != UnknownInputDevice ) {
         this->processKey.invoke( this->engine, Q_RETURN_ARG( bool, flag ), Q_ARG( int, keycode ) ) ;
         if ( flag ) 
-            emit this->update() ;
+            this->show();
     }
     return flag ;
 }

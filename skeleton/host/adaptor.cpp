@@ -16,6 +16,7 @@ void Adaptor::hide() {
 }
 
 bool Adaptor::keyPress( int keycode, int modifiers ) {
+    //qDebug() << "keyPree" << keycode << modifiers ;
     return this->host->keyPress( keycode, modifiers ) ;
 }
 

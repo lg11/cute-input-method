@@ -25,8 +25,8 @@ int main( int argc, char** argv ) {
 
     QDesktopWidget* desktop = QApplication::desktop() ;
     view->setGeometry( desktop->geometry() ) ;
-    //view->move( 0, 25 ) ;
-    //view->displayOffsetY = 25 ;
+    view->move( 0, 1 ) ;
+    view->displayOffsetY = 1 ;
 
     view->rootContext()->setContextProperty( "host", host ) ;
     view->rootContext()->setContextProperty( "view", view ) ;
@@ -46,7 +46,7 @@ int main( int argc, char** argv ) {
     QDBusConnection::sessionBus().connect( "", "", "inputmethod.context", "cursorRectUpdate", host->adaptor, SIGNAL(cursorRectUpdate( int, int, int, int )) ) ;
 
     QObject::connect( host->adaptor, SIGNAL(cursorRectUpdate( int, int, int, int )), view, SLOT(cursorRectUpdate( int, int, int, int )) ) ;
-    QObject::connect( host, SIGNAL(update()), view, SIGNAL(candidateUpdate()) ) ;
+    QObject::connect( engine, SIGNAL(candidateUpdate()), view, SIGNAL(candidateUpdate()) ) ;
     QObject::connect( engine, SIGNAL(sendCommit( const QString& )), host->adaptor, SIGNAL( sendCommit( const QString& ) ) ) ;
 
     qDebug() << "load start" ;

@@ -18,7 +18,7 @@ class Context : public QInputContext {
 public :
     adaptor::Adaptor* adaptor ;
     QDBusInterface* interface ;
-    QRect cursorRect ;
+    //QRect cursorRect ;
 
     Context( QObject* parent = NULL ) ;
     virtual bool filterEvent( const QEvent* event ) ;
@@ -29,6 +29,8 @@ public :
     virtual void reset() ;
     virtual void setFocusWidget( QWidget* widget ) ;
     virtual void update() ;
+
+    void checkCursorRect() ;
 } ;
 
 }

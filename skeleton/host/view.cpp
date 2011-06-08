@@ -76,6 +76,7 @@ const QRect& View::readCursorRect() {
 }
 
 void View::cursorRectUpdate( int x, int y, int width, int height ) {
+    //qDebug() << "cursorRectUpdate" << x << y << width << height ;
     QRect cursorRect( x, y, width, height ) ;
     cursorRect.moveTopLeft( this->mapFromGlobal( cursorRect.topLeft() ) ) ;
     if ( this->cursorRect != cursorRect ) {

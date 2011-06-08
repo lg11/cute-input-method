@@ -23,7 +23,7 @@ class Host : public QObject {
     friend class adaptor::Adaptor ;
 
 signals :
-    void update() ;
+    //void update() ;
 
 public :
     enum InputDevice { UnknownInputDevice = 0, HardwareInputDevice = 1, OnscreenInputDevice = 2 } ;
