@@ -30,6 +30,7 @@ class Engine : public QObject {
     Q_OBJECT
 signals :
     void sendCommit( const QString& text ) ;
+    void candidateUpdate() ;
 public:
     enum KeyboardLayout { UnknownKeyboardLayout = 0, FullKeyboardLayout = 1, T9KeyboardLayout = 2 } ;
     lookup::Lookup lookup ;
@@ -428,6 +429,8 @@ public:
                 flag = true ;
             }
         }
+        if ( flag )
+            emit this->candidateUpdate() ;
         return flag ;
     }
 

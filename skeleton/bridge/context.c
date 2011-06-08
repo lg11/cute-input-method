@@ -31,11 +31,13 @@ static gboolean filter_keypress( GtkIMContext* context, GdkEventKey* event ) {
 
 static void focus_in( GtkIMContext* context ) {
     Context* c = CONTEXT(context) ;
+    c->focused = TRUE ;
     emit_focusIn( &(c->connection) ) ;
 }
 
 static void focus_out( GtkIMContext* context ) {
     Context* c = CONTEXT(context) ;
+    c->focused = FALSE ;
     emit_focusOut( &(c->connection) ) ;
 }
 
@@ -86,6 +88,8 @@ static void context_init( Context* context ) {
     g_signal_connect( G_OBJECT(context->slave), "commit", G_CALLBACK(slave_commit), context ) ;
     context->connection = NULL ;
     context->window = NULL ;
+    request_connect( &(context->connection), context ) ;
+    context->focused = FALSE ;
 }
 
 static void context_class_init( ContextClass* context_class ) {

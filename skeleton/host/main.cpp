@@ -46,7 +46,7 @@ int main( int argc, char** argv ) {
     QDBusConnection::sessionBus().connect( "", "", "inputmethod.context", "cursorRectUpdate", host->adaptor, SIGNAL(cursorRectUpdate( int, int, int, int )) ) ;
 
     QObject::connect( host->adaptor, SIGNAL(cursorRectUpdate( int, int, int, int )), view, SLOT(cursorRectUpdate( int, int, int, int )) ) ;
-    QObject::connect( host, SIGNAL(update()), view, SIGNAL(candidateUpdate()) ) ;
+    QObject::connect( engine, SIGNAL(candidateUpdate()), view, SIGNAL(candidateUpdate()) ) ;
     QObject::connect( engine, SIGNAL(sendCommit( const QString& )), host->adaptor, SIGNAL( sendCommit( const QString& ) ) ) ;
 
     qDebug() << "load start" ;

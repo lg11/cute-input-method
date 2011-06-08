@@ -1,4 +1,5 @@
 #include "message.h"
+#include "context.h"
 
 static void check_connect( DBusConnection** connection ) {
     if ( !(*connection) ) {
@@ -92,4 +93,40 @@ gboolean call_keyRelease( DBusConnection** connection, int keycode , int modifie
     dbus_message_unref( method ) ;
 
     return flag ;
+}
+
+DBusHandlerResult filter( DBusConnection* connection, DBusMessage* message, void* data ) {
+    g_debug( "filter %s", dbus_message_get_member( message ) ) ;
+    Context* c = CONTEXT(data) ;
+    if ( c->focused ) {
+        if ( dbus_message_is_signal( message, "inputmethod.host", "sendCommit" ) ) {
+            char* s ;
+            DBusError error ;
+            dbus_error_init( &error ) ;
+            dbus_message_get_args( message, &error, DBUS_TYPE_STRING, &s, DBUS_TYPE_INVALID ) ;
+            g_signal_emit_by_name( c, "commit", s ) ;
+            /*dbus_free( s ) ;*/
+            return DBUS_HANDLER_RESULT_HANDLED ;
+        }
+        if ( dbus_message_is_signal( message, "inputmethod.host", "sendMessage" ) ) {
+            char* s ;
+            DBusError error ;
+            dbus_error_init( &error ) ;
+            dbus_message_get_args( message, &error, DBUS_TYPE_STRING, &s, DBUS_TYPE_INVALID ) ;
+            /*g_debug( "received %s", s ) ;*/
+            /*dbus_free( s ) ;*/
+            return DBUS_HANDLER_RESULT_HANDLED ;
+        }
+    }
+
+    return DBUS_HANDLER_RESULT_NOT_YET_HANDLED ;
+}
+
+void request_connect( DBusConnection** connection, GObject* object ) {
+    check_connect( connection ) ;
+    dbus_connection_setup_with_g_main( *connection, NULL ) ;
+    dbus_bus_add_match( *connection, "type='signal',interface='inputmethod.host',member='sendCommit',path='/host'", NULL ) ;
+    dbus_bus_add_match( *connection, "type='signal',interface='inputmethod.host',member='sendKeyEvent',path='/host'", NULL ) ;
+    dbus_bus_add_match( *connection, "type='signal',interface='inputmethod.host',member='sendMessage',path='/host'", NULL ) ;
+    dbus_connection_add_filter( *connection, filter, object, NULL ) ;
 }

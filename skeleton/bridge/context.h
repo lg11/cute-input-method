@@ -27,6 +27,7 @@ typedef struct {
     DBusConnection* connection ;
     GdkRectangle cursorRect ;
     GdkWindow* window ;
+    gboolean focused ;
 } Context ;
 
 typedef struct {
