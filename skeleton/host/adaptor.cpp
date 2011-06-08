@@ -5,7 +5,10 @@
 
 namespace adaptor {
 
-Adaptor::Adaptor( host::Host* host ) : QDBusAbstractAdaptor( host ), host( host ) {}
+Adaptor::Adaptor( host::Host* host ) : QDBusAbstractAdaptor( host ), host( host ) {
+    qDebug() << "sendMessage" ;
+    emit this->sendMessage( "test" ) ;
+}
 
 void Adaptor::show() {
     this->host->show() ;
@@ -16,6 +19,7 @@ void Adaptor::hide() {
 }
 
 bool Adaptor::keyPress( int keycode, int modifiers ) {
+    qDebug() << "keyPree" << keycode << modifiers ;
     return this->host->keyPress( keycode, modifiers ) ;
 }
 
