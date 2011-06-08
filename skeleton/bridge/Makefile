@@ -11,7 +11,7 @@ libcuteinputmethod.so : module.o context.o message.o
 module.o : module.c context.h
 	gcc -c module.c -o module.o `pkg-config --cflags glib-2.0 gtk+-3.0 dbus-glib-1` -Wall
 
-context.o : context.c context.h message.h
+context.o : context.c context.h message.h keymap.h
 	gcc -c context.c -o context.o `pkg-config --cflags glib-2.0 gtk+-3.0 dbus-glib-1` -Wall
 
 message.o : message.h message.c context.h
@@ -25,6 +25,12 @@ main : main.o context.o
 
 main.o : main.c context.h
 	gcc -c main.c -o main.o `pkg-config --cflags glib-2.0 gtk+-3.0 dbus-glib-1` -Wall
+
+keymap.h : keymap
+	./keymap > keymap.h
+
+keymap : keymap.cpp
+	g++ keymap.cpp -o keymap `pkg-config --cflags QtCore` -Wall
 
 clean :
 	rm *.o

@@ -59,9 +59,31 @@ gboolean call_keyPress( DBusConnection** connection, int keycode , int modifiers
     DBusMessage* reply = dbus_connection_send_with_reply_and_block( *connection, method, -1, &error ) ;
 
     gboolean flag = ( reply != NULL ) ;
-    g_debug( "%d", flag ) ;
     if ( flag ) {
-        g_debug( "%d", flag ) ;
+        dbus_error_init( &error ) ;
+        dbus_message_get_args( reply, &error, DBUS_TYPE_BOOLEAN, &flag, DBUS_TYPE_INVALID ) ;
+        dbus_message_unref( reply ) ;
+    }
+    
+    dbus_message_unref( method ) ;
+
+    return flag ;
+}
+
+gboolean call_keyRelease( DBusConnection** connection, int keycode , int modifiers ) {
+    check_connect( connection ) ;
+
+    DBusMessage* method = dbus_message_new_method_call( "me.inputmethod.host", "/host", "inputmethod.host", "keyRelease" ) ;
+    dbus_message_append_args( method, DBUS_TYPE_INT32, &keycode, DBUS_TYPE_INT32, &modifiers, DBUS_TYPE_INVALID ) ;
+
+
+    DBusError error ;
+    dbus_error_init( &error ) ;
+    
+    DBusMessage* reply = dbus_connection_send_with_reply_and_block( *connection, method, -1, &error ) ;
+
+    gboolean flag = ( reply != NULL ) ;
+    if ( flag ) {
         dbus_error_init( &error ) ;
         dbus_message_get_args( reply, &error, DBUS_TYPE_BOOLEAN, &flag, DBUS_TYPE_INVALID ) ;
         dbus_message_unref( reply ) ;

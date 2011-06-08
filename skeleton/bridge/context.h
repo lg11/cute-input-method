@@ -25,6 +25,8 @@ typedef struct {
     GtkIMContext parent ;
     GtkIMContext* slave ;
     DBusConnection* connection ;
+    GdkRectangle cursorRect ;
+    GdkWindow* window ;
 } Context ;
 
 typedef struct {

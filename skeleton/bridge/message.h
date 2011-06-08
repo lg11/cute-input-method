@@ -14,4 +14,6 @@ void emit_cursorRectUpdate( DBusConnection**, int x, int y, int width, int heigh
 
 gboolean call_keyPress( DBusConnection** connection, int keycode , int modifiers ) ;
 
+gboolean call_keyRelease( DBusConnection** connection, int keycode , int modifiers ) ;
+
 #endif
