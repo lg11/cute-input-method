@@ -22,7 +22,8 @@ signals :
     void sendCommit( const QString& text ) ;
     //void sendKeyEvent( int type, int keycode, int modifiers, bool autoRepeat, const QString& text, int count ) ;
     void sendKeyEvent( int type, int keycode, int modifiers ) ;
-    void cursorRectUpdate( int x, int y, int width, int height ) ;
+    void querySurrounding() ;
+    void queryCursorRect() ;
 
 public :
     host::Host* host ;
@@ -30,11 +31,17 @@ public :
     Adaptor( host::Host* host ) ;
 
 public slots :
-    Q_NOREPLY void show() ;
-    Q_NOREPLY void hide() ;
+    //Q_NOREPLY void show() ;
+    //Q_NOREPLY void hide() ;
     Q_NOREPLY void receiveMessage( const QString& message ) ;
     bool keyPress( int keycode, int modifiers ) ;
     bool keyRelease( int keycode, int modifiers ) ;
+    Q_NOREPLY void receiveSurrounding( const QString& surrounding ) ;
+    Q_NOREPLY void cursorRectUpdate( int x, int y, int width, int height ) ;
+    Q_NOREPLY void requestSoftwareInputPanel() ;
+    Q_NOREPLY void closeSoftwareInputPanel() ;
+    Q_NOREPLY void preeditStart() ;
+    Q_NOREPLY void preeditEnd() ;
 } ;
 
 }

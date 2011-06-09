@@ -8,11 +8,11 @@ Item {
     Rectangle {
         id : canvas
         anchors.fill : parent 
-        color: "#06FF0000"
+        color: "#15FF0000"
         PreeditPanel {
             id : preeditPanel
             x : view.cursorRect.x < 0 ? 0 : view.cursorRect.x + width > view.displayWidth ? view.displayWidth - width : view.cursorRect.x
-            y : view.cursorRect.y + view.cursorRect.height + 6
+            y : view.cursorRect.y < 0 ? 0 : view.cursorRect.y + view.cursorRect.height + height > view.displayHeight ? view.displayHeight - height : view.cursorRect.y + view.cursorRect.height
         }
     }
 

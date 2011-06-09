@@ -7,6 +7,8 @@ int main( int argc, char** argv ) {
     cout << "#ifndef KEYMAP_H\n" ;
     cout << "#define KEYMAP_H\n" ;
     cout << "\n" ;
+    cout << "#include <gdk/gdkkeysyms.h>\n" ;
+    cout << "\n" ;
 
     cout << "int convert_keycode( int keycode ) {\n" ;
     cout << "    switch ( keycode ) {\n" ;
@@ -34,6 +36,10 @@ int main( int argc, char** argv ) {
     cout << "        return " << Qt::Key_Return << ";\n" ;
     cout << "    case GDK_KEY_space :\n" ;
     cout << "        return " << Qt::Key_Space << ";\n" ;
+    cout << "    case GDK_KEY_minus :\n" ;
+    cout << "        return " << Qt::Key_Minus << ";\n" ;
+    cout << "    case GDK_KEY_equal :\n" ;
+    cout << "        return " << Qt::Key_Equal << ";\n" ;
     cout << "    default :\n" ;
     cout << "        return -1 ;\n" ;
     cout << "    }\n" ;

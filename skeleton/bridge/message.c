@@ -96,7 +96,7 @@ gboolean call_keyRelease( DBusConnection** connection, int keycode , int modifie
 }
 
 DBusHandlerResult filter( DBusConnection* connection, DBusMessage* message, void* data ) {
-    g_debug( "filter %s", dbus_message_get_member( message ) ) ;
+    /*g_debug( "filter %s", dbus_message_get_member( message ) ) ;*/
     Context* c = CONTEXT(data) ;
     if ( c->focused ) {
         if ( dbus_message_is_signal( message, "inputmethod.host", "sendCommit" ) ) {
@@ -108,13 +108,17 @@ DBusHandlerResult filter( DBusConnection* connection, DBusMessage* message, void
             /*dbus_free( s ) ;*/
             return DBUS_HANDLER_RESULT_HANDLED ;
         }
-        if ( dbus_message_is_signal( message, "inputmethod.host", "sendMessage" ) ) {
+        else if ( dbus_message_is_signal( message, "inputmethod.host", "sendMessage" ) ) {
             char* s ;
             DBusError error ;
             dbus_error_init( &error ) ;
             dbus_message_get_args( message, &error, DBUS_TYPE_STRING, &s, DBUS_TYPE_INVALID ) ;
-            /*g_debug( "received %s", s ) ;*/
+            g_debug( "received %s", s ) ;
             /*dbus_free( s ) ;*/
+            return DBUS_HANDLER_RESULT_HANDLED ;
+        }
+        else if ( dbus_message_is_signal( message, "inputmethod.host", "queryCursorRect" ) ) {
+            emit_cursorRectUpdate( &(c->connection), c->cursorRect.x, c->cursorRect.y, c->cursorRect.width, c->cursorRect.height ) ;
             return DBUS_HANDLER_RESULT_HANDLED ;
         }
     }
@@ -128,5 +132,6 @@ void request_connect( DBusConnection** connection, GObject* object ) {
     dbus_bus_add_match( *connection, "type='signal',interface='inputmethod.host',member='sendCommit',path='/host'", NULL ) ;
     dbus_bus_add_match( *connection, "type='signal',interface='inputmethod.host',member='sendKeyEvent',path='/host'", NULL ) ;
     dbus_bus_add_match( *connection, "type='signal',interface='inputmethod.host',member='sendMessage',path='/host'", NULL ) ;
+    dbus_bus_add_match( *connection, "type='signal',interface='inputmethod.host',member='queryCursorRect',path='/host'", NULL ) ;
     dbus_connection_add_filter( *connection, filter, object, NULL ) ;
 }

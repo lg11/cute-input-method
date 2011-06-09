@@ -3,7 +3,7 @@
 
 #include <QEvent>
 
-//#include <QDebug>
+#include <QDebug>
 
 namespace host {
 
@@ -48,8 +48,6 @@ bool Host::keyPress( int keycode, int modifiers ) {
     bool flag = false ;
     if ( modifiers == Qt::NoModifier && inputDevice != UnknownInputDevice ) {
         this->processKey.invoke( this->engine, Q_RETURN_ARG( bool, flag ), Q_ARG( int, keycode ) ) ;
-        if ( flag ) 
-            this->show();
     }
     return flag ;
 }

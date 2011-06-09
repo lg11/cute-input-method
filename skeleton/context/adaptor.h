@@ -24,6 +24,7 @@ signals :
     void focusIn() ;
     void focusOut() ;
     void cursorRectUpdate( int x, int y, int width, int height ) ;
+    void sendSurrounding( const QString& surrounding ) ;
 
 public :
     context::Context* context ;
@@ -34,6 +35,9 @@ public slots :
     Q_NOREPLY void receiveMessage( const QString& message ) ;
     Q_NOREPLY void receiveCommit( const QString& text ) ;
     Q_NOREPLY void receiveKeyEvent( int type, int keycode, int modifiers ) ;
+    Q_NOREPLY void requestSurrounding() ;
+    Q_NOREPLY void queryCursorRect() ;
+
 } ;
 
 }
