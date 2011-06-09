@@ -16,6 +16,8 @@ class Adaptor ;
 
 namespace host {
 
+enum InputDevice { UnknownInputDevice = 0, HardwareInputDevice = 1, OnscreenInputDevice = 2 } ;
+
 class Host : public QObject {
 
     Q_OBJECT
@@ -24,9 +26,9 @@ class Host : public QObject {
 
 signals :
     //void update() ;
+    void cursorRectUpdate( int x, int y, int width, int height ) ;
 
 public :
-    enum InputDevice { UnknownInputDevice = 0, HardwareInputDevice = 1, OnscreenInputDevice = 2 } ;
     QWidget* view ;
     QObject* engine ;
     QRect cursorRect ;

@@ -3,7 +3,7 @@
 
 #include <QApplication>
 
-//#include <QDebug>
+#include <QDebug>
 
 namespace adaptor {
 
@@ -30,6 +30,24 @@ void Adaptor::receiveKeyEvent( int type, int keycode, int modifiers ) {
         QKeyEvent event( static_cast<QEvent::Type>(type), keycode, static_cast<Qt::KeyboardModifiers>(modifiers), "", false, 1 ) ;
         QApplication::sendEvent( widget, &event ) ;
     }
+}
+
+void Adaptor::requestSurrounding() {
+    QWidget* widget = this->context->focusWidget() ;
+    if ( widget ) {
+        QVariant result( widget->inputMethodQuery( Qt::ImSurroundingText ) ) ;
+        if ( result.isValid() ) {
+            QString surrounding( result.toString() ) ;
+            emit this->sendSurrounding( surrounding ) ;
+            //qDebug() << surrounding ;
+        }
+    }
+}
+
+void Adaptor::queryCursorRect() {
+    //qDebug() << "queryCursorRect" ;
+    this->context->update() ;
+    emit this->cursorRectUpdate( this->context->cursorRect.x(), this->context->cursorRect.y(), this->context->cursorRect.width(), this->context->cursorRect.height() ) ;
 }
 
 }

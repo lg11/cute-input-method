@@ -18,6 +18,8 @@ Context::Context( QObject* parent ) :
 
     QDBusConnection::sessionBus().connect( "", "", "inputmethod.host", "sendCommit", this->adaptor, SLOT(receiveCommit( const QString& )) ) ;
     QDBusConnection::sessionBus().connect( "", "", "inputmethod.host", "sendKeyEvent", this->adaptor, SLOT(receiveKeyEvent( int, int, int )) ) ;
+    QDBusConnection::sessionBus().connect( "", "", "inputmethod.host", "requestSurrounding", this->adaptor, SLOT(requestSurrounding()) ) ;
+    QDBusConnection::sessionBus().connect( "", "", "inputmethod.host", "queryCursorRect", this->adaptor, SLOT(queryCursorRect()) ) ;
 
 }
 
@@ -77,7 +79,6 @@ void Context::setFocusWidget( QWidget* widget ) {
         //QDBusConnection::sessionBus().registerService( "me.inputmethod.context" ) ;
         //emit this->adaptor->sendMessage( "focusIn" ) ;
         emit this->adaptor->focusIn() ;
-        this->checkCursorRect() ;
     }
     else {
         //emit this->adaptor->sendMessage( "focusOut" ) ;
@@ -89,20 +90,14 @@ void Context::setFocusWidget( QWidget* widget ) {
 
 void Context::update() {
     //emit this->adaptor->sendMessage( "update" ) ;
-    this->checkCursorRect() ;
-}
-
-void Context::checkCursorRect() {
     QWidget* widget = this->focusWidget() ;
     if ( widget ) {
         QVariant result( widget->inputMethodQuery( Qt::ImMicroFocus ) ) ;
         if ( result.isValid() ) {
             QRect cursorRect( result.toRect() ) ;
             cursorRect.moveTopLeft( widget->mapToGlobal( cursorRect.topLeft() ) ) ;
-            //if ( this->cursorRect != cursorRect ) {
-                //this->cursorRect = cursorRect ;
-                emit this->adaptor->cursorRectUpdate( cursorRect.x(), cursorRect.y(), cursorRect.width(), cursorRect.height() ) ;
-            //}
+            if ( this->cursorRect != cursorRect )
+                this->cursorRect = cursorRect ;
         }
     }
 }

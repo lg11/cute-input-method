@@ -44,20 +44,17 @@ static void focus_out( GtkIMContext* context ) {
 static void set_cursor_location( GtkIMContext* context, const GdkRectangle* area ) {
     Context* c = CONTEXT(context) ;
     if ( c->window ) {
-        GdkRectangle rect ;
-        rect.x = area->x ;
-        rect.y = area->y ;
-        rect.width = area->width ;
-        rect.height = area->height ;
+        c->cursorRect.x = area->x ;
+        c->cursorRect.y = area->y ;
+        c->cursorRect.width = area->width ;
+        c->cursorRect.height = area->height ;
         
         int x ; int y ;
         /*gdk_window_get_root_origin( c->window, &x, &y ) ;*/
         gdk_window_get_origin( c->window, &x, &y ) ;
 
-        rect.x += x ;
-        rect.y += y ;
-    
-        emit_cursorRectUpdate( &(c->connection), rect.x, rect.y, rect.width, rect.height ) ;
+        c->cursorRect.x += x ;
+        c->cursorRect.y += y ;
     }
 }
 
