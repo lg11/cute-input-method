@@ -7,15 +7,11 @@
 #include <QStringList>
 #include <QSet>
 #include <QFile>
+#include <QTimer>
 #include <QTextStream>
-#include <QDir>
-
-//#include <unistd.h>
 
 #include "../lookup/lookup.h"
 #include "../lookup/t9.h"
-
-//#include <QDebug>
 
 namespace engine {
 
@@ -46,6 +42,7 @@ public:
     KeyboardLayout keyboardLayout ;
     QFile* logFile ;
     QTextStream* textStream ;
+    QTimer flushTimer ;
 
     Engine( QObject* parent = NULL ) ;
 
@@ -61,9 +58,9 @@ public slots :
     
     void load( const QString& path ) ;
     
-    void prevPage() ;
+    bool prevPage() ;
     
-    void nextPage() ;
+    bool nextPage() ;
     
     int getCodeLength() const ;
     

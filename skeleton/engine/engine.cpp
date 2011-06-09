@@ -1,5 +1,10 @@
 #include "engine.h"
 
+//#include <unistd.h>
+
+//#include <QDebug>
+#include <QObject>
+
 namespace engine {
 
 Engine::Engine( QObject* parent ) : QObject( parent ), lookup(), t9lookup(&(lookup.dict)), selected(), selectedWord() {
@@ -8,6 +13,10 @@ Engine::Engine( QObject* parent ) : QObject( parent ), lookup(), t9lookup(&(look
     this->keyboardLayout = UnknownKeyboardLayout ;
     this->logFile = NULL ;
     this->textStream = NULL ;
+
+    //this->flushTimer.setInterval( 1000 ) ;
+    this->flushTimer.setInterval( 600000 ) ;
+    QObject::connect( &(this->flushTimer), SIGNAL(timeout()), this, SLOT(flushLog() ) ) ;
 }
 
 Engine::~Engine() {
@@ -19,9 +28,7 @@ Engine::~Engine() {
 }
 
 void Engine::startLog( const QString& path ) {
-    QString p( QDir::homePath() ) ;
-    p.append( path.right( path.length() - 1 ) ) ;
-    this->logFile = new QFile( p ) ;
+    this->logFile = new QFile( path ) ;
     if ( this->logFile->exists() ) {
         this->logFile->open( QIODevice::WriteOnly | QIODevice::Append ) ;
         //this->logFile->open( QIODevice::WriteOnly | QIODevice::Append | QIODevice::Unbuffered ) ;
@@ -29,6 +36,7 @@ void Engine::startLog( const QString& path ) {
         this->textStream->setCodec( "utf-8" ) ;
         this->textStream->setRealNumberNotation( QTextStream::SmartNotation ) ;
         this->textStream->setRealNumberPrecision( 16 ) ;
+        this->flushTimer.start() ;
     }
     else {
         delete this->logFile ;
@@ -43,10 +51,12 @@ void Engine::stopLog() {
         delete this->logFile ;
         this->logFile = NULL ;
         this->textStream = NULL ;
+        this->flushTimer.stop() ;
     }
 }
 
 void Engine::flushLog() {
+    //qDebug() << "flush" ;
     if ( this->logFile ) {
         this->logFile->flush() ;
         //this->logFile->close() ;
@@ -56,14 +66,7 @@ void Engine::flushLog() {
 }
 
 void Engine::load( const QString& path ) {
-    QString p ;
-    if ( path.at(0) == QChar( '~' ) ) {
-        p.append( QDir::homePath() ) ;
-        p.append( path.right( path.length() - 1 ) ) ;
-    }
-    else
-        p.append( path ) ;
-    QFile file( p ) ;
+    QFile file( path ) ;
     if ( file.open( QIODevice::ReadOnly | QIODevice::Text ) ) {
         QSet<QString> newKeySet ;
         QTextStream in( &file ) ;
@@ -90,12 +93,17 @@ void Engine::load( const QString& path ) {
     }
 }
 
-void Engine::prevPage() {
-    if ( this->pageIndex > 0 )
+bool Engine::prevPage() {
+    bool flag = false ;
+    if ( this->pageIndex > 0 ) {
         this->pageIndex-- ;
+        flag = true ;
+    }
+    return flag ;
 }
 
-void Engine::nextPage() {
+bool Engine::nextPage() {
+    bool flag = false ;
     int pageIndex = this->pageIndex + 1 ;
     const lookup::Candidate* candidate ;
     if ( this->keyboardLayout == FullKeyboardLayout )
@@ -104,8 +112,11 @@ void Engine::nextPage() {
         candidate = this->t9lookup.getCand( pageIndex * 6 ) ;
     else
         candidate = NULL ;
-    if ( candidate )
+    if ( candidate ) {
         this->pageIndex = pageIndex ;
+        flag = true ;
+    }
+    return flag ;
 }
 
 int Engine::getCodeLength() const {
@@ -392,6 +403,18 @@ bool Engine::processKey( int keycode ) {
         if ( this->getCodeLength() > 0 ) {
             emit this->sendCommit( this->getCode() ) ;
             this->reset() ;
+            flag = true ;
+        }
+    }
+    else if ( keycode == Qt::Key_Minus ) {
+        if ( this->getCodeLength() > 0 ) {
+            this->prevPage() ;
+            flag = true ;
+        }
+    }
+    else if ( keycode == Qt::Key_Equal ) {
+        if ( this->getCodeLength() > 0 ) {
+            this->nextPage() ;
             flag = true ;
         }
     }

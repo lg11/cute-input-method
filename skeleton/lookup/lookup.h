@@ -168,7 +168,9 @@ public :
             }
             if ( flag ) {
                 this->lookupCache[this->candCacheIndex].first = fitPoint ;
-                pick::set( &(this->pickCache), key, preedit, &(this->dict.hash) ) ;
+                pick::set( &(this->pickCache), key, preedit, &(this->dict.hash), &(this->usedKeySet) ) ;
+                foreach( const QString* k, *key )
+                    this->usedKeySet.insert( *k ) ;
             }
         }
         return flag ;

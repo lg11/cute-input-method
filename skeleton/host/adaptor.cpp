@@ -34,7 +34,7 @@ void Adaptor::receiveSurrounding( const QString& surrounding ) {
 }
 
 void Adaptor::cursorRectUpdate( int x, int y, int width, int height ) {
-    qDebug() << "cursorRectUpdate"  ;
+    //qDebug() << "cursorRectUpdate"  ;
     emit this->host->cursorRectUpdate( x, y, width, height ) ;
 }
 

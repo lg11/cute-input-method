@@ -169,8 +169,11 @@ public :
                 if ( !flag )
                     this->candCacheIndex-- ;
             }
-            if ( flag )
+            if ( flag ) {
                 pick::set( &(this->pickCache), key, preedit, &(this->dict->hash), &(this->usedKeySet) ) ;
+                foreach( const QString* k, *key )
+                    this->usedKeySet.insert( *k ) ;
+            }
         }
         return flag ;
     }

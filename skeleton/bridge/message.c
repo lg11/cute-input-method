@@ -96,7 +96,7 @@ gboolean call_keyRelease( DBusConnection** connection, int keycode , int modifie
 }
 
 DBusHandlerResult filter( DBusConnection* connection, DBusMessage* message, void* data ) {
-    g_debug( "filter %s", dbus_message_get_member( message ) ) ;
+    /*g_debug( "filter %s", dbus_message_get_member( message ) ) ;*/
     Context* c = CONTEXT(data) ;
     if ( c->focused ) {
         if ( dbus_message_is_signal( message, "inputmethod.host", "sendCommit" ) ) {
