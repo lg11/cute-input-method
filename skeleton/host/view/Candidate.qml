@@ -13,12 +13,29 @@ Item {
 
     Row {
         id : row
-        anchors.centerIn : parent
-        CandidateItem { id : id_candidateItem_0 ; font.pointSize : 20 ; color : "#FF2299FF" }
-        CandidateItem { id : id_candidateItem_1 ; font.pointSize : 20 ; color : "#FFFFFFFF" }
-        CandidateItem { id : id_candidateItem_2 ; font.pointSize : 20 ; color : "#FFFFFFFF" }
-        CandidateItem { id : id_candidateItem_3 ; font.pointSize : 20 ; color : "#FFFFFFFF" }
-        CandidateItem { id : id_candidateItem_4 ; font.pointSize : 20 ; color : "#FFFFFFFF" }
+        /*anchors.centerIn : parent*/
+        anchors.verticalCenter : parent.verticalCenter
+        x : 0
+        /*CandidateItem { id : id_candidateItem_0 ; font.pointSize : 20 ; color : "#FF2299FF" }*/
+        /*CandidateItem { id : id_candidateItem_1 ; font.pointSize : 20 ; color : "#FFFFFFFF" }*/
+        /*CandidateItem { id : id_candidateItem_2 ; font.pointSize : 20 ; color : "#FFFFFFFF" }*/
+        /*CandidateItem { id : id_candidateItem_3 ; font.pointSize : 20 ; color : "#FFFFFFFF" }*/
+        /*CandidateItem { id : id_candidateItem_4 ; font.pointSize : 20 ; color : "#FFFFFFFF" }*/
+        CandidateItem { id : id_candidateItem_0 ; font.pointSize : 28 ; color : "#FF2299FF" 
+            width : view.displayWidth / 5
+        }
+        CandidateItem { id : id_candidateItem_1 ; font.pointSize : 28 ; color : "#FFFFFFFF" 
+            width : view.displayWidth / 5
+        }
+        CandidateItem { id : id_candidateItem_2 ; font.pointSize : 28 ; color : "#FFFFFFFF" 
+            width : view.displayWidth / 5
+        }
+        CandidateItem { id : id_candidateItem_3 ; font.pointSize : 28 ; color : "#FFFFFFFF" 
+            width : view.displayWidth / 5
+        }
+        CandidateItem { id : id_candidateItem_4 ; font.pointSize : 28 ; color : "#FFFFFFFF" 
+            width : view.displayWidth / 5
+        }
     }
 
     Gradient {

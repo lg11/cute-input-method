@@ -21,7 +21,7 @@ View::View( QWidget* parent ) : QDeclarativeView( parent ) {
     palette.setColor( QPalette::Base, Qt::transparent ) ;
     this->setPalette( palette ) ;
 
-    this->setWindowFlags( Qt::FramelessWindowHint | Qt::X11BypassWindowManagerHint ) ;
+    this->setWindowFlags( Qt::FramelessWindowHint | Qt::X11BypassWindowManagerHint | Qt::WindowStaysOnTopHint | Qt::BypassGraphicsProxyWidget ) ;
     this->setAttribute( Qt::WA_TranslucentBackground, true ) ;
 
     this->displayOffsetX = 0 ;

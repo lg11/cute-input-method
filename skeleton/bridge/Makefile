@@ -2,7 +2,7 @@
 
 #ALL : main
 
-GTK_VERSION = gtk+-3.0
+GTK_VERSION = gtk+-2.0 gdk-2.0
 
 ALL : libcuteinputmethod.so
 

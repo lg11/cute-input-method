@@ -25,11 +25,13 @@ class Host : public QObject {
     friend class adaptor::Adaptor ;
 
 signals :
-    //void update() ;
+    void inputDeviceChanged() ;
     void cursorRectUpdate( int x, int y, int width, int height ) ;
+    void receiveSurrounding( const QString& surrounding ) ;
 
 public :
     QWidget* view ;
+    QWidget* extraInputPanel ;
     QObject* engine ;
     QRect cursorRect ;
     InputDevice inputDevice ;
@@ -39,6 +41,7 @@ public :
 
     Host( QObject* parent = NULL ) ;
     void setView( QWidget* view ) ;
+    void setExtraInputPanel( QWidget* extraInputPanel ) ;
     void setEngine( QObject* engine ) ;
 
     Q_INVOKABLE void show() ;

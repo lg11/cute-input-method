@@ -14,8 +14,8 @@ Item {
     Row {
         id : id_row
         anchors.verticalCenter : parent.verticalCenter
-        CandidateItem { id : id_selectedWord ; font.pointSize : 20 ; color : "#FFFFFFFF" ; horizontalMargin : verticalMargin }
-        CandidateItem { id : id_preeditCode ; font.pointSize : 20 ; color : "#FFFFFFFF" ; horizontalMargin : verticalMargin }
-        CandidateItem { id : id_invalidCode ; font.pointSize : 20 ; color : "#FFFF0000" ; horizontalMargin : verticalMargin }
+        CandidateItem { id : id_selectedWord ; font.pointSize : 28 ; color : "#FFFFFFFF" ; horizontalMargin : verticalMargin }
+        CandidateItem { id : id_preeditCode ; font.pointSize : 28 ; color : "#FFFFFFFF" ; horizontalMargin : verticalMargin }
+        CandidateItem { id : id_invalidCode ; font.pointSize : 28 ; color : "#FFFF0000" ; horizontalMargin : verticalMargin }
     }
 }

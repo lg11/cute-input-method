@@ -18,8 +18,10 @@ Context::Context( QObject* parent ) :
 
     QDBusConnection::sessionBus().connect( "", "", "inputmethod.host", "sendCommit", this->adaptor, SLOT(receiveCommit( const QString& )) ) ;
     QDBusConnection::sessionBus().connect( "", "", "inputmethod.host", "sendKeyEvent", this->adaptor, SLOT(receiveKeyEvent( int, int, int )) ) ;
-    QDBusConnection::sessionBus().connect( "", "", "inputmethod.host", "requestSurrounding", this->adaptor, SLOT(requestSurrounding()) ) ;
+    QDBusConnection::sessionBus().connect( "", "", "inputmethod.host", "replaceSurrounding", this->adaptor, SLOT(replaceSurrounding()) ) ;
+    QDBusConnection::sessionBus().connect( "", "", "inputmethod.host", "querySurrounding", this->adaptor, SLOT(querySurrounding()) ) ;
     QDBusConnection::sessionBus().connect( "", "", "inputmethod.host", "queryCursorRect", this->adaptor, SLOT(queryCursorRect()) ) ;
+    QDBusConnection::sessionBus().connect( "", "", "inputmethod.host", "replaceSurrounding", this->adaptor, SLOT(replaceSurrounding( const QString& )) ) ;
 
 }
 

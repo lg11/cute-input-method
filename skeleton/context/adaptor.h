@@ -35,8 +35,9 @@ public slots :
     Q_NOREPLY void receiveMessage( const QString& message ) ;
     Q_NOREPLY void receiveCommit( const QString& text ) ;
     Q_NOREPLY void receiveKeyEvent( int type, int keycode, int modifiers ) ;
-    Q_NOREPLY void requestSurrounding() ;
+    Q_NOREPLY void querySurrounding() ;
     Q_NOREPLY void queryCursorRect() ;
+    Q_NOREPLY void replaceSurrounding( const QString& text ) ;
 
 } ;
 

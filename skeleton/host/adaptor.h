@@ -24,8 +24,10 @@ signals :
     void sendKeyEvent( int type, int keycode, int modifiers ) ;
     void querySurrounding() ;
     void queryCursorRect() ;
+    void replaceSurrounding( const QString& text ) ;
 
 public :
+    int extraCallCount ;
     host::Host* host ;
     
     Adaptor( host::Host* host ) ;
@@ -42,6 +44,7 @@ public slots :
     Q_NOREPLY void closeSoftwareInputPanel() ;
     Q_NOREPLY void preeditStart() ;
     Q_NOREPLY void preeditEnd() ;
+    Q_NOREPLY void setInputDevice( int index ) ;
 } ;
 
 }

@@ -32,7 +32,23 @@ void Adaptor::receiveKeyEvent( int type, int keycode, int modifiers ) {
     }
 }
 
-void Adaptor::requestSurrounding() {
+void Adaptor::replaceSurrounding( const QString& text ) {
+    QWidget* widget = this->context->focusWidget() ;
+    if ( widget ) {
+        QVariant result( widget->inputMethodQuery( Qt::ImSurroundingText ) ) ;
+        if ( result.isValid() ) {
+            QString surrounding( result.toString() ) ;
+            result = ( widget->inputMethodQuery( Qt::ImCursorPosition ) ) ;
+            int position = result.toInt() ;
+            QInputMethodEvent event ;
+            event.setCommitString( text, -position, surrounding.length() ) ;
+            QApplication::sendEvent( widget, &event ) ;
+            //qDebug() << surrounding ;
+        }
+    }
+}
+
+void Adaptor::querySurrounding() {
     QWidget* widget = this->context->focusWidget() ;
     if ( widget ) {
         QVariant result( widget->inputMethodQuery( Qt::ImSurroundingText ) ) ;

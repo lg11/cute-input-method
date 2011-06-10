@@ -9,6 +9,7 @@
 
 #include "host.h"
 #include "view.h"
+#include "extra.h"
 #include "adaptor.h"
 #include "../engine/engine.h"
 
@@ -35,6 +36,10 @@ int main( int argc, char** argv ) {
     view::View* view = new view::View() ;
     host->setView( view ) ;
 
+    extra::ExtraInputPanel* extraInputPanel = new extra::ExtraInputPanel() ;
+    host->setExtraInputPanel( extraInputPanel ) ;
+    extraInputPanel->setInputContext( NULL ) ;
+
     QDesktopWidget* desktop = QApplication::desktop() ;
     view->setGeometry( desktop->geometry() ) ;
     view->move( 0, 1 ) ;
@@ -43,8 +48,11 @@ int main( int argc, char** argv ) {
     view->rootContext()->setContextProperty( "host", host ) ;
     view->rootContext()->setContextProperty( "view", view ) ;
     view->rootContext()->setContextProperty( "engine", engine ) ;
+    extraInputPanel->rootContext()->setContextProperty( "engine", engine ) ;
+    extraInputPanel->rootContext()->setContextProperty( "view", extraInputPanel ) ;
 
     view->setSource( QUrl(extendHome( "~/.config/mcip/view/root.qml") ) ) ;
+    extraInputPanel->setSource( QUrl(extendHome( "~/.config/mcip/extra/root.qml") ) ) ;
     //view->setSource( QUrl("qml/keyboard.qml") ) ;
 
     QDBusConnection::sessionBus().registerService( "me.inputmethod.host" ) ;
@@ -57,19 +65,23 @@ int main( int argc, char** argv ) {
     QDBusConnection::sessionBus().connect( "", "", "inputmethod.context", "focusOut", host->adaptor, SLOT(closeSoftwareInputPanel()) ) ;
     QDBusConnection::sessionBus().connect( "", "", "inputmethod.context", "cursorRectUpdate", host->adaptor, SLOT(cursorRectUpdate( int, int, int, int )) ) ;
     QDBusConnection::sessionBus().connect( "", "", "inputmethod.context", "sendSurrounding", host->adaptor, SIGNAL(receiveSurrounding( const QString& )) ) ;
+    QDBusConnection::sessionBus().connect( "", "", "inputmethod.console", "setInputDevice", host->adaptor, SIGNAL(receiveSurrounding(int)) ) ;
 
     QObject::connect( host, SIGNAL(cursorRectUpdate( int, int, int, int )), view, SLOT(cursorRectUpdate( int, int, int, int )) ) ;
     QObject::connect( engine, SIGNAL(candidateUpdate()), view, SIGNAL(candidateUpdate()) ) ;
     QObject::connect( engine, SIGNAL(sendCommit( const QString& )), host->adaptor, SIGNAL( sendCommit( const QString& ) ) ) ;
     QObject::connect( engine, SIGNAL(preeditStart()), host->adaptor, SLOT(preeditStart()) ) ;
     QObject::connect( engine, SIGNAL(preeditEnd()), host->adaptor, SLOT(preeditEnd()) ) ;
+    QObject::connect( host, SIGNAL(receiveSurrounding( const QString& )), extraInputPanel, SIGNAL(receiveSurrounding( const QString& )) ) ;
+    QObject::connect( extraInputPanel, SIGNAL(replaceSurrounding( const QString& )), host->adaptor, SIGNAL(replaceSurrounding( const QString& )) ) ;
 
     qDebug() << "load start" ;
     engine->load( extendHome( "~/.config/mcip/sysdict" ) ) ;
     engine->load( extendHome( "~/.config/mcip/userdict.log" ) ) ;
     engine->startLog( extendHome( "~/.config/mcip/userdict.log" ) ) ;
     engine->setKeyboardLayout( engine::Engine::FullKeyboardLayout ) ;
-    host->inputDevice = host::HardwareInputDevice ;
+    //host->inputDevice = host::HardwareInputDevice ;
+    host->inputDevice = host::OnscreenInputDevice ;
     qDebug() << "load end" ;
 
     return app.exec() ;

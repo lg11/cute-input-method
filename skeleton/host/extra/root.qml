@@ -24,9 +24,9 @@ Item {
     property int keyboardModeRecord : 0
     property alias t9Text : t9SwitcherText.text
 
-    IMEngine {
-        id : imEngine
-    }
+    /*IMEngine {*/
+        /*id : engine*/
+    /*}*/
 
     Palette { id : palette }
     Config { id : config }
@@ -85,12 +85,12 @@ Item {
                 onMouseReleased : {
                     if ( t9Mode == false ) {
                         t9Mode = true
-                        /*if ( !imEngine.hasCode )*/
+                        /*if ( !engine.hasCode )*/
                             /*t9Mode = true*/
                     }
                     else if ( t9Mode == true ) {
                         t9Mode = false
-                        /*if ( !imEngine.hasCode )*/
+                        /*if ( !engine.hasCode )*/
                             /*t9Mode = false*/
                     }
                 }
@@ -127,11 +127,11 @@ Item {
         textview.selectionEndPos = 0
         textview.selectEnd()
         textview.set( text )
-        imEngine.reset()
+        engine.reset()
         keyboard.updateCandString()
     }
     function getText() {
-        imEngine.flushLog()
+        engine.flushLog()
         return textview.get()
     }
     function setRotate( flag ) {
@@ -141,14 +141,14 @@ Item {
     onT9ModeChanged : {
         if ( t9Mode == false ) {
             if ( rotateFlag == 1 ) {
-                imEngine.setMode( 0 )
+                engine.setMode( 0 )
                 keyboard.updateCandString()
                 keyboard.mode = 1
             }
         }
         else if ( t9Mode == true ) {
             if ( rotateFlag == 1 ) {
-                imEngine.setMode( 1 )
+                engine.setMode( 1 )
                 t9Keyboard.selectMode = false
                 t9Keyboard.updateCandString()
                 if ( t9Keyboard.puncMode ) {
@@ -161,14 +161,14 @@ Item {
     onRotateFlagChanged : {
         if ( rotateFlag == 0 ) {
             if ( t9Mode == true ) {
-                imEngine.setMode( 0 )
+                engine.setMode( 0 )
                 keyboard.updateCandString()
                 keyboard.mode = keyboardModeRecord
             }
         }
         else if ( rotateFlag == 1 ) {
             if ( t9Mode == true ) {
-                imEngine.setMode( 1 )
+                engine.setMode( 1 )
                 t9Keyboard.selectMode = false
                 t9Keyboard.updateCandString()
                 if ( t9Keyboard.puncMode ) {
@@ -246,17 +246,33 @@ Item {
             }
         } 
      }
+
+    property string commitString
+    Timer {
+        id : commitTimer
+        interval : 10
+        onTriggered : {
+            commitTimer.stop()
+            view.replaceSurrounding( getText() )
+            engine.reset()
+        }
+    }
+
+    Connections {
+        target : view
+        onReceiveSurrounding : {
+            engine.reset()
+            setText( surrounding )
+        }
+        onHided : {
+            commitTimer.start()
+        }
+    }
     Component.onCompleted : {
-        console.log( "load start" ) 
-        imEngine.load( "../data/formated" )
-        imEngine.load( "~/.config/mcip/userdict.log" )
-        console.log( "load end" ) 
-        imEngine.startLog( "~/.config/mcip/userdict.log" )
         t9Mode = true
-        /*rotateFlag = 1*/
     }
     Component.onDestruction : {
         console.log( "destruction" ) 
-        imEngine.stopLog()
+        engine.stopLog()
     }
 }

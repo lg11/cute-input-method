@@ -10,6 +10,7 @@ namespace host {
 Host::Host( QObject* parent ) :
     QObject( parent ),
     view( NULL ),
+    extraInputPanel( NULL ),
     engine( NULL ),
     inputDevice( UnknownInputDevice ), 
     adaptor( new adaptor::Adaptor( this ) ) {
@@ -18,6 +19,12 @@ Host::Host( QObject* parent ) :
 void Host::setView( QWidget* view ) {
     if ( view ) {
         this->view = view ;
+    }
+}
+
+void Host::setExtraInputPanel( QWidget* extraInputPanel ) {
+    if ( extraInputPanel ) {
+        this->extraInputPanel = extraInputPanel ;
     }
 }
 
@@ -34,13 +41,23 @@ void Host::setEngine( QObject* engine ) {
 }
 
 void Host::show() {
-    if ( this->view )
-        this->view->show() ;
+    //qDebug() << "show" ;
+    if ( this->inputDevice == HardwareInputDevice ) {
+        if ( this->view )
+            this->view->show() ;
+    }
+    else if ( this->inputDevice == OnscreenInputDevice ) {
+        if ( this->extraInputPanel )
+            this->extraInputPanel->show() ;
+    }
 }
 
 void Host::hide() {
+    //qDebug() << "hide" ;
     if ( this->view )
         this->view->hide() ;
+    if ( this->extraInputPanel )
+        this->extraInputPanel->hide() ;
 }
 
 bool Host::keyPress( int keycode, int modifiers ) {

@@ -5,7 +5,9 @@
 
 namespace adaptor {
 
-Adaptor::Adaptor( host::Host* host ) : QDBusAbstractAdaptor( host ), host( host ) {}
+Adaptor::Adaptor( host::Host* host ) : QDBusAbstractAdaptor( host ), host( host ) {
+    this->extraCallCount = 0 ;
+}
 
 //void Adaptor::show() {
     //this->host->show() ;
@@ -31,6 +33,8 @@ void Adaptor::receiveMessage( const QString& message ) {
 
 void Adaptor::receiveSurrounding( const QString& surrounding ) {
     qDebug() << "receiveSurrounding" << surrounding ;
+    if ( this->host->inputDevice == host::OnscreenInputDevice ) 
+        emit this->host->receiveSurrounding( surrounding ) ;
 }
 
 void Adaptor::cursorRectUpdate( int x, int y, int width, int height ) {
@@ -40,13 +44,19 @@ void Adaptor::cursorRectUpdate( int x, int y, int width, int height ) {
 
 void Adaptor::requestSoftwareInputPanel() {
     if ( this->host->inputDevice == host::OnscreenInputDevice ) {
-        this->host->show() ;
-        emit this->querySurrounding() ;
+        if ( this->extraCallCount == 0 ) 
+            this->extraCallCount++ ;
+        else if ( this->extraCallCount == 1 ) {
+            this->host->show() ;
+            emit this->querySurrounding() ;
+            this->extraCallCount = 0 ;
+        }
     }
 }
 
 void Adaptor::closeSoftwareInputPanel() {
-    this->host->hide() ;
+    //this->host->hide() ;
+    this->extraCallCount = 0 ;
 }
 
 void Adaptor::preeditStart() {
@@ -57,6 +67,27 @@ void Adaptor::preeditEnd() {
     //if ( this->host->inputDevice == host::HardwareInputDevice ) {
         //this->host->hide() ;
     //}
+}
+
+void Adaptor::setInputDevice( int index ) {
+    if ( index == 0 ) {
+        if ( this->host->inputDevice != host::UnknownInputDevice ) {
+            this->host->inputDevice = host::UnknownInputDevice ;
+            emit this->host->inputDeviceChanged() ;
+        }
+    }
+    else if ( index == 1 ) {
+        if ( this->host->inputDevice != host::HardwareInputDevice ) {
+            this->host->inputDevice = host::HardwareInputDevice ;
+            emit this->host->inputDeviceChanged() ;
+        }
+    }
+    else if ( index == 2 ) {
+        if ( this->host->inputDevice != host::OnscreenInputDevice ) {
+            this->host->inputDevice = host::OnscreenInputDevice ;
+            emit this->host->inputDeviceChanged() ;
+        }
+    }
 }
 
 }
