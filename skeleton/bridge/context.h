@@ -28,6 +28,8 @@ typedef struct {
     GdkRectangle cursorRect ;
     GdkWindow* window ;
     gboolean focused ;
+    gboolean prepare_send_surrounding ;
+    char* surrounding ;
 } Context ;
 
 typedef struct {
@@ -36,6 +38,7 @@ typedef struct {
 
 void context_register_type( GTypeModule* type_module ) ;
 GType context_get_type( void ) ;
+
 //Context* context_new( void ) ;
 
 //void gtk_im_context_set_client_window(GtkIMContext *context, GdkWindow *window);

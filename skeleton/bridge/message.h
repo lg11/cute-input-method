@@ -4,7 +4,11 @@
 #include <dbus/dbus-glib.h>
 #include <dbus/dbus.h>
 
+//gboolean send_surrounding( void* data ) {
+
 void emit_sendMessage( DBusConnection** connection, char* message ) ;
+
+void emit_sendSurrounding( DBusConnection** connection, char* surrounding ) ;
 
 void emit_focusIn( DBusConnection** connection ) ;
 

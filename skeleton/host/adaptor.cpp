@@ -33,8 +33,10 @@ void Adaptor::receiveMessage( const QString& message ) {
 
 void Adaptor::receiveSurrounding( const QString& surrounding ) {
     qDebug() << "receiveSurrounding" << surrounding ;
-    if ( this->host->inputDevice == host::OnscreenInputDevice ) 
+    if ( this->host->inputDevice == host::OnscreenInputDevice ) {
         emit this->host->receiveSurrounding( surrounding ) ;
+        this->host->show() ;
+    }
 }
 
 void Adaptor::cursorRectUpdate( int x, int y, int width, int height ) {
@@ -43,11 +45,12 @@ void Adaptor::cursorRectUpdate( int x, int y, int width, int height ) {
 }
 
 void Adaptor::requestSoftwareInputPanel() {
+    qDebug() << "requestSoftwareInputPanel"  ;
     if ( this->host->inputDevice == host::OnscreenInputDevice ) {
         if ( this->extraCallCount == 0 ) 
             this->extraCallCount++ ;
         else if ( this->extraCallCount == 1 ) {
-            this->host->show() ;
+            //this->host->show() ;
             emit this->querySurrounding() ;
             this->extraCallCount = 0 ;
         }
@@ -55,6 +58,7 @@ void Adaptor::requestSoftwareInputPanel() {
 }
 
 void Adaptor::closeSoftwareInputPanel() {
+    qDebug() << "closeSoftwareInputPanel"  ;
     //this->host->hide() ;
     this->extraCallCount = 0 ;
 }
