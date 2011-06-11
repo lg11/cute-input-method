@@ -30,6 +30,8 @@ typedef struct {
     gboolean focused ;
     gboolean prepare_send_surrounding ;
     char* surrounding ;
+    int surrounding_cursor_offset ;
+    int surrounding_length ;
 } Context ;
 
 typedef struct {

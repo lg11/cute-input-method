@@ -33,7 +33,8 @@ gboolean filter_event( GtkIMContext* context, GdkEvent* event ) {
     Context* c = CONTEXT(context) ;
 
     GdkEventButton* button_event = (GdkEventButton*)event ;
-    if ( button_event->type == GDK_BUTTON_PRESS )
+    /*if ( button_event->type == GDK_BUTTON_PRESS )*/
+    if ( button_event->type == GDK_BUTTON_RELEASE )
         emit_focusIn( &(c->connection) ) ;
 
     return FALSE ;
@@ -80,6 +81,7 @@ static void set_cursor_location( GtkIMContext* context, const GdkRectangle* area
     Context* c = CONTEXT(context) ;
     if ( c->prepare_send_surrounding ) {
         c->prepare_send_surrounding = FALSE ;
+        /*gtk_idle_add( send_surrounding, context ) ;*/
         gtk_idle_add( send_surrounding, context ) ;
     }
     if ( c->window ) {
@@ -128,6 +130,8 @@ static void context_init( Context* context ) {
     context->focused = FALSE ;
     context->prepare_send_surrounding = FALSE ;
     context->surrounding = NULL ;
+    context->surrounding_cursor_offset = 0 ;
+    context->surrounding_length = 0 ;
 }
 
 static void context_class_init( ContextClass* context_class ) {

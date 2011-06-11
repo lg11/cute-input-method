@@ -20,6 +20,12 @@ static gboolean send_surrounding( void* data ) {
     return FALSE ;
 }
 
+static gboolean replace_surrounding( Context* c, char* s ) {
+    gtk_im_context_delete_surrounding( GTK_IM_CONTEXT(c), c->surrounding_cursor_offset, c->surrounding_length ) ;
+    g_signal_emit_by_name( c, "commit", s ) ;
+    return TRUE ;
+}
+
 static gboolean query_surrounding( Context* c ) {
     int pos ;
     gboolean r ;
@@ -27,23 +33,19 @@ static gboolean query_surrounding( Context* c ) {
     if ( c->surrounding )
         g_free( c->surrounding ) ;
     r = gtk_im_context_get_surrounding( GTK_IM_CONTEXT(c), &(c->surrounding), &pos ) ;
-    
+
     if ( r ) {
         int len = g_utf8_strlen( c->surrounding, -1 ) ; 
         if ( len > 0 ) {
             char* str = &(c->surrounding[pos]) ;
-            char* start = c->surrounding ;
-            char* end = str ;
-            for ( ; end[0] != '\0' ; end++ ) ;
+            int tail_len = g_utf8_strlen( str, -1 ) ; 
 
-            int offset_start ;
-            int offset_end ;
-            if ( end - start >= 0 ) {
-                offset_start = str - start ;
-                offset_end = end - start ;
-            }
+            g_debug( "cim surrounf %s, %d, %d, %d, %d", c->surrounding, pos, tail_len - len, len, tail_len ) ;
+
+            c->surrounding_cursor_offset = tail_len - len ;
+            c->surrounding_length = len ;
             
-            gtk_im_context_delete_surrounding( GTK_IM_CONTEXT(c), -offset_start, offset_end ) ;
+            /*gtk_im_context_delete_surrounding( GTK_IM_CONTEXT(c), tail_len - len, len ) ;*/
 
             c->prepare_send_surrounding = TRUE ;
         }
@@ -190,12 +192,14 @@ DBusHandlerResult filter( DBusConnection* connection, DBusMessage* message, void
             return DBUS_HANDLER_RESULT_HANDLED ;
         }
         else if ( dbus_message_is_signal( message, "inputmethod.host", "replaceSurrounding" ) ) {
-            g_debug( "replaceSurrounding" ) ;
+            /*g_debug( "replaceSurrounding" ) ;*/
             char* s ;
             DBusError error ;
             dbus_error_init( &error ) ;
             dbus_message_get_args( message, &error, DBUS_TYPE_STRING, &s, DBUS_TYPE_INVALID ) ;
-            g_signal_emit_by_name( c, "commit", s ) ;
+            g_debug( "replaceSurrounding with %s", s ) ;
+            replace_surrounding( c, s ) ;
+            /*g_signal_emit_by_name( c, "commit", s ) ;*/
             return DBUS_HANDLER_RESULT_HANDLED ;
         }
     }
