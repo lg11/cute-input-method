@@ -36,6 +36,7 @@ void Host::setEngine( QObject* engine ) {
         if ( index >= 0 ) {
             this->processKey = object->method( index ) ;
             this->engine = engine ;
+            //qDebug() << "set engine" ;
         }
     }
 }
@@ -61,11 +62,12 @@ void Host::hide() {
 }
 
 bool Host::keyPress( int keycode, int modifiers ) {
-    //qDebug() << "keyPress" << keycode << modifiers ;
+    qDebug() << "keyPress" << keycode << modifiers ;
     bool flag = false ;
     if ( modifiers == Qt::NoModifier && inputDevice != UnknownInputDevice ) {
         this->processKey.invoke( this->engine, Q_RETURN_ARG( bool, flag ), Q_ARG( int, keycode ) ) ;
     }
+    //qDebug() << "keyPress" << flag ;
     return flag ;
 }
 

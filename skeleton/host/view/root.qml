@@ -17,9 +17,9 @@ Item {
             anchors.bottom : parent.bottom
             width : view.displayWidth
             height : view.displayHeight
-            onSelect : engine.processKey( Qt.Key_1 + index )
-            onNextPage : engine.processKey( Qt.Key_Equal )
-            onPrevPage : engine.processKey( Qt.Key_Minus )
+            onSelect : handle.processKey( Qt.Key_1 + index )
+            onNextPage : handle.processKey( Qt.Key_Equal )
+            onPrevPage : handle.processKey( Qt.Key_Minus )
             visible : false
         }
 

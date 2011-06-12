@@ -18,5 +18,5 @@ unix {
 }
 
 # Input
-HEADERS += host.h view.h adaptor.h ../engine/engine.h extra.h
-SOURCES += main.cpp host.cpp view.cpp adaptor.cpp ../engine/engine.cpp extra.cpp
+HEADERS += host.h view.h adaptor.h ../engine/engine.h extra.h handle.h
+SOURCES += main.cpp host.cpp view.cpp adaptor.cpp ../engine/engine.cpp extra.cpp handle.cpp

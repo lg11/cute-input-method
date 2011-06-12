@@ -2,6 +2,7 @@
 #define ADAPTOR_H
 
 #include <QDBusAbstractAdaptor>
+#include <QDBusInterface>
 
 namespace host {
 
@@ -29,6 +30,9 @@ signals :
 public :
     int extraCallCount ;
     host::Host* host ;
+#ifdef Q_WS_MAEMO_5
+    QDBusInterface* interface ;
+#endif
     
     Adaptor( host::Host* host ) ;
 
@@ -45,6 +49,9 @@ public slots :
     Q_NOREPLY void preeditStart() ;
     Q_NOREPLY void preeditEnd() ;
     Q_NOREPLY void setInputDevice( int index ) ;
+#ifdef Q_WS_MAEMO_5
+    Q_NOREPLY void checkKeyboardStatus() ;
+#endif
 } ;
 
 }

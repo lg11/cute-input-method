@@ -13,6 +13,10 @@
 #include "../lookup/lookup.h"
 #include "../lookup/t9.h"
 
+namespace handle {
+class Handle ;
+}
+
 namespace engine {
 
 typedef QPair<QString, QString> KeyPair ;
@@ -24,6 +28,8 @@ typedef QPair<KeyPair, WordPair> SelectedPair ;
 
 class Engine : public QObject {
     Q_OBJECT
+
+    friend class handle::Handle ;
 
 signals :
     void preeditStart() ;
@@ -94,7 +100,7 @@ public slots :
 
     bool appendCode( QChar code ) ;
 
-    bool processKey( int keycode ) ;
+    //bool processKey( int keycode ) ;
 
     bool appendCode( const QString& code ) ;
 

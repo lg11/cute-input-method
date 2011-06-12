@@ -11,6 +11,7 @@
 #include "view.h"
 #include "extra.h"
 #include "adaptor.h"
+#include "handle.h"
 #include "../engine/engine.h"
 
 QString extendHome( const QString& path ) {
@@ -31,7 +32,8 @@ int main( int argc, char** argv ) {
     host::Host* host = new host::Host() ;
 
     engine::Engine* engine = new engine::Engine() ;
-    host->setEngine( engine ) ;
+    handle::Handle* handle = new handle::Handle( engine ) ;
+    host->setEngine( handle ) ;
 
     view::View* view = new view::View() ;
     host->setView( view ) ;
@@ -48,6 +50,7 @@ int main( int argc, char** argv ) {
     view->rootContext()->setContextProperty( "host", host ) ;
     view->rootContext()->setContextProperty( "view", view ) ;
     view->rootContext()->setContextProperty( "engine", engine ) ;
+    view->rootContext()->setContextProperty( "handle", handle ) ;
     extraInputPanel->rootContext()->setContextProperty( "engine", engine ) ;
     extraInputPanel->rootContext()->setContextProperty( "view", extraInputPanel ) ;
 
@@ -81,8 +84,13 @@ int main( int argc, char** argv ) {
     engine->startLog( extendHome( "~/.config/mcip/userdict.log" ) ) ;
     engine->setKeyboardLayout( engine::Engine::FullKeyboardLayout ) ;
     //host->inputDevice = host::HardwareInputDevice ;
-    host->inputDevice = host::OnscreenInputDevice ;
+    //host->inputDevice = host::OnscreenInputDevice ;
     qDebug() << "load end" ;
 
+#ifdef Q_WS_MAEMO_5
+    qDebug() << "start track keyboard status" ;
+    QDBusConnection::systemBus().connect( "org.freedesktop.Hal", "/org/freedesktop/Hal/devices/platform_slide", "org.freedesktop.Hal.Device", "PropertyModified", host->adaptor, SLOT(checkKeyboardStatus()) ) ;
+    host->adaptor->checkKeyboardStatus() ;
+#endif 
     return app.exec() ;
 }

@@ -378,50 +378,50 @@ bool Engine::appendCode( QChar code ) {
     return flag ;
 }
 
-bool Engine::processKey( int keycode ) {
-    bool flag = false ;
-    if ( keycode >= Qt::Key_A && keycode <= Qt::Key_Z ) {
-        keycode = keycode + 'a' - Qt::Key_A  ;
-        QChar code( keycode )  ;
-        flag = this->appendCode( code ) ;
-    }
-    else if ( keycode == Qt::Key_Backspace ) {
-        flag = this->deselect() ? true : this->popCode() ;
-    }
-    else if ( keycode == Qt::Key_Space ) {
-        flag = this->select( 0 ) ;
-        if ( flag )
-            this->checkCommit() ;
-    }
-    else if ( keycode >= Qt::Key_1 && keycode <= Qt::Key_5 ) {
-        keycode = keycode - Qt::Key_1 ;
-        flag = this->select( keycode ) ;
-        if ( flag )
-            this->checkCommit() ;
-    }
-    else if ( keycode == Qt::Key_Return || keycode == Qt::Key_Enter ) {
-        if ( this->getCodeLength() > 0 ) {
-            emit this->sendCommit( this->getCode() ) ;
-            this->reset() ;
-            flag = true ;
-        }
-    }
-    else if ( keycode == Qt::Key_Minus ) {
-        if ( this->getCodeLength() > 0 ) {
-            this->prevPage() ;
-            flag = true ;
-        }
-    }
-    else if ( keycode == Qt::Key_Equal ) {
-        if ( this->getCodeLength() > 0 ) {
-            this->nextPage() ;
-            flag = true ;
-        }
-    }
-    if ( flag )
-        emit this->candidateUpdate() ;
-    return flag ;
-}
+//bool Engine::processKey( int keycode ) {
+    //bool flag = false ;
+    //if ( keycode >= Qt::Key_A && keycode <= Qt::Key_Z ) {
+        //keycode = keycode + 'a' - Qt::Key_A  ;
+        //QChar code( keycode )  ;
+        //flag = this->appendCode( code ) ;
+    //}
+    //else if ( keycode == Qt::Key_Backspace ) {
+        //flag = this->deselect() ? true : this->popCode() ;
+    //}
+    //else if ( keycode == Qt::Key_Space ) {
+        //flag = this->select( 0 ) ;
+        //if ( flag )
+            //this->checkCommit() ;
+    //}
+    //else if ( keycode >= Qt::Key_1 && keycode <= Qt::Key_5 ) {
+        //keycode = keycode - Qt::Key_1 ;
+        //flag = this->select( keycode ) ;
+        //if ( flag )
+            //this->checkCommit() ;
+    //}
+    //else if ( keycode == Qt::Key_Return || keycode == Qt::Key_Enter ) {
+        //if ( this->getCodeLength() > 0 ) {
+            //emit this->sendCommit( this->getCode() ) ;
+            //this->reset() ;
+            //flag = true ;
+        //}
+    //}
+    //else if ( keycode == Qt::Key_Minus ) {
+        //if ( this->getCodeLength() > 0 ) {
+            //this->prevPage() ;
+            //flag = true ;
+        //}
+    //}
+    //else if ( keycode == Qt::Key_Equal ) {
+        //if ( this->getCodeLength() > 0 ) {
+            //this->nextPage() ;
+            //flag = true ;
+        //}
+    //}
+    //if ( flag )
+        //emit this->candidateUpdate() ;
+    //return flag ;
+//}
 
 bool Engine::appendCode( const QString& code ) {
     return this->appendCode( code.at(0) ) ;

@@ -1,12 +1,16 @@
 #include "adaptor.h"
 #include "host.h"
 
+#include <QDBusReply>
 #include <QDebug>
 
 namespace adaptor {
 
 Adaptor::Adaptor( host::Host* host ) : QDBusAbstractAdaptor( host ), host( host ) {
     this->extraCallCount = 0 ;
+#ifdef Q_WS_MAEMO_5
+    this->interface = new QDBusInterface( "org.freedesktop.Hal", "/org/freedesktop/Hal/devices/platform_slide", "org.freedesktop.Hal.Device", QDBusConnection::systemBus(), this ) ;
+#endif
 }
 
 //void Adaptor::show() {
@@ -93,5 +97,24 @@ void Adaptor::setInputDevice( int index ) {
         }
     }
 }
+
+#ifdef Q_WS_MAEMO_5
+    void Adaptor::checkKeyboardStatus() {
+        if ( this->interface->isValid() ) {
+            QDBusReply<bool> result = this->interface->call( "GetProperty", "button.state.value" ) ;
+            bool status ;
+            if ( result.isValid() ) {
+                status = result.value() ;
+                qDebug() << "keyboard isClosed" << status ;
+                if ( status )
+                    host->inputDevice = host::OnscreenInputDevice ;
+                    //this->host->setInputDevice( host::OnscreenInputDevice ) ;
+                else
+                    host->inputDevice = host::HardwareInputDevice ;
+                    //this->host->setInputDevice( host::HardwareInputDevice ) ;
+            }
+        }
+    }
+#endif
 
 }
