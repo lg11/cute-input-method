@@ -26,7 +26,7 @@ static gboolean replace_surrounding( Context* c, char* s ) {
     return TRUE ;
 }
 
-static gboolean query_surrounding( Context* c ) {
+static void query_surrounding( Context* c ) {
     int pos ;
     gboolean r ;
 
@@ -44,15 +44,17 @@ static gboolean query_surrounding( Context* c ) {
 
             c->surrounding_cursor_offset = tail_len - len ;
             c->surrounding_length = len ;
-            
-            /*gtk_im_context_delete_surrounding( GTK_IM_CONTEXT(c), tail_len - len, len ) ;*/
-
-            c->prepare_send_surrounding = TRUE ;
         }
-        else
-            r = FALSE ;
+        else {
+            c->surrounding_cursor_offset = 0 ;
+            c->surrounding_length = 0 ;
+        }
     }
-    return r ;
+    else {
+        c->surrounding = NULL ;
+        c->surrounding_cursor_offset = 0 ;
+        c->surrounding_length = 0 ;
+    }
 }
 
 static void check_connect( DBusConnection** connection ) {
@@ -195,14 +197,8 @@ DBusHandlerResult filter( DBusConnection* connection, DBusMessage* message, void
             return DBUS_HANDLER_RESULT_HANDLED ;
         }
         else if ( dbus_message_is_signal( message, "inputmethod.host", "querySurrounding" ) ) {
-            /*if ( !c->prepare_send_surrounding ) {*/
-                gboolean r = query_surrounding( c ) ;
-                /*if ( !r ) {*/
-                    /*c->prepare_send_surrounding = FALSE ;*/
-                    /*gtk_idle_add( send_surrounding, c ) ;*/
-                    send_surrounding( c ) ;
-                /*}*/
-            /*}*/
+            query_surrounding( c ) ;
+            send_surrounding( c ) ;
             return DBUS_HANDLER_RESULT_HANDLED ;
         }
         else if ( dbus_message_is_signal( message, "inputmethod.host", "replaceSurrounding" ) ) {

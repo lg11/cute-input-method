@@ -29,7 +29,7 @@ bool Context::filterEvent( const QEvent* event ) {
     if ( event->type() == QEvent::KeyPress ) {
         if ( this->interface->isValid() ) {
             const QKeyEvent* keyevent = static_cast<const QKeyEvent*>(event) ;
-            //qDebug() << keyevent->key() << keyevent->modifiers() ;
+            //qDebug() << "keypress" << keyevent->key() << keyevent->modifiers() ;
             QDBusReply<bool> result = this->interface->call( "keyPress", (int)( keyevent->key() ), (int)( keyevent->modifiers() ) ) ;
             return result.isValid() ? result.value() : false ;
         }

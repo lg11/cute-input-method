@@ -13,15 +13,6 @@ static GType context_type = 0 ;
     /*return FALSE ;*/
 /*}*/
 
-static gboolean send_surrounding( void* data ) {
-    Context* c = CONTEXT(data) ;
-    if ( c->surrounding )
-        emit_sendSurrounding( &(c->connection), c->surrounding ) ;
-    else
-        emit_sendSurrounding( &(c->connection), "" ) ;
-    return FALSE ;
-}
-
 #ifdef MAEMO_CHANGES
 /*static void show( GtkIMContext* context ) {*/
     /*Context* c = CONTEXT(context) ;*/
@@ -39,7 +30,6 @@ static gboolean send_surrounding( void* data ) {
 gboolean filter_event( GtkIMContext* context, GdkEvent* event ) {
     Context* c = CONTEXT(context) ;
 
-
     GdkEventButton* button_event = (GdkEventButton*)event ;
     if ( button_event->type == GDK_BUTTON_PRESS )
         g_get_current_time( &(c->press_time) ) ;
@@ -50,7 +40,6 @@ gboolean filter_event( GtkIMContext* context, GdkEvent* event ) {
         /*g_debug( "timestamp %ld.%ld, %ld.%ld, %ld", c->press_time.tv_sec, c->press_time.tv_usec, current_time.tv_sec, current_time.tv_usec, d ) ;*/
         if ( d > 0 && d < 200000 )
             emit_requestSoftwareInputPanel( &(c->connection) ) ;
-            /*gtk_idle_add( send_focus_in, c ) ;*/
     }
 
     return FALSE ;
@@ -69,13 +58,24 @@ static gboolean filter_keypress( GtkIMContext* context, GdkEventKey* event ) {
     gboolean flag = FALSE ;
     int keycode = convert_keycode( event->keyval ) ;
     
+    g_debug( "prepare_send_keypress %d %d", keycode, event->type ) ;
     if ( keycode > 0 ) {
         int modifiers = convert_modifiers( event->state ) ;
     
-        if ( event->type == GDK_KEY_PRESS )
+        if ( event->type == GDK_KEY_PRESS ) {
+            /*g_debug( "send_keypress %d %d", keycode, modifiers ) ;*/
             flag = call_keyPress( &(c->connection), keycode, modifiers ) ;
-        else if ( event->type == GDK_KEY_RELEASE )
-            flag = call_keyRelease( &(c->connection), keycode, modifiers ) ;
+        }
+        else if ( event->type == GDK_KEY_RELEASE ) {
+            /*g_debug( "send_keyrelease %d %d", keycode, modifiers ) ;*/
+            if ( keycode == 16777221 && modifiers == 0 ) {
+                gtk_im_context_delete_surrounding( GTK_IM_CONTEXT(c), -1, 1 ) ;
+                flag = call_keyPress( &(c->connection), keycode, modifiers ) ;
+                flag = call_keyRelease( &(c->connection), keycode, modifiers ) && flag ;
+            }
+            else
+                flag = call_keyRelease( &(c->connection), keycode, modifiers ) ;
+        }
     }
     return flag ? flag : gtk_im_context_filter_keypress( c->slave, event )  ;
 }
@@ -95,10 +95,6 @@ static void focus_out( GtkIMContext* context ) {
 static void set_cursor_location( GtkIMContext* context, const GdkRectangle* area ) {
     g_debug( "set_cursor_location" ) ;
     Context* c = CONTEXT(context) ;
-    /*if ( c->prepare_send_surrounding ) {*/
-        /*c->prepare_send_surrounding = FALSE ;*/
-        /*gtk_idle_add( send_surrounding, context ) ;*/
-    /*}*/
     if ( c->window ) {
         c->cursorRect.x = area->x ;
         c->cursorRect.y = area->y ;
@@ -143,7 +139,6 @@ static void context_init( Context* context ) {
     context->window = NULL ;
     request_connect( &(context->connection), G_OBJECT(context) ) ;
     context->focused = FALSE ;
-    context->prepare_send_surrounding = FALSE ;
     context->surrounding = NULL ;
     context->surrounding_cursor_offset = 0 ;
     context->surrounding_length = 0 ;

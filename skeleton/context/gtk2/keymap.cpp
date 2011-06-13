@@ -40,6 +40,10 @@ int main( int argc, char** argv ) {
     cout << "        return " << Qt::Key_Minus << ";\n" ;
     cout << "    case GDK_equal :\n" ;
     cout << "        return " << Qt::Key_Equal << ";\n" ;
+    cout << "    case 65421 :\n" ;
+    cout << "        return " << Qt::Key_Enter << ";\n" ;
+    cout << "    case 65507 :\n" ;
+    cout << "        return " << 16777249 << ";\n" ; // n900_ctrl
     cout << "    default :\n" ;
     cout << "        return -1 ;\n" ;
     cout << "    }\n" ;

@@ -32,9 +32,11 @@ void Host::setEngine( QObject* engine ) {
     if ( engine ) {
         const QMetaObject* object = engine->metaObject() ;
 
-        int index = object->indexOfMethod( "processKey(int)" ) ;
+        int index = object->indexOfMethod( "processKeyPress(int)" ) ;
         if ( index >= 0 ) {
-            this->processKey = object->method( index ) ;
+            this->processKeyPress = object->method( index ) ;
+            index = object->indexOfMethod( "processKeyRelease(int)" ) ;
+            this->processKeyRelease = object->method( index ) ;
             this->engine = engine ;
             //qDebug() << "set engine" ;
         }
@@ -63,19 +65,24 @@ void Host::hide() {
 
 bool Host::keyPress( int keycode, int modifiers ) {
     qDebug() << "keyPress" << keycode << modifiers ;
+    Q_UNUSED( modifiers ) ;
     bool flag = false ;
-    if ( modifiers == Qt::NoModifier && inputDevice != UnknownInputDevice ) {
-        this->processKey.invoke( this->engine, Q_RETURN_ARG( bool, flag ), Q_ARG( int, keycode ) ) ;
+    //if ( modifiers == Qt::NoModifier && inputDevice != UnknownInputDevice ) {
+    if ( inputDevice == HardwareInputDevice ) {
+        this->processKeyPress.invoke( this->engine, Q_RETURN_ARG( bool, flag ), Q_ARG( int, keycode ) ) ;
     }
     //qDebug() << "keyPress" << flag ;
     return flag ;
 }
 
 bool Host::keyRelease( int keycode, int modifiers ) {
-    //qDebug() << "keyRelease" << keycode << modifiers ;
-    Q_UNUSED( keycode ) ;
+    qDebug() << "keyRelease" << keycode << modifiers ;
     Q_UNUSED( modifiers ) ;
-    return false ;
+    bool flag = false ;
+    if ( inputDevice == HardwareInputDevice ) {
+        this->processKeyRelease.invoke( this->engine, Q_RETURN_ARG( bool, flag ), Q_ARG( int, keycode ) ) ;
+    }
+    return flag ;
 }
 
 void Host::sendCommit( const QString& text ) {

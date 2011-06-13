@@ -37,7 +37,8 @@ public :
     InputDevice inputDevice ;
     adaptor::Adaptor* adaptor ;
 
-    QMetaMethod processKey ;
+    QMetaMethod processKeyPress ;
+    QMetaMethod processKeyRelease ;
 
     Host( QObject* parent = NULL ) ;
     void setView( QWidget* view ) ;
