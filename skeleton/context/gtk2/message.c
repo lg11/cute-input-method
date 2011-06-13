@@ -101,6 +101,15 @@ void emit_focusOut( DBusConnection** connection ) {
     dbus_message_unref( signal ) ;
 }
 
+void emit_requestSoftwareInputPanel( DBusConnection** connection ) {
+    check_connect( connection ) ;
+
+    DBusMessage* signal = dbus_message_new_signal( "/context", "inputmethod.context", "requestSoftwareInputPanel" ) ;
+    dbus_connection_send( *connection, signal, 0 ) ;
+    
+    dbus_message_unref( signal ) ;
+}
+
 void emit_cursorRectUpdate( DBusConnection** connection, int x, int y, int width, int height ) {
     check_connect( connection ) ;
 
@@ -186,9 +195,14 @@ DBusHandlerResult filter( DBusConnection* connection, DBusMessage* message, void
             return DBUS_HANDLER_RESULT_HANDLED ;
         }
         else if ( dbus_message_is_signal( message, "inputmethod.host", "querySurrounding" ) ) {
-            gboolean r = query_surrounding( c ) ;
-            if ( !r ) 
-                gtk_idle_add( send_surrounding, c ) ;
+            /*if ( !c->prepare_send_surrounding ) {*/
+                gboolean r = query_surrounding( c ) ;
+                /*if ( !r ) {*/
+                    /*c->prepare_send_surrounding = FALSE ;*/
+                    /*gtk_idle_add( send_surrounding, c ) ;*/
+                    send_surrounding( c ) ;
+                /*}*/
+            /*}*/
             return DBUS_HANDLER_RESULT_HANDLED ;
         }
         else if ( dbus_message_is_signal( message, "inputmethod.host", "replaceSurrounding" ) ) {

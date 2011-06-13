@@ -14,6 +14,8 @@ void emit_focusIn( DBusConnection** connection ) ;
 
 void emit_focusOut( DBusConnection** connection ) ;
 
+void emit_requestSoftwareInputPanel( DBusConnection** connection ) ;
+
 void emit_cursorRectUpdate( DBusConnection**, int x, int y, int width, int height ) ;
 
 gboolean call_keyPress( DBusConnection** connection, int keycode , int modifiers ) ;

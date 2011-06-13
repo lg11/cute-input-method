@@ -28,7 +28,7 @@ signals :
     void replaceSurrounding( const QString& text ) ;
 
 public :
-    int extraCallCount ;
+    //int extraCallCount ;
     host::Host* host ;
 #ifdef Q_WS_MAEMO_5
     QDBusInterface* interface ;
@@ -44,6 +44,8 @@ public slots :
     bool keyRelease( int keycode, int modifiers ) ;
     Q_NOREPLY void receiveSurrounding( const QString& surrounding ) ;
     Q_NOREPLY void cursorRectUpdate( int x, int y, int width, int height ) ;
+    Q_NOREPLY void focusIn() ;
+    Q_NOREPLY void focusOut() ;
     Q_NOREPLY void requestSoftwareInputPanel() ;
     Q_NOREPLY void closeSoftwareInputPanel() ;
     Q_NOREPLY void preeditStart() ;

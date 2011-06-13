@@ -32,6 +32,7 @@ typedef struct {
     char* surrounding ;
     int surrounding_cursor_offset ;
     int surrounding_length ;
+    GTimeVal press_time ;
 } Context ;
 
 typedef struct {

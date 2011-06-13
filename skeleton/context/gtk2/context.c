@@ -3,8 +3,15 @@
 #include "keymap.h"
 
 #include <gtk/gtk.h>
+#include <glib.h>
 
 static GType context_type = 0 ;
+
+/*static gboolean send_focus_in( void* data ) {*/
+    /*Context* c = CONTEXT(data) ;*/
+    /*emit_focusIn( &(c->connection) ) ;*/
+    /*return FALSE ;*/
+/*}*/
 
 static gboolean send_surrounding( void* data ) {
     Context* c = CONTEXT(data) ;
@@ -32,10 +39,19 @@ static gboolean send_surrounding( void* data ) {
 gboolean filter_event( GtkIMContext* context, GdkEvent* event ) {
     Context* c = CONTEXT(context) ;
 
+
     GdkEventButton* button_event = (GdkEventButton*)event ;
-    /*if ( button_event->type == GDK_BUTTON_PRESS )*/
-    if ( button_event->type == GDK_BUTTON_RELEASE )
-        emit_focusIn( &(c->connection) ) ;
+    if ( button_event->type == GDK_BUTTON_PRESS )
+        g_get_current_time( &(c->press_time) ) ;
+    else if ( button_event->type == GDK_BUTTON_RELEASE ) {
+        GTimeVal current_time ;
+        g_get_current_time( &current_time ) ;
+        glong d = ( current_time.tv_sec - c->press_time.tv_sec ) * 1000000 + current_time.tv_usec - c->press_time.tv_usec ;
+        /*g_debug( "timestamp %ld.%ld, %ld.%ld, %ld", c->press_time.tv_sec, c->press_time.tv_usec, current_time.tv_sec, current_time.tv_usec, d ) ;*/
+        if ( d > 0 && d < 200000 )
+            emit_requestSoftwareInputPanel( &(c->connection) ) ;
+            /*gtk_idle_add( send_focus_in, c ) ;*/
+    }
 
     return FALSE ;
 }
@@ -79,11 +95,10 @@ static void focus_out( GtkIMContext* context ) {
 static void set_cursor_location( GtkIMContext* context, const GdkRectangle* area ) {
     g_debug( "set_cursor_location" ) ;
     Context* c = CONTEXT(context) ;
-    if ( c->prepare_send_surrounding ) {
-        c->prepare_send_surrounding = FALSE ;
+    /*if ( c->prepare_send_surrounding ) {*/
+        /*c->prepare_send_surrounding = FALSE ;*/
         /*gtk_idle_add( send_surrounding, context ) ;*/
-        gtk_idle_add( send_surrounding, context ) ;
-    }
+    /*}*/
     if ( c->window ) {
         c->cursorRect.x = area->x ;
         c->cursorRect.y = area->y ;
@@ -132,6 +147,7 @@ static void context_init( Context* context ) {
     context->surrounding = NULL ;
     context->surrounding_cursor_offset = 0 ;
     context->surrounding_length = 0 ;
+    g_get_current_time( &(context->press_time) ) ;
 }
 
 static void context_class_init( ContextClass* context_class ) {
