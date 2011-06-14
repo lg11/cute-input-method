@@ -66,45 +66,45 @@ Item {
         }
     }
     function updateCandString() {
-        imEngine.updateCandidate( 0 )
-        key_1.candString = imEngine.getWord()
+        engine.updateCandidate( 0 )
+        key_1.candString = engine.getWord()
 
-        preedit.preeditString = imEngine.getPreedit()
-        preedit.invaildCode = imEngine.getInvaildCode()
-        preedit.selectedWord = imEngine.getSelectedWord()
+        preedit.preeditString = engine.getPreeditCode()
+        preedit.invaildCode = engine.getInvalidCode()
+        preedit.selectedWord = engine.getSelectedWord()
 
-        imEngine.updateCandidate( 1 )
-        key_2.candString = imEngine.getWord()
-        imEngine.updateCandidate( 2 )
-        key_3.candString = imEngine.getWord()
-        imEngine.updateCandidate( 3 )
-        key_4.candString = imEngine.getWord()
-        imEngine.updateCandidate( 4 )
-        key_5.candString = imEngine.getWord()
-        imEngine.updateCandidate( 5 )
-        key_6.candString = imEngine.getWord()
+        engine.updateCandidate( 1 )
+        key_2.candString = engine.getWord()
+        engine.updateCandidate( 2 )
+        key_3.candString = engine.getWord()
+        engine.updateCandidate( 3 )
+        key_4.candString = engine.getWord()
+        engine.updateCandidate( 4 )
+        key_5.candString = engine.getWord()
+        engine.updateCandidate( 5 )
+        key_6.candString = engine.getWord()
     }
     function commit() {
-        if ( imEngine.getSelectedLength() > 0 ) {
-            root.textview.insert( imEngine.getSelectedWord() )
-            imEngine.commit()
+        if ( engine.getSelectedLength() > 0 ) {
+            root.textview.insert( engine.getSelectedWord() )
+            engine.commit()
         }
     }
     function backspace() {
         if ( !key_backspace.paused ) {
-            if ( imEngine.getSelectedLength() > 0 ) {
-                imEngine.cancel()
+            if ( engine.getSelectedLength() > 0 ) {
+                engine.cancel()
                 updateCandString()
             }
-            else if ( imEngine.getCodeLength() > 0 ) {
+            else if ( engine.getCodeLength() > 0 ) {
                 if ( selectMode == true ) {
                     selectMode = false
                     /*key_backspace.pauseAutoRepeat()*/
                 }
                 else {
-                    imEngine.popCode()
+                    engine.popCode()
                     updateCandString()
-                    if ( imEngine.getCodeLength() <= 0 ) {
+                    if ( engine.getCodeLength() <= 0 ) {
                         key_backspace.pauseAutoRepeat()
                     }
                 }
@@ -124,20 +124,20 @@ Item {
         if ( selectMode ) {
             if ( keycode >= Utils.keycode_1 && keycode <= Utils.keycode_6 ) {
                 var index = keycode - Utils.keycode_1
-                imEngine.select( index )
+                engine.select( index )
                 updateCandString()
-                if ( imEngine.getCodeLength() <= 0 && imEngine.getInvaildCodeLength() <= 0 && imEngine.getSelectedLength() > 0 ) {
+                if ( engine.getCodeLength() <= 0 && engine.getInvalidCodeLength() <= 0 && engine.getSelectedLength() > 0 ) {
                     commit()
                     updateCandString()
                     selectMode = false
                 }
             }
             else if ( keycode == Utils.keycode_7 ) {
-                imEngine.prevPage()
+                engine.prevPage()
                 updateCandString()
             }
             else if ( keycode == Utils.keycode_9 ) {
-                imEngine.nextPage()
+                engine.nextPage()
                 updateCandString()
             }
             else if ( keycode == Utils.keycode_backspace ) {
@@ -162,7 +162,7 @@ Item {
         else {
             if ( keycode >= Utils.keycode_2 && keycode <= Utils.keycode_9 ) {
                 if ( mask == Utils.keymask_null ) {
-                    imEngine.appendCode( keysym[mask] )
+                    engine.appendCode( keysym[mask] )
                     updateCandString()
                 }
                 else if ( mask == Utils.keymask_shift ) {
@@ -171,14 +171,14 @@ Item {
             }
             else if ( keycode == Utils.keycode_0 ) {
                 if ( mask == Utils.keymask_null ) {
-                    if ( imEngine.getCodeLength() <= 0 ) 
+                    if ( engine.getCodeLength() <= 0 ) 
                         root.textview.insert( " " )
                 }
                 else if ( mask == Utils.keymask_shift )
                     root.textview.insert( keysym[mask] )
             }
             else if ( keycode == Utils.keycode_1 ) {
-                if ( imEngine.getCodeLength() > 0 ) {
+                if ( engine.getCodeLength() > 0 ) {
                     selectMode = true
                 }
                 else if ( mask == Utils.keymask_shift ) {
@@ -192,9 +192,9 @@ Item {
                 backspace()
             }
             else if ( keycode == Utils.keycode_enter ) {
-                if ( imEngine.getCodeLength() > 0 ) {
-                    root.textview.insert( imEngine.getCode() )
-                    imEngine.reset()
+                if ( engine.getCodeLength() > 0 ) {
+                    root.textview.insert( engine.getCode() )
+                    engine.reset()
                     updateCandString()
                 }
                 else {
@@ -202,7 +202,7 @@ Item {
                 }
             }
             else if ( keycode == Utils.keycode_shift_l ) {
-                if ( imEngine.getCodeLength() <= 0 ) {
+                if ( engine.getCodeLength() <= 0 ) {
                     if ( mask != Utils.keymask_shift ) {
                         mask = Utils.keymask_shift
                         key_shift_l.keepDown = true

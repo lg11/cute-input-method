@@ -50,8 +50,10 @@ void Host::show() {
             this->view->show() ;
     }
     else if ( this->inputDevice == OnscreenInputDevice ) {
-        if ( this->extraInputPanel )
+        if ( this->extraInputPanel ) {
+            this->view->hide() ;
             this->extraInputPanel->show() ;
+        }
     }
 }
 

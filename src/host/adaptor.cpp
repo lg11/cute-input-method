@@ -118,12 +118,14 @@ void Adaptor::setInputDevice( int index ) {
             if ( result.isValid() ) {
                 status = result.value() ;
                 qDebug() << "keyboard isClosed" << status ;
-                if ( status )
-                    host->inputDevice = host::OnscreenInputDevice ;
-                    //this->host->setInputDevice( host::OnscreenInputDevice ) ;
-                else
-                    host->inputDevice = host::HardwareInputDevice ;
+                if ( status ) {
+                    this->host->inputDevice = host::OnscreenInputDevice ;
+                }
+                else {
+                    this->host->inputDevice = host::HardwareInputDevice ;
+                    emit this->host->setKeyboardLayout( 1 ) ;
                     //this->host->setInputDevice( host::HardwareInputDevice ) ;
+                }
             }
         }
     }

@@ -475,6 +475,17 @@ bool Engine::setKeyboardLayout( KeyboardLayout layout ) {
         return false ;
 }
 
+bool Engine::setKeyboardLayout( int layout ) {
+    if ( layout == 0 ) 
+        return this->setKeyboardLayout( UnknownKeyboardLayout ) ;
+    else if ( layout == 1 ) 
+        return this->setKeyboardLayout( FullKeyboardLayout ) ;
+    else if ( layout == 2 ) 
+        return this->setKeyboardLayout( T9KeyboardLayout ) ;
+    else 
+        return false ;
+}
+
 }
 
 

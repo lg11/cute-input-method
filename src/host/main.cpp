@@ -51,6 +51,7 @@ int main( int argc, char** argv ) {
     view->rootContext()->setContextProperty( "view", view ) ;
     view->rootContext()->setContextProperty( "engine", engine ) ;
     view->rootContext()->setContextProperty( "handle", handle ) ;
+    
     extraInputPanel->rootContext()->setContextProperty( "engine", engine ) ;
     extraInputPanel->rootContext()->setContextProperty( "view", extraInputPanel ) ;
 
@@ -82,7 +83,7 @@ int main( int argc, char** argv ) {
     engine->load( extendHome( "~/.config/mcip/sysdict" ) ) ;
     engine->load( extendHome( "~/.config/mcip/userdict.log" ) ) ;
     engine->startLog( extendHome( "~/.config/mcip/userdict.log" ) ) ;
-    engine->setKeyboardLayout( engine::Engine::FullKeyboardLayout ) ;
+    //engine->setKeyboardLayout( engine::Engine::FullKeyboardLayout ) ;
     //host->inputDevice = host::HardwareInputDevice ;
     //host->inputDevice = host::OnscreenInputDevice ;
     qDebug() << "load end" ;
@@ -91,6 +92,7 @@ int main( int argc, char** argv ) {
     qDebug() << "start track keyboard status" ;
     QDBusConnection::systemBus().connect( "org.freedesktop.Hal", "/org/freedesktop/Hal/devices/platform_slide", "org.freedesktop.Hal.Device", "PropertyModified", host->adaptor, SLOT(checkKeyboardStatus()) ) ;
     host->adaptor->checkKeyboardStatus() ;
+    QObject::connect( host, SIGNAL(setKeyboardLayout(int)), handle, SLOT(setKeyboardLayout(int)) ) ;
 #endif 
     return app.exec() ;
 }

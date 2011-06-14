@@ -28,6 +28,7 @@ signals :
     void inputDeviceChanged() ;
     void cursorRectUpdate( int x, int y, int width, int height ) ;
     void receiveSurrounding( const QString& surrounding ) ;
+    void setKeyboardLayout( int layout ) ;
 
 public :
     QWidget* view ;

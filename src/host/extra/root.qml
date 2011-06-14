@@ -138,17 +138,18 @@ Item {
         rotateFlag = flag
     }
 
+
     onT9ModeChanged : {
         if ( t9Mode == false ) {
             if ( rotateFlag == 1 ) {
-                engine.setMode( 0 )
+                engine.setKeyboardLayout( 1 )
                 keyboard.updateCandString()
                 keyboard.mode = 1
             }
         }
         else if ( t9Mode == true ) {
             if ( rotateFlag == 1 ) {
-                engine.setMode( 1 )
+                engine.setKeyboardLayout( 2 )
                 t9Keyboard.selectMode = false
                 t9Keyboard.updateCandString()
                 if ( t9Keyboard.puncMode ) {
@@ -161,14 +162,14 @@ Item {
     onRotateFlagChanged : {
         if ( rotateFlag == 0 ) {
             if ( t9Mode == true ) {
-                engine.setMode( 0 )
+                engine.setKeyboardLayout( 1 )
                 keyboard.updateCandString()
                 keyboard.mode = keyboardModeRecord
             }
         }
         else if ( rotateFlag == 1 ) {
             if ( t9Mode == true ) {
-                engine.setMode( 1 )
+                engine.setKeyboardLayout( 2 )
                 t9Keyboard.selectMode = false
                 t9Keyboard.updateCandString()
                 if ( t9Keyboard.puncMode ) {
@@ -263,9 +264,20 @@ Item {
         onReceiveSurrounding : {
             engine.reset()
             setText( surrounding )
+            if ( t9Mode ) {
+                if ( rotateFlag == 1 ) 
+                    engine.setKeyboardLayout( 2 )
+                else
+                    engine.setKeyboardLayout( 1 )
+            }
+            else
+                engine.setKeyboardLayout( 1 )
         }
         onHided : {
             commitTimer.start()
+        }
+        onRotateChanged : {
+            setRotate( rotate )
         }
     }
     Component.onCompleted : {

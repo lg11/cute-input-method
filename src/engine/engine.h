@@ -110,6 +110,8 @@ public slots :
 
     bool setKeyboardLayout( KeyboardLayout layout ) ;
 
+    bool setKeyboardLayout( int layout ) ;
+
 } ;
 
 }

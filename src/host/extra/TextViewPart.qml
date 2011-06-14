@@ -15,7 +15,7 @@ Item {
             height : part.height
             onMousePressed : switchFlag = true 
             onMouseReleased : {
-                if ( switchFlag && !imEngine.hasCode ) {
+                if ( switchFlag && engine.getCodeLength() <= 0 ) {
                     if ( !( root.rotateFlag == 1 && root.t9Mode == true ) )
                         keyboard.switchMode()
                 }
