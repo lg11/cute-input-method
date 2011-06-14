@@ -29,6 +29,8 @@ signals :
     void cursorRectUpdate( int x, int y, int width, int height ) ;
     void receiveSurrounding( const QString& surrounding ) ;
     void setKeyboardLayout( int layout ) ;
+    void queryStatus() ;
+    void sendStatus( int status ) ;
 
 public :
     QWidget* view ;

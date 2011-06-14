@@ -33,5 +33,5 @@ main.o : main.c context.h
 clean :
 	rm *.o
 	rm *.so
-	rm main
+	rm keymap.h
 

@@ -25,8 +25,9 @@ set -e
 
 case "$1" in
     configure)
-    hildon-im-recache
-    gconftool --type string -s /apps/osso/inputmethod/default-plugins/finger maemo-chinese-input-pad-plugin
+    gtk-query-immodules-2.0 > /etc/gtk-2.0/gtk.immodules 
+    echo export GTK_IM_MODULE=\"cuteinputmethod\" >> /etc/profile 
+    echo export QT_IM_MODULE=\"cuteinputmethod\" >> /etc/profile  
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)

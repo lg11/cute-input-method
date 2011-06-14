@@ -4,8 +4,8 @@ set -e
 
 case "$1" in
     remove|upgrade|deconfigure)
-    gconftool --type string -s /apps/osso/inputmethod/default-plugins/finger hildon_western_fkb
-    gconftool --type string -s /apps/osso/inputmethod/default-plugins/hw-keyboard hildon_keyboard_assistant
+    cat /etc/profile | grep -v cuteinputmethod > /tmp/profile.tmp 
+	cat /tmp/profile.tmp > /etc/profile 
 	;;
     failed-upgrade)
 	;;

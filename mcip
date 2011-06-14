@@ -1,9 +1,30 @@
 #!/bin/sh
 
+if [ ! -f /home/user/.config/mcip ]
+then
+    mkdir -p /home/user/.config/mcip
+fi
+
+if [ ! -f /home/user/.config/mcip/sysdict ]
+then
+    cp /opt/cim/data/formated /home/user/.config/mcip/sysdict 
+fi
+
+if [ ! -f /home/user/.config/mcip/view ]
+then
+    cp -r /opt/cim/host/view /home/user/.config/mcip 
+fi
+
+if [ ! -f /home/user/.config/mcip/extra ]
+then
+    cp -r /opt/cim/host/extra /home/user/.config/mcip 
+fi
+
+
 mkdir -p /home/user/.config/mcip
 touch /home/user/.config/mcip/userdict.log
 sort -r /home/user/.config/mcip/userdict.log > /home/user/.config/mcip/userdict.tmp
-python /opt/cim/bin/ui/prePhrase.py /home/user/.config/mcip/userdict.tmp > /home/user/.config/mcip/userdict.log
+python /opt/cim/data/prePhrase.py /home/user/.config/mcip/userdict.tmp > /home/user/.config/mcip/userdict.log
 
-cd /opt/cim/bin/
-run-standalone.sh /opt/cim/bin/mcip.py
+
+run-standalone.sh /opt/cim/host/main

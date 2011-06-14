@@ -1,0 +1,3 @@
+[D-BUS Service]
+Name = me.inputmethod.host
+Exec = /opt/cim/mcip

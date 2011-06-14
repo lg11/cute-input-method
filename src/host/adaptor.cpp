@@ -110,6 +110,10 @@ void Adaptor::setInputDevice( int index ) {
     }
 }
 
+void Adaptor::queryStatus() {
+    emit this->host->queryStatus() ;
+}
+
 #ifdef Q_WS_MAEMO_5
     void Adaptor::checkKeyboardStatus() {
         if ( this->interface->isValid() ) {
@@ -120,9 +124,11 @@ void Adaptor::setInputDevice( int index ) {
                 qDebug() << "keyboard isClosed" << status ;
                 if ( status ) {
                     this->host->inputDevice = host::OnscreenInputDevice ;
+                    this->host->view->hide() ;
                 }
                 else {
                     this->host->inputDevice = host::HardwareInputDevice ;
+                    this->host->extraInputPanel->hide() ;
                     emit this->host->setKeyboardLayout( 1 ) ;
                     //this->host->setInputDevice( host::HardwareInputDevice ) ;
                 }

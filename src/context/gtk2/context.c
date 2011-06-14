@@ -71,6 +71,8 @@ static gboolean filter_keypress( GtkIMContext* context, GdkEventKey* event ) {
             if ( keycode == 16777221 && modifiers == 0 ) {
                 gtk_im_context_delete_surrounding( GTK_IM_CONTEXT(c), -1, 1 ) ;
                 flag = call_keyPress( &(c->connection), keycode, modifiers ) ;
+                if ( !flag ) 
+                    g_signal_emit_by_name( c, "commit", "\n" ) ;
                 flag = call_keyRelease( &(c->connection), keycode, modifiers ) && flag ;
             }
             else

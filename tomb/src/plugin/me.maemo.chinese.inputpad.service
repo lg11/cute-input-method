@@ -1,3 +1,0 @@
-[D-BUS Service]
-Name = me.maemo.input.chinese
-Exec = /opt/cim/bin/mcip

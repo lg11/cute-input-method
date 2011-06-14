@@ -26,6 +26,7 @@ signals :
     void querySurrounding() ;
     void queryCursorRect() ;
     void replaceSurrounding( const QString& text ) ;
+    void sendStatus( int status ) ;
 
 public :
     //int extraCallCount ;
@@ -51,6 +52,7 @@ public slots :
     Q_NOREPLY void preeditStart() ;
     Q_NOREPLY void preeditEnd() ;
     Q_NOREPLY void setInputDevice( int index ) ;
+    Q_NOREPLY void queryStatus() ;
 #ifdef Q_WS_MAEMO_5
     Q_NOREPLY void checkKeyboardStatus() ;
 #endif

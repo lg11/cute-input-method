@@ -71,6 +71,8 @@ int main( int argc, char** argv ) {
     QDBusConnection::sessionBus().connect( "", "", "inputmethod.context", "sendSurrounding", host->adaptor, SIGNAL(receiveSurrounding( const QString& )) ) ;
     QDBusConnection::sessionBus().connect( "", "", "inputmethod.console", "setInputDevice", host->adaptor, SIGNAL(receiveSurrounding(int)) ) ;
 
+    QDBusConnection::sessionBus().connect( "", "", "inputmethod.status", "queryStatus", host->adaptor, SLOT(queryStatus()) ) ;
+
     QObject::connect( host, SIGNAL(cursorRectUpdate( int, int, int, int )), view, SLOT(cursorRectUpdate( int, int, int, int )) ) ;
     QObject::connect( engine, SIGNAL(candidateUpdate()), view, SIGNAL(candidateUpdate()) ) ;
     QObject::connect( engine, SIGNAL(sendCommit( const QString& )), host->adaptor, SIGNAL( sendCommit( const QString& ) ) ) ;
@@ -78,12 +80,13 @@ int main( int argc, char** argv ) {
     QObject::connect( engine, SIGNAL(preeditEnd()), host->adaptor, SLOT(preeditEnd()) ) ;
     QObject::connect( host, SIGNAL(receiveSurrounding( const QString& )), extraInputPanel, SIGNAL(receiveSurrounding( const QString& )) ) ;
     QObject::connect( extraInputPanel, SIGNAL(replaceSurrounding( const QString& )), host->adaptor, SIGNAL(replaceSurrounding( const QString& )) ) ;
+    QObject::connect( host, SIGNAL(queryStatus()), handle, SLOT(queryStatus()) ) ;
+    QObject::connect( handle, SIGNAL(sendStatus(int)), host->adaptor, SIGNAL(sendStatus(int)) ) ;
 
     qDebug() << "load start" ;
     engine->load( extendHome( "~/.config/mcip/sysdict" ) ) ;
     engine->load( extendHome( "~/.config/mcip/userdict.log" ) ) ;
     engine->startLog( extendHome( "~/.config/mcip/userdict.log" ) ) ;
-    //engine->setKeyboardLayout( engine::Engine::FullKeyboardLayout ) ;
     //host->inputDevice = host::HardwareInputDevice ;
     //host->inputDevice = host::OnscreenInputDevice ;
     qDebug() << "load end" ;
@@ -91,6 +94,7 @@ int main( int argc, char** argv ) {
 #ifdef Q_WS_MAEMO_5
     qDebug() << "start track keyboard status" ;
     QDBusConnection::systemBus().connect( "org.freedesktop.Hal", "/org/freedesktop/Hal/devices/platform_slide", "org.freedesktop.Hal.Device", "PropertyModified", host->adaptor, SLOT(checkKeyboardStatus()) ) ;
+    engine->setKeyboardLayout( engine::Engine::FullKeyboardLayout ) ;
     host->adaptor->checkKeyboardStatus() ;
     QObject::connect( host, SIGNAL(setKeyboardLayout(int)), handle, SLOT(setKeyboardLayout(int)) ) ;
 #endif 
