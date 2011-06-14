@@ -1,3 +1,5 @@
+#ifndef __i386__
+
 #include <gtk/gtk.h>
 #include <gtk/gtkimmodule.h>
 
@@ -41,3 +43,4 @@ G_MODULE_EXPORT void im_module_list( const GtkIMContextInfo*** contexts, gint* n
     *n_contexts = G_N_ELEMENTS( info_list ) ;
 }
 
+#endif

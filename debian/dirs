@@ -1,2 +1,3 @@
-usr/lib/hildon-input-method
+usr/lib/gtk-2.0/2.10.0/immodules/
+usr/lib/qt4/plugins/inputmethods/
 usr/share/dbus-1/services

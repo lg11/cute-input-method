@@ -1,4 +1,4 @@
-Source: mcip
+Source: mcip-nt1
 Section: user/system
 Priority: optional
 Maintainer: liang <sd.foolegg@gmail.com> 
@@ -7,7 +7,7 @@ Build-Depends: dpkg-dev (>= 1.13.19), debhelper (>= 4.0.0), dpatch, autotools-de
 Standards-Version: 3.7.2
 
 Package: mcip-nt1
-Architecture: any
+Architecture: armel
 Conflicts: scim, mscim, mcip
 Depends:  ${shlibs:Depends}, pyside-qt4, python2.5-qt4-dbus
 Description: A Chinese Pinyin input method for N900

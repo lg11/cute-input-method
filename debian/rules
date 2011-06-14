@@ -55,7 +55,7 @@ install: build
 	dh_installdirs
 
 	# Add here commands to install the package into debian/mcip.
-	$(MAKE) DESTDIR=$(CURDIR)/debian/mcip install
+	$(MAKE) DESTDIR=$(CURDIR)/debian/mcip-nt1 install
 
 
 # Build architecture-independent files here.

@@ -1,3 +1,5 @@
+#ifndef __i386__
+
 #include "message.h"
 #include "context.h"
 
@@ -228,3 +230,5 @@ void request_connect( DBusConnection** connection, GObject* object ) {
     dbus_bus_add_match( *connection, "type='signal',interface='inputmethod.host',member='replaceSurrounding',path='/host'", NULL ) ;
     dbus_connection_add_filter( *connection, filter, object, NULL ) ;
 }
+
+#endif

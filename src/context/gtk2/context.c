@@ -1,3 +1,5 @@
+#ifndef __i386__
+
 #include "context.h"
 #include "message.h"
 #include "keymap.h"
@@ -198,3 +200,4 @@ GType context_get_type( void ) {
     /*return (Context*)object ;*/
 /*}*/
 
+#endif

@@ -34,6 +34,8 @@ install :
 	mkdir -p $(DESTDIR)/opt/cim/plugin
 	mkdir -p $(DESTDIR)/opt/cim/data
 	mkdir -p $(DESTDIR)/usr/share/dbus-1/services
+	mkdir -p $(DESTDIR)/usr/lib/qt4/plugins/inputmethods
+	mkdir -p $(DESTDIR)/usr/lib/gtk-2.0/2.10.0/immodules
 	cp src/host/main $(DESTDIR)/opt/cim/host
 	cp src/host/view/*.qml $(DESTDIR)/opt/cim/host/view
 	cp src/host/extra/*.qml $(DESTDIR)/opt/cim/host/extra
@@ -58,6 +60,7 @@ uninstall :
 	rm $(DESTDIR)/usr/lib/gtk-2.0/2.10.0/immodules/libcuteinputmethod.so
 	rm $(DESTDIR)/usr/lib/qt4/plugins/inputmethods/libcuteinputmethod.so
 	if test "$(DESTDIR)x" == "x"; then \
-		 cat $(DESTDIR)/etc/profile | grep -v cuteinputmethod > $(DESTDIR)/tmp/profile.tmp ; \
-		 cat $(DESTDIR)/tmp/profile.tmp > $(DESTDIR)/etc/profile ; \
+		gtk-query-immodules-2.0 > $(DESTDIR)/etc/gtk-2.0/gtk.immodules ; \
+		cat $(DESTDIR)/etc/profile | grep -v cuteinputmethod > $(DESTDIR)/tmp/profile.tmp ; \
+		cat $(DESTDIR)/tmp/profile.tmp > $(DESTDIR)/etc/profile ; \
 	fi
