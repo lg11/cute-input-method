@@ -1,0 +1,19 @@
+#!/bin/sh
+set -e
+
+
+case "$1" in
+    remove|upgrade|deconfigure)
+    gtk-query-immodules-2.0 > /etc/gtk-2.0/gtk.immodules 
+	;;
+    failed-upgrade)
+	;;
+    *)
+	echo "postrm called with unknown argument \`$1'" >&2
+	exit 1
+   ;;
+esac
+
+#DEBHELPER#
+
+exit 0

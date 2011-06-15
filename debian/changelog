@@ -1,3 +1,8 @@
+mcip-nt1 (0.4.0.2-maemo5-1) fremantle; urgency=low
+  * fix Onscreen Keyboard cannot deselecet issue.
+  * fix not reset issue when close/open keyboard.
+ -- liang <sd.foolegg@gmail.com>  Web,  15 Jun 2011 20:20:00 +0800
+ 
 mcip-nt1 (0.4.0.1-maemo5-1) fremantle; urgency=low
   * write new gtk+/qt4 IMContext.
   * support hardware Chinese input.
