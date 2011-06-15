@@ -3,7 +3,7 @@
 
 #include <QEvent>
 
-#include <QDebug>
+//#include <QDebug>
 
 namespace host {
 
@@ -47,7 +47,7 @@ void Host::hide() {
 }
 
 bool Host::keyPress( int keycode, int modifiers ) {
-    qDebug() << "keyPress" << keycode << modifiers ;
+    //qDebug() << "keyPress" << keycode << modifiers ;
     Q_UNUSED( modifiers ) ;
     bool flag = false ;
     if ( inputDevice == HardwareInputDevice ) 
@@ -56,7 +56,7 @@ bool Host::keyPress( int keycode, int modifiers ) {
 }
 
 bool Host::keyRelease( int keycode, int modifiers ) {
-    qDebug() << "keyRelease" << keycode << modifiers ;
+    //qDebug() << "keyRelease" << keycode << modifiers ;
     Q_UNUSED( modifiers ) ;
     bool flag = false ;
     if ( inputDevice == HardwareInputDevice ) 

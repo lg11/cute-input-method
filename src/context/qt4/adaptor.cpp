@@ -3,7 +3,7 @@
 
 #include <QApplication>
 
-#include <QDebug>
+//#include <QDebug>
 
 namespace adaptor {
 

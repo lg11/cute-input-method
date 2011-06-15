@@ -154,11 +154,13 @@ void Adaptor::queryStatus() {
                 if ( status ) {
                     this->host->inputDevice = host::OnscreenInputDevice ;
                     this->host->hide() ;
+                    this->host->requestReset.invoke( this->host->handle ) ;
                 }
                 else {
                     this->host->inputDevice = host::HardwareInputDevice ;
                     this->extraInputPanel->hide() ;
                     this->host->setKeyboardLayout.invoke( this->host->handle, Q_ARG( int, 1 ) ) ;
+                    this->host->requestReset.invoke( this->host->handle ) ;
                 }
             }
         }
