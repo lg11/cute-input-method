@@ -23,10 +23,6 @@ class Handle ;
 
 namespace engine {
 
-//typedef QPair<QString, QString> KeyPair ;
-//typedef QPair<QChar, qreal> WordPair ;
-//typedef QPair<KeyPair, WordPair> SelectedPair ;
-
 typedef QPair<const QString*, const QString*> KeyPair ;
 typedef QPair<const QString*, qreal > WordPair ;
 typedef QPair<KeyPair, WordPair> CandPair ;

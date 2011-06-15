@@ -10,70 +10,46 @@ namespace host {
 Host::Host( QObject* parent ) :
     QObject( parent ),
     view( NULL ),
-    extraInputPanel( NULL ),
-    engine( NULL ),
+    handle( NULL ),
     inputDevice( UnknownInputDevice ), 
+    inputLanguage( UnknownLanguage ), 
     adaptor( new adaptor::Adaptor( this ) ) {
 }
 
 void Host::setView( QWidget* view ) {
-    if ( view ) {
-        this->view = view ;
-    }
+    this->view = view ;
 }
 
-void Host::setExtraInputPanel( QWidget* extraInputPanel ) {
-    if ( extraInputPanel ) {
-        this->extraInputPanel = extraInputPanel ;
-    }
-}
+void Host::setHandle( QObject* handle ) {
+    int index ;
+    const QMetaObject* object = handle->metaObject() ;
 
-void Host::setEngine( QObject* engine ) {
-    if ( engine ) {
-        const QMetaObject* object = engine->metaObject() ;
+    index = object->indexOfMethod( "processKeyPress(int)" ) ;
+    this->processKeyPress = object->method( index ) ;
+    index = object->indexOfMethod( "processKeyRelease(int)" ) ;
+    this->processKeyRelease = object->method( index ) ;
+    index = object->indexOfMethod( "requestReset()" ) ;
+    this->requestReset = object->method( index ) ;
 
-        int index = object->indexOfMethod( "processKeyPress(int)" ) ;
-        if ( index >= 0 ) {
-            this->processKeyPress = object->method( index ) ;
-            index = object->indexOfMethod( "processKeyRelease(int)" ) ;
-            this->processKeyRelease = object->method( index ) ;
-            this->engine = engine ;
-            //qDebug() << "set engine" ;
-        }
-    }
+    this->handle = handle ;
 }
 
 void Host::show() {
     //qDebug() << "show" ;
-    if ( this->inputDevice == HardwareInputDevice ) {
-        if ( this->view )
-            this->view->show() ;
-    }
-    else if ( this->inputDevice == OnscreenInputDevice ) {
-        if ( this->extraInputPanel ) {
-            this->view->hide() ;
-            this->extraInputPanel->show() ;
-        }
-    }
+    this->view->show() ;
 }
 
 void Host::hide() {
     //qDebug() << "hide" ;
-    if ( this->view )
-        this->view->hide() ;
-    if ( this->extraInputPanel )
-        this->extraInputPanel->hide() ;
+    this->view->hide() ;
 }
 
 bool Host::keyPress( int keycode, int modifiers ) {
     qDebug() << "keyPress" << keycode << modifiers ;
     Q_UNUSED( modifiers ) ;
     bool flag = false ;
-    //if ( modifiers == Qt::NoModifier && inputDevice != UnknownInputDevice ) {
-    if ( inputDevice == HardwareInputDevice ) {
-        this->processKeyPress.invoke( this->engine, Q_RETURN_ARG( bool, flag ), Q_ARG( int, keycode ) ) ;
-    }
-    //qDebug() << "keyPress" << flag ;
+    if ( inputDevice == HardwareInputDevice ) 
+        this->processKeyPress.invoke( this->handle, Q_RETURN_ARG( bool, flag ), Q_ARG( int, keycode ) ) ;
     return flag ;
 }
 
@@ -81,9 +57,8 @@ bool Host::keyRelease( int keycode, int modifiers ) {
     qDebug() << "keyRelease" << keycode << modifiers ;
     Q_UNUSED( modifiers ) ;
     bool flag = false ;
-    if ( inputDevice == HardwareInputDevice ) {
-        this->processKeyRelease.invoke( this->engine, Q_RETURN_ARG( bool, flag ), Q_ARG( int, keycode ) ) ;
-    }
+    if ( inputDevice == HardwareInputDevice ) 
+        this->processKeyRelease.invoke( this->handle, Q_RETURN_ARG( bool, flag ), Q_ARG( int, keycode ) ) ;
     return flag ;
 }
 

@@ -85,15 +85,15 @@ Item {
         key_6.candString = engine.getWord()
     }
     function commit() {
-        if ( engine.getSelectedLength() > 0 ) {
+        if ( engine.getSelectedWordLength() > 0 ) {
             root.textview.insert( engine.getSelectedWord() )
             engine.commit()
         }
     }
     function backspace() {
         if ( !key_backspace.paused ) {
-            if ( engine.getSelectedLength() > 0 ) {
-                engine.cancel()
+            if ( engine.getSelectedWordLength() > 0 ) {
+                engine.deselect()
                 updateCandString()
             }
             else if ( engine.getCodeLength() > 0 ) {
@@ -126,7 +126,7 @@ Item {
                 var index = keycode - Utils.keycode_1
                 engine.select( index )
                 updateCandString()
-                if ( engine.getCodeLength() <= 0 && engine.getInvalidCodeLength() <= 0 && engine.getSelectedLength() > 0 ) {
+                if ( engine.getCodeLength() <= 0 && engine.getInvalidCodeLength() <= 0 && engine.getSelectedWordLength() > 0 ) {
                     commit()
                     updateCandString()
                     selectMode = false

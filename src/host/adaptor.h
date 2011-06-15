@@ -4,10 +4,13 @@
 #include <QDBusAbstractAdaptor>
 #include <QDBusInterface>
 
+#ifdef Q_WS_MAEMO_5
+namespace extra {
+class ExtraInputPanel ;
+}
+#endif
 namespace host {
-
 class Host ;
-
 }
 
 namespace adaptor {
@@ -26,20 +29,21 @@ signals :
     void querySurrounding() ;
     void queryCursorRect() ;
     void replaceSurrounding( const QString& text ) ;
-    void sendStatus( int status ) ;
+    void sendStatus( int inputDevice, int inputLanguage ) ;
 
 public :
-    //int extraCallCount ;
-    host::Host* host ;
 #ifdef Q_WS_MAEMO_5
     QDBusInterface* interface ;
+    extra::ExtraInputPanel* extraInputPanel ;
 #endif
+    host::Host* host ;
     
     Adaptor( host::Host* host ) ;
+#ifdef Q_WS_MAEMO_5
+    void setExtraInputPanel( extra::ExtraInputPanel* extraInputPanel ) ;
+#endif
 
 public slots :
-    //Q_NOREPLY void show() ;
-    //Q_NOREPLY void hide() ;
     Q_NOREPLY void receiveMessage( const QString& message ) ;
     bool keyPress( int keycode, int modifiers ) ;
     bool keyRelease( int keycode, int modifiers ) ;
@@ -51,7 +55,8 @@ public slots :
     Q_NOREPLY void closeSoftwareInputPanel() ;
     Q_NOREPLY void preeditStart() ;
     Q_NOREPLY void preeditEnd() ;
-    Q_NOREPLY void setInputDevice( int index ) ;
+    Q_NOREPLY void setInputDevice( int inputDevice ) ;
+    Q_NOREPLY void setInputLanguage( int inputLanguage ) ;
     Q_NOREPLY void queryStatus() ;
 #ifdef Q_WS_MAEMO_5
     Q_NOREPLY void checkKeyboardStatus() ;

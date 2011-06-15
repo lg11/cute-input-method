@@ -4,12 +4,18 @@
 #include <QDeclarativeView>
 #include <QSize>
 
+namespace adaptor {
+class Adaptor ;
+}
+
 namespace extra {
 
 class ExtraInputPanel : public QDeclarativeView {
     Q_OBJECT
 
     Q_PROPERTY( int rotate READ readRotate WRITE writeRotate NOTIFY rotateChanged ) 
+
+friend class adaptor::Adaptor ;
 
 signals :
     //void candidateUpdate() ;

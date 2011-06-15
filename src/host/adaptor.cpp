@@ -1,29 +1,30 @@
 #include "adaptor.h"
 #include "host.h"
+#ifdef Q_WS_MAEMO_5
+#include "extra.h"
+#endif
 
 #include <QDBusReply>
-#include <QDebug>
 
 namespace adaptor {
 
-Adaptor::Adaptor( host::Host* host ) : QDBusAbstractAdaptor( host ), host( host ) {
-    //this->extraCallCount = 0 ;
+Adaptor::Adaptor( host::Host* host ) : 
+    QDBusAbstractAdaptor( host ),
 #ifdef Q_WS_MAEMO_5
-    this->interface = new QDBusInterface( "org.freedesktop.Hal", "/org/freedesktop/Hal/devices/platform_slide", "org.freedesktop.Hal.Device", QDBusConnection::systemBus(), this ) ;
+    interface( new QDBusInterface( "org.freedesktop.Hal", "/org/freedesktop/Hal/devices/platform_slide", "org.freedesktop.Hal.Device", QDBusConnection::systemBus(), this ) ),
+    extraInputPanel( NULL ),
 #endif
+    host( host ) {
 }
 
-//void Adaptor::show() {
-    //this->host->show() ;
-    //emit this->requestSurrounding() ;
-//}
+#ifdef Q_WS_MAEMO_5
+void Adaptor::setExtraInputPanel( extra::ExtraInputPanel* extraInputPanel ) {
+    this->extraInputPanel = extraInputPanel ;
+}
+#endif
 
-//void Adaptor::hide() {
-    //this->host->hide() ;
-//}
 
 bool Adaptor::keyPress( int keycode, int modifiers ) {
-    //qDebug() << "keyPree" << keycode << modifiers ;
     return this->host->keyPress( keycode, modifiers ) ;
 }
 
@@ -32,16 +33,20 @@ bool Adaptor::keyRelease( int keycode, int modifiers ) {
 }
 
 void Adaptor::receiveMessage( const QString& message ) {
-    qDebug() << "received" << message ;
+    //qDebug() << "received" << message ;
+    Q_UNUSED( message ) ;
 }
 
 void Adaptor::receiveSurrounding( const QString& surrounding ) {
-    qDebug() << "receiveSurrounding" << surrounding ;
+    //qDebug() << "receiveSurrounding" << surrounding ;
 #ifdef Q_WS_MAEMO_5
     if ( this->host->inputDevice == host::OnscreenInputDevice ) {
-        emit this->host->receiveSurrounding( surrounding ) ;
-        this->host->show() ;
+        emit this->extraInputPanel->receiveSurrounding( surrounding ) ;
+        this->host->hide() ;
+        this->extraInputPanel->show() ;
     }
+#else
+    Q_UNUSED( message ) ;
 #endif
 }
 
@@ -51,21 +56,17 @@ void Adaptor::cursorRectUpdate( int x, int y, int width, int height ) {
 }
 
 void Adaptor::focusIn() {
-    qDebug() << "focusIn"  ;
+    //qDebug() << "focusIn"  ;
 }
 
 void Adaptor::focusOut() {
-    qDebug() << "focusOut"  ;
-#ifdef Q_WS_MAEMO_5
-    if ( this->host->inputDevice == host::HardwareInputDevice )
-        this->host->hide() ;
-#else
+    //qDebug() << "focusOut"  ;
     this->host->hide() ;
-#endif
+    this->host->requestReset.invoke( this->host->handle ) ;
 }
 
 void Adaptor::requestSoftwareInputPanel() {
-    qDebug() << "requestSoftwareInputPanel"  ;
+    //qDebug() << "requestSoftwareInputPanel"  ;
     if ( this->host->inputDevice == host::OnscreenInputDevice ) {
 #ifdef Q_WS_MAEMO_5
         emit this->querySurrounding() ;
@@ -76,33 +77,46 @@ void Adaptor::requestSoftwareInputPanel() {
 }
 
 void Adaptor::closeSoftwareInputPanel() {
-    qDebug() << "closeSoftwareInputPanel"  ;
+    //qDebug() << "closeSoftwareInputPanel"  ;
+if ( this->host->inputDevice == host::OnscreenInputDevice ) {
+#ifdef Q_WS_MAEMO_5
+#else
+        this->host->hide() ;
+#endif
+    }
 }
 
 void Adaptor::preeditStart() {
-    emit this->queryCursorRect() ;
+#ifdef Q_WS_MAEMO_5
+    if ( this->host->inputDevice == host::HardwareInputDevice ) {
+        emit this->queryCursorRect() ;
+        this->host->show() ;
+    }
+#else
     this->host->show() ;
+#endif
 }
+
 void Adaptor::preeditEnd() {
     //if ( this->host->inputDevice == host::HardwareInputDevice ) {
         //this->host->hide() ;
     //}
 }
 
-void Adaptor::setInputDevice( int index ) {
-    if ( index == 0 ) {
+void Adaptor::setInputDevice( int inputDevice ) {
+    if ( inputDevice == 0 ) {
         if ( this->host->inputDevice != host::UnknownInputDevice ) {
             this->host->inputDevice = host::UnknownInputDevice ;
             emit this->host->inputDeviceChanged() ;
         }
     }
-    else if ( index == 1 ) {
+    else if ( inputDevice == 1 ) {
         if ( this->host->inputDevice != host::HardwareInputDevice ) {
             this->host->inputDevice = host::HardwareInputDevice ;
             emit this->host->inputDeviceChanged() ;
         }
     }
-    else if ( index == 2 ) {
+    else if ( inputDevice == 2 ) {
         if ( this->host->inputDevice != host::OnscreenInputDevice ) {
             this->host->inputDevice = host::OnscreenInputDevice ;
             emit this->host->inputDeviceChanged() ;
@@ -110,8 +124,23 @@ void Adaptor::setInputDevice( int index ) {
     }
 }
 
+void Adaptor::setInputLanguage( int inputLanguage ) {
+    if ( inputLanguage == 0 ) {
+        if ( this->host->inputLanguage != host::UnknownLanguage ) {
+            this->host->inputLanguage = host::UnknownLanguage ;
+            emit this->host->inputLanguageChanged() ;
+        }
+    }
+    else if ( inputLanguage == 1 ) {
+        if ( this->host->inputLanguage != host::SimplifiedChinese ) {
+            this->host->inputLanguage = host::SimplifiedChinese ;
+            emit this->host->inputLanguageChanged() ;
+        }
+    }
+}
+
 void Adaptor::queryStatus() {
-    emit this->host->queryStatus() ;
+    emit this->sendStatus( this->host->inputDevice, this->host->inputLanguage ) ;
 }
 
 #ifdef Q_WS_MAEMO_5
@@ -121,16 +150,15 @@ void Adaptor::queryStatus() {
             bool status ;
             if ( result.isValid() ) {
                 status = result.value() ;
-                qDebug() << "keyboard isClosed" << status ;
+                //qDebug() << "keyboard isClosed" << status ;
                 if ( status ) {
                     this->host->inputDevice = host::OnscreenInputDevice ;
-                    this->host->view->hide() ;
+                    this->host->hide() ;
                 }
                 else {
                     this->host->inputDevice = host::HardwareInputDevice ;
-                    this->host->extraInputPanel->hide() ;
-                    emit this->host->setKeyboardLayout( 1 ) ;
-                    //this->host->setInputDevice( host::HardwareInputDevice ) ;
+                    this->extraInputPanel->hide() ;
+                    //emit this->host->setKeyboardLayout( 1 ) ;
                 }
             }
         }

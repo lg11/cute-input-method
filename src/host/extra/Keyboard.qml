@@ -42,7 +42,7 @@ Item {
         key_1_2.candString = engine.getWord()
     }
     function commit() {
-        /*if ( engine.getSelectedLength() > 0 ) {*/
+        /*if ( engine.getSelectedWordLength() > 0 ) {*/
         root.textview.insert( engine.getSelectedWord() )
         engine.commit()
         /*}*/
@@ -108,8 +108,8 @@ Item {
     }
     function backspace() {
         if ( !key_backspace.paused ) {
-            if ( engine.getSelectedLength() > 0 ) {
-                engine.cancel()
+            if ( engine.getSelectedWordLength() > 0 ) {
+                engine.deselect()
                 updateCandString()
             }
             else if ( engine.getCodeLength() > 0 ) {
@@ -177,7 +177,7 @@ Item {
             if ( engine.getCodeLength() > 0 ) {
                 engine.select( 0 )
                 updateCandString()
-                if ( engine.getCodeLength() <= 0 && engine.getInvalidCodeLength() <= 0 && engine.getSelectedLength() > 0 ) {
+                if ( engine.getCodeLength() <= 0 && engine.getInvalidCodeLength() <= 0 && engine.getSelectedWordLength() > 0 ) {
                     commit()
                     updateCandString()
                 }
@@ -192,7 +192,7 @@ Item {
                 index = Utils.candIndex[index]
                 engine.select( index )
                 updateCandString()
-                if ( engine.getCodeLength() <= 0 && engine.getInvalidCodeLength() <= 0 && engine.getSelectedLength() > 0 ) {
+                if ( engine.getCodeLength() <= 0 && engine.getInvalidCodeLength() <= 0 && engine.getSelectedWordLength() > 0 ) {
                     commit()
                     updateCandString()
                 }

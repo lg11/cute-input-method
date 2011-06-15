@@ -9,10 +9,6 @@
 
 namespace engine {
 
-//typedef QPair<QStringList, QStringList> KeyListPair ;
-//typedef QPair< QString, QList<qreal> > WordListPair ;
-//typedef QPair<KeyListPair, WordListPair> SelectedPair ;
-
 inline void append_selected( SelectedPair* pair, const QString* key, const QString* preedit, const QString* word, qreal freq ) {
     if ( !pair->first.first.isEmpty() ) {
         pair->first.first.append( QChar('\'') ) ;

@@ -72,7 +72,7 @@ public :
     KeyString emptyString ;
     KeySet keySet ;
     QList<KeyString> stringList ;
-    inline Spliter() : code(), emptyString( QStringList(), QPair<int,int>() ), keySet(), stringList() { this->emptyString.first.append( "" ) ; this->stringList.append( this->emptyString ) ; }
+    inline Spliter() : code(), emptyString( QStringList(), QPair<int,int>() ), keySet(), stringList() { this->emptyString.first.append( QString("") ) ; this->stringList.append( this->emptyString ) ; }
     inline void appendCode( QChar code ) {
         QList<KeyString*> list ;
         for ( int i = 0 ; i < this->stringList.length() ; i++ )

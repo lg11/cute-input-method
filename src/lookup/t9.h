@@ -43,12 +43,12 @@ inline void set_cand( Candidate* cand, const QString* key, const QString* preedi
 typedef QPair< QList<const QString*>, QList<const QString*> > LookupPair ;
 
 inline void convert_preedit( const QString& key, const QString& src, QString* dest ) {
-    int count = key.count( '\'' ) ;
+    int count = key.count( QChar('\'') ) ;
     if ( count > 0 ) {
         int i = 0 ;
         int length = 0 ;
         while ( i < src.length() ) {
-            if ( key.at( i + length ) == '\'' )
+            if ( key.at( i + length ) == QChar('\'') )
                 length++ ;
             else 
                 i++ ;
@@ -56,10 +56,10 @@ inline void convert_preedit( const QString& key, const QString& src, QString* de
         length += i ;
         *dest = key.left( length ) ;
         //qDebug() << length << key << src << *dest ;
-        count = count - dest->count( '\'' ) ;
+        count = count - dest->count( QChar('\'') ) ;
         if ( count > 0 ) {
             for ( int i = 0 ; i < count ; i++ )
-                dest->append( '\'' ) ;
+                dest->append( QChar('\'') ) ;
         }
     }
     else

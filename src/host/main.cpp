@@ -33,14 +33,14 @@ int main( int argc, char** argv ) {
 
     engine::Engine* engine = new engine::Engine() ;
     handle::Handle* handle = new handle::Handle( engine ) ;
-    host->setEngine( handle ) ;
+    host->setHandle( handle ) ;
 
     view::View* view = new view::View() ;
     host->setView( view ) ;
 
     extra::ExtraInputPanel* extraInputPanel = new extra::ExtraInputPanel() ;
-    host->setExtraInputPanel( extraInputPanel ) ;
     extraInputPanel->setInputContext( NULL ) ;
+    host->adaptor->setExtraInputPanel( extraInputPanel ) ;
 
     QDesktopWidget* desktop = QApplication::desktop() ;
     view->setGeometry( desktop->geometry() ) ;
@@ -52,12 +52,15 @@ int main( int argc, char** argv ) {
     view->rootContext()->setContextProperty( "engine", engine ) ;
     view->rootContext()->setContextProperty( "handle", handle ) ;
     
+#ifdef Q_WS_MAEMO_5
     extraInputPanel->rootContext()->setContextProperty( "engine", engine ) ;
     extraInputPanel->rootContext()->setContextProperty( "view", extraInputPanel ) ;
+#endif
 
     view->setSource( QUrl(extendHome( "~/.config/mcip/view/root.qml") ) ) ;
+#ifdef Q_WS_MAEMO_5
     extraInputPanel->setSource( QUrl(extendHome( "~/.config/mcip/extra/root.qml") ) ) ;
-    //view->setSource( QUrl("qml/keyboard.qml") ) ;
+#endif
 
     QDBusConnection::sessionBus().registerService( "me.inputmethod.host" ) ;
     QDBusConnection::sessionBus().registerObject( "/host", host ) ;
@@ -69,7 +72,7 @@ int main( int argc, char** argv ) {
     QDBusConnection::sessionBus().connect( "", "", "inputmethod.context", "closeSoftwareInputPanel", host->adaptor, SLOT(closeSoftwareInputPanel()) ) ;
     QDBusConnection::sessionBus().connect( "", "", "inputmethod.context", "cursorRectUpdate", host->adaptor, SLOT(cursorRectUpdate( int, int, int, int )) ) ;
     QDBusConnection::sessionBus().connect( "", "", "inputmethod.context", "sendSurrounding", host->adaptor, SIGNAL(receiveSurrounding( const QString& )) ) ;
-    QDBusConnection::sessionBus().connect( "", "", "inputmethod.console", "setInputDevice", host->adaptor, SIGNAL(receiveSurrounding(int)) ) ;
+    QDBusConnection::sessionBus().connect( "", "", "inputmethod.console", "setInputDevice", host->adaptor, SIGNAL(setInputDevice(int)) ) ;
 
     QDBusConnection::sessionBus().connect( "", "", "inputmethod.status", "queryStatus", host->adaptor, SLOT(queryStatus()) ) ;
 
@@ -78,10 +81,9 @@ int main( int argc, char** argv ) {
     QObject::connect( engine, SIGNAL(sendCommit( const QString& )), host->adaptor, SIGNAL( sendCommit( const QString& ) ) ) ;
     QObject::connect( engine, SIGNAL(preeditStart()), host->adaptor, SLOT(preeditStart()) ) ;
     QObject::connect( engine, SIGNAL(preeditEnd()), host->adaptor, SLOT(preeditEnd()) ) ;
-    QObject::connect( host, SIGNAL(receiveSurrounding( const QString& )), extraInputPanel, SIGNAL(receiveSurrounding( const QString& )) ) ;
+#ifdef Q_WS_MAEMO_5
     QObject::connect( extraInputPanel, SIGNAL(replaceSurrounding( const QString& )), host->adaptor, SIGNAL(replaceSurrounding( const QString& )) ) ;
-    QObject::connect( host, SIGNAL(queryStatus()), handle, SLOT(queryStatus()) ) ;
-    QObject::connect( handle, SIGNAL(sendStatus(int)), host->adaptor, SIGNAL(sendStatus(int)) ) ;
+#endif
 
     qDebug() << "load start" ;
     engine->load( extendHome( "~/.config/mcip/sysdict" ) ) ;
@@ -96,7 +98,7 @@ int main( int argc, char** argv ) {
     QDBusConnection::systemBus().connect( "org.freedesktop.Hal", "/org/freedesktop/Hal/devices/platform_slide", "org.freedesktop.Hal.Device", "PropertyModified", host->adaptor, SLOT(checkKeyboardStatus()) ) ;
     engine->setKeyboardLayout( engine::Engine::FullKeyboardLayout ) ;
     host->adaptor->checkKeyboardStatus() ;
-    QObject::connect( host, SIGNAL(setKeyboardLayout(int)), handle, SLOT(setKeyboardLayout(int)) ) ;
+    //QObject::connect( host, SIGNAL(setKeyboardLayout(int)), handle, SLOT(setKeyboardLayout(int)) ) ;
 #endif 
     return app.exec() ;
 }
