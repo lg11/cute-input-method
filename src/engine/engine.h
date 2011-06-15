@@ -2,16 +2,20 @@
 #define ENGINE_H
 
 #include <QObject>
+#include <QPair>
 #include <QList>
 #include <QString>
-#include <QStringList>
-#include <QSet>
 #include <QFile>
 #include <QTimer>
 #include <QTextStream>
 
-#include "../lookup/lookup.h"
-#include "../lookup/t9.h"
+namespace lookup {
+class Lookup ;
+}
+
+namespace t9 {
+class T9Lookup ;
+}
 
 namespace handle {
 class Handle ;
@@ -19,12 +23,18 @@ class Handle ;
 
 namespace engine {
 
-typedef QPair<QString, QString> KeyPair ;
-typedef QPair<QChar, qreal> WordPair ;
-typedef QPair<KeyPair, WordPair> SelectedPair ;
+//typedef QPair<QString, QString> KeyPair ;
+//typedef QPair<QChar, qreal> WordPair ;
+//typedef QPair<KeyPair, WordPair> SelectedPair ;
 
-//typedef QPair<QStringList, QStringList> KeyPair ;
-//typedef QPair< QString, QList<qreal> > WordPair ;
+typedef QPair<const QString*, const QString*> KeyPair ;
+typedef QPair<const QString*, qreal > WordPair ;
+typedef QPair<KeyPair, WordPair> CandPair ;
+typedef QPair<CandPair, int> Candidate ;
+
+typedef QPair<QString, QString> SelectedKeyPair ;
+typedef QPair< QString, QList<qreal> > SelectedWordPair ;
+typedef QPair<SelectedKeyPair, SelectedWordPair> SelectedPair ;
 
 class Engine : public QObject {
     Q_OBJECT
@@ -39,12 +49,12 @@ signals :
 
 public:
     enum KeyboardLayout { UnknownKeyboardLayout = 0, FullKeyboardLayout = 1, T9KeyboardLayout = 2 } ;
-    lookup::Lookup lookup ;
-    t9::T9Lookup t9lookup ;
-    QList<SelectedPair> selected ;
-    QString selectedWord ;
+    lookup::Lookup* lookup ;
+    t9::T9Lookup* t9lookup ;
+    SelectedPair selected ;
+    QString* selectedWord ;
     int pageIndex ;
-    const lookup::Candidate* candidate ;
+    const Candidate* candidate ;
     KeyboardLayout keyboardLayout ;
     QFile* logFile ;
     QTextStream* textStream ;
@@ -70,11 +80,11 @@ public slots :
     
     int getCodeLength() const ;
     
-    int getPreeditLength() const ;
+    int getPreeditCodeLength() const ;
     
     int getInvalidCodeLength() const ;
 
-    int getSelectedLength() const ;
+    //int getSelectedLength() const ;
 
     int getSelectedWordLength() const ;
    
@@ -99,8 +109,6 @@ public slots :
     void reset() ;
 
     bool appendCode( QChar code ) ;
-
-    //bool processKey( int keycode ) ;
 
     bool appendCode( const QString& code ) ;
 

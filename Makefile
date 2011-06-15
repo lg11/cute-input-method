@@ -46,21 +46,21 @@ install :
 	cp mcip $(DESTDIR)/opt/cim/
 	set -e ; for d in $(QML_PLUGIN_DIRS) ; do cp $$d/*.so $(DESTDIR)/opt/cim/host/extra ; done
 	cp src/context/qt4/libcuteinputmethod.so $(DESTDIR)/usr/lib/qt4/plugins/inputmethods
-	cp src/context/gtk2/libcuteinputmethod.so $(DESTDIR)/usr/lib/gtk-2.0/2.10.0/immodules
+	#cp src/context/gtk2/libcuteinputmethod.so $(DESTDIR)/usr/lib/gtk-2.0/2.10.0/immodules
 	cp me.inputmethod.host.service $(DESTDIR)/usr/share/dbus-1/services/ 
 	if test "$(DESTDIR)x" == "x"; then \
-		gtk-query-immodules-2.0 > $(DESTDIR)/etc/gtk-2.0/gtk.immodules ; \
 		echo export GTK_IM_MODULE=\"cuteinputmethod\" >> $(DESTDIR)/etc/profile ; \
 		echo export QT_IM_MODULE=\"cuteinputmethod\" >> $(DESTDIR)/etc/profile ; \
 	fi
+		#gtk-query-immodules-2.0 > $(DESTDIR)/etc/gtk-2.0/gtk.immodules ; \
 
 uninstall :
 	rm -rf $(DESTDIR)/opt/cim
 	rm $(DESTDIR)/usr/share/dbus-1/services/me.inputmethod.host.service
-	rm $(DESTDIR)/usr/lib/gtk-2.0/2.10.0/immodules/libcuteinputmethod.so
+	#rm $(DESTDIR)/usr/lib/gtk-2.0/2.10.0/immodules/libcuteinputmethod.so
 	rm $(DESTDIR)/usr/lib/qt4/plugins/inputmethods/libcuteinputmethod.so
 	if test "$(DESTDIR)x" == "x"; then \
-		gtk-query-immodules-2.0 > $(DESTDIR)/etc/gtk-2.0/gtk.immodules ; \
 		cat $(DESTDIR)/etc/profile | grep -v cuteinputmethod > $(DESTDIR)/tmp/profile.tmp ; \
 		cat $(DESTDIR)/tmp/profile.tmp > $(DESTDIR)/etc/profile ; \
 	fi
+		#gtk-query-immodules-2.0 > $(DESTDIR)/etc/gtk-2.0/gtk.immodules ; \
