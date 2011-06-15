@@ -1,19 +1,22 @@
 #include "handle.h"
+#include "host.h"
 #include "../engine/engine.h"
 
 #include <QDebug>
 
 namespace handle {
 
-Handle::Handle( engine::Engine* engine, QObject* parent ) : QObject( parent ), engine(engine) {
-    this->pressCount = 0 ;
+Handle::Handle( host::Host* host, engine::Engine* engine, QObject* parent ) : 
+    QObject( parent ),
+    host( host ),
+    engine( engine ),
+    pressCount( 0 ) {
     //this->modifiers = NoModifier ;
-    this->flag = true ;
 }
 
 bool Handle::processKeyPress( int keycode ) {
     this->pressCount++ ;
-    if ( !this->flag ) {
+    if ( this->host->inputLanguage != host::SimplifiedChinese ) {
         return false ;
     }
     bool flag = false ;
@@ -72,10 +75,16 @@ bool Handle::processKeyRelease( int keycode ) {
     if ( keycode == 16777249 ) {
         //this->modifiers = NoModifier ;
         if ( this->pressCount <= 2 ) {
-            this->flag = !this->flag ;
-            this->queryStatus() ;
-            this->engine->reset() ;
-            emit this->engine->candidateUpdate() ;
+            if ( this->host->inputLanguage == host::SimplifiedChinese ) {
+                this->host->setInputLanguage( host::UnknownLanguage ) ;
+                this->engine->reset() ;
+                emit this->engine->candidateUpdate() ;
+            }
+            else if ( this->host->inputLanguage == host::UnknownLanguage ) {
+                this->host->setInputLanguage( host::SimplifiedChinese ) ;
+                this->engine->reset() ;
+                emit this->engine->candidateUpdate() ;
+            }
         }
     }
 #endif
@@ -83,16 +92,12 @@ bool Handle::processKeyRelease( int keycode ) {
     return false ;
 }
 
-bool Handle::setKeyboardLayout( int layout ) {
-    return this->engine->setKeyboardLayout( layout ) ;
+void Handle::requestReset() {
+    this->engine->reset() ;
 }
 
-void Handle::queryStatus() {
-    qDebug( "queryStatus" ) ;
-    if ( this->flag )
-        emit this->sendStatus( 1 ) ;
-    else
-        emit this->sendStatus( 0 ) ;
+void Handle::setKeyboardLayout( int layout ) {
+    this->engine->setKeyboardLayout( layout ) ;
 }
 
 }

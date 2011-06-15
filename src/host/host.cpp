@@ -30,6 +30,8 @@ void Host::setHandle( QObject* handle ) {
     this->processKeyRelease = object->method( index ) ;
     index = object->indexOfMethod( "requestReset()" ) ;
     this->requestReset = object->method( index ) ;
+    index = object->indexOfMethod( "setKeyboardLayout(int)" ) ;
+    this->setKeyboardLayout = object->method( index ) ;
 
     this->handle = handle ;
 }
@@ -72,6 +74,20 @@ void Host::sendKeyPress( int keycode, int modifiers ) {
 
 void Host::sendKeyRelease( int keycode, int modifiers ) {
     emit this->adaptor->sendKeyEvent( QEvent::KeyRelease, keycode, modifiers ) ;
+} 
+
+void Host::setInputDevice( InputDevice inputDevice ) {
+    if ( this->inputDevice != inputDevice ) {
+        this->inputDevice = inputDevice ;
+        emit this->adaptor->sendStatus( this->inputDevice, this->inputLanguage ) ;
+    }
+}
+
+void Host::setInputLanguage( InputLanguage inputLanguage ) {
+    if ( this->inputLanguage != inputLanguage ) {
+        this->inputLanguage = inputLanguage ;
+        emit this->adaptor->sendStatus( this->inputDevice, this->inputLanguage ) ;
+    }
 }
 
 }

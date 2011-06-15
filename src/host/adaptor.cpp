@@ -158,7 +158,7 @@ void Adaptor::queryStatus() {
                 else {
                     this->host->inputDevice = host::HardwareInputDevice ;
                     this->extraInputPanel->hide() ;
-                    //emit this->host->setKeyboardLayout( 1 ) ;
+                    this->host->setKeyboardLayout.invoke( this->host->handle, Q_ARG( int, 1 ) ) ;
                 }
             }
         }

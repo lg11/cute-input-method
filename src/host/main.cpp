@@ -32,7 +32,7 @@ int main( int argc, char** argv ) {
     host::Host* host = new host::Host() ;
 
     engine::Engine* engine = new engine::Engine() ;
-    handle::Handle* handle = new handle::Handle( engine ) ;
+    handle::Handle* handle = new handle::Handle( host, engine ) ;
     host->setHandle( handle ) ;
 
     view::View* view = new view::View() ;
@@ -89,16 +89,14 @@ int main( int argc, char** argv ) {
     engine->load( extendHome( "~/.config/mcip/sysdict" ) ) ;
     engine->load( extendHome( "~/.config/mcip/userdict.log" ) ) ;
     engine->startLog( extendHome( "~/.config/mcip/userdict.log" ) ) ;
-    //host->inputDevice = host::HardwareInputDevice ;
-    //host->inputDevice = host::OnscreenInputDevice ;
     qDebug() << "load end" ;
+    host->setInputLanguage( host::SimplifiedChinese ) ;
 
 #ifdef Q_WS_MAEMO_5
     qDebug() << "start track keyboard status" ;
     QDBusConnection::systemBus().connect( "org.freedesktop.Hal", "/org/freedesktop/Hal/devices/platform_slide", "org.freedesktop.Hal.Device", "PropertyModified", host->adaptor, SLOT(checkKeyboardStatus()) ) ;
     engine->setKeyboardLayout( engine::Engine::FullKeyboardLayout ) ;
     host->adaptor->checkKeyboardStatus() ;
-    //QObject::connect( host, SIGNAL(setKeyboardLayout(int)), handle, SLOT(setKeyboardLayout(int)) ) ;
 #endif 
     return app.exec() ;
 }

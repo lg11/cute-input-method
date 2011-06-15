@@ -6,6 +6,9 @@
 namespace engine {
 class Engine ;
 }
+namespace host {
+class Host ;
+}
 
 namespace handle {
 
@@ -14,19 +17,18 @@ namespace handle {
 class Handle : public QObject {
     Q_OBJECT 
 signals :
-    void sendStatus( int status ) ;
 
 public :
+    host::Host* host ;
     engine::Engine* engine ;
     //Modifiers modifiers ;
     int pressCount ;
-    bool flag ;
 
-    Handle( engine::Engine* engine, QObject* parent = NULL ) ;
+    Handle( host::Host* host, engine::Engine* engine, QObject* parent = NULL ) ;
     Q_INVOKABLE bool processKeyPress( int keycode ) ;
     Q_INVOKABLE bool processKeyRelease( int keycode ) ;
-    Q_INVOKABLE bool setKeyboardLayout( int layout ) ;
-    Q_SLOT void queryStatus() ;
+    Q_INVOKABLE void requestReset() ;
+    Q_INVOKABLE void setKeyboardLayout( int layout ) ;
 } ;
 
 } 

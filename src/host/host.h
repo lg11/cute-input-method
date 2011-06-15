@@ -27,10 +27,6 @@ signals :
     void inputDeviceChanged() ;
     void inputLanguageChanged() ;
     void cursorRectUpdate( int x, int y, int width, int height ) ;
-    //void receiveSurrounding( const QString& surrounding ) ;
-    //void setKeyboardLayout( int layout ) ;
-    //void queryStatus() ;
-    //void sendStatus( int inputDevice, int inputLanguage ) ;
 
 public :
     QWidget* view ;
@@ -43,6 +39,7 @@ public :
     QMetaMethod processKeyPress ;
     QMetaMethod processKeyRelease ;
     QMetaMethod requestReset ;
+    QMetaMethod setKeyboardLayout ;
 
     Host( QObject* parent = NULL ) ;
     void setView( QWidget* view ) ;
@@ -55,6 +52,8 @@ public :
     Q_INVOKABLE void sendCommit( const QString& text ) ;
     Q_INVOKABLE void sendKeyPress( int keycode, int modifiers ) ;
     Q_INVOKABLE void sendKeyRelease( int keycode, int modifiers ) ;
+    Q_INVOKABLE void setInputDevice( InputDevice inputDevice ) ;
+    Q_INVOKABLE void setInputLanguage( InputLanguage inputLanguage ) ;
 } ;
 
 }
