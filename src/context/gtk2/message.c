@@ -3,6 +3,12 @@
 #include "message.h"
 #include "context.h"
 
+static Context* focused_context = NULL ;
+
+void set_focused_context( GObject* object ) {
+    focused_context = CONTEXT(object) ;
+}
+
 /*static int count_utf8_characters( char* s ) {*/
     /*int i = 0, j = 0 ;*/
     /*while ( s[i] ) {*/
@@ -42,7 +48,7 @@ static void query_surrounding( Context* c ) {
             char* str = &(c->surrounding[pos]) ;
             int tail_len = g_utf8_strlen( str, -1 ) ; 
 
-            g_debug( "cim surrounf %s, %d, %d, %d, %d", c->surrounding, pos, tail_len - len, len, tail_len ) ;
+            /*g_debug( "cim surrounf %s, %d, %d, %d, %d", c->surrounding, pos, tail_len - len, len, tail_len ) ;*/
 
             c->surrounding_cursor_offset = tail_len - len ;
             c->surrounding_length = len ;
@@ -174,15 +180,15 @@ gboolean call_keyRelease( DBusConnection** connection, int keycode , int modifie
 
 DBusHandlerResult filter( DBusConnection* connection, DBusMessage* message, void* data ) {
     /*g_debug( "filter %s", dbus_message_get_member( message ) ) ;*/
-    Context* c = CONTEXT(data) ;
-    if ( c->focused ) {
+    if ( focused_context ) {
+        Context* c = focused_context ;
         if ( dbus_message_is_signal( message, "inputmethod.host", "sendCommit" ) ) {
             char* s ;
             DBusError error ;
             dbus_error_init( &error ) ;
             dbus_message_get_args( message, &error, DBUS_TYPE_STRING, &s, DBUS_TYPE_INVALID ) ;
-            g_signal_emit_by_name( c, "commit", s ) ;
             /*g_debug( "cim receive commit %s", s  ) ;*/
+            g_signal_emit_by_name( c, "commit", s ) ;
             /*dbus_free( s ) ;*/
             return DBUS_HANDLER_RESULT_HANDLED ;
         }
@@ -191,7 +197,7 @@ DBusHandlerResult filter( DBusConnection* connection, DBusMessage* message, void
             DBusError error ;
             dbus_error_init( &error ) ;
             dbus_message_get_args( message, &error, DBUS_TYPE_STRING, &s, DBUS_TYPE_INVALID ) ;
-            g_debug( "received %s", s ) ;
+            /*g_debug( "received %s", s ) ;*/
             /*dbus_free( s ) ;*/
             return DBUS_HANDLER_RESULT_HANDLED ;
         }
@@ -211,7 +217,7 @@ DBusHandlerResult filter( DBusConnection* connection, DBusMessage* message, void
             DBusError error ;
             dbus_error_init( &error ) ;
             dbus_message_get_args( message, &error, DBUS_TYPE_STRING, &s, DBUS_TYPE_INVALID ) ;
-            g_debug( "replaceSurrounding with %s", s ) ;
+            /*g_debug( "replaceSurrounding with %s", s ) ;*/
             replace_surrounding( c, s ) ;
             /*g_signal_emit_by_name( c, "commit", s ) ;*/
             return DBUS_HANDLER_RESULT_HANDLED ;
@@ -223,7 +229,7 @@ DBusHandlerResult filter( DBusConnection* connection, DBusMessage* message, void
     return DBUS_HANDLER_RESULT_NOT_YET_HANDLED ;
 }
 
-void request_connect( DBusConnection** connection, GObject* object ) {
+void request_connect( DBusConnection** connection ) {
     check_connect( connection ) ;
     dbus_connection_setup_with_g_main( *connection, NULL ) ;
     dbus_bus_add_match( *connection, "type='signal',interface='inputmethod.host',member='sendCommit',path='/host'", NULL ) ;
@@ -232,7 +238,7 @@ void request_connect( DBusConnection** connection, GObject* object ) {
     dbus_bus_add_match( *connection, "type='signal',interface='inputmethod.host',member='queryCursorRect',path='/host'", NULL ) ;
     dbus_bus_add_match( *connection, "type='signal',interface='inputmethod.host',member='querySurrounding',path='/host'", NULL ) ;
     dbus_bus_add_match( *connection, "type='signal',interface='inputmethod.host',member='replaceSurrounding',path='/host'", NULL ) ;
-    dbus_connection_add_filter( *connection, filter, object, NULL ) ;
+    dbus_connection_add_filter( *connection, filter, NULL, NULL ) ;
 }
 
 #endif

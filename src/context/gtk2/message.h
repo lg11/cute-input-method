@@ -22,6 +22,8 @@ gboolean call_keyPress( DBusConnection** connection, int keycode , int modifiers
 
 gboolean call_keyRelease( DBusConnection** connection, int keycode , int modifiers ) ;
 
-void request_connect( DBusConnection** connection, GObject* object ) ;
+void request_connect( DBusConnection** connection ) ;
+
+void set_focused_context( GObject* object ) ;
 
 #endif

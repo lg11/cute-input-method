@@ -9,15 +9,16 @@
 #define CONTEXT_TYPE \
     (context_get_type())
 #define CONTEXT(obj) \
-    (G_TYPE_CHECK_INSTANCE_CAST( (obj), CONTEXT_TYPE, Context ))
+    (G_TYPE_CHECK_INSTANCE_CAST((obj), CONTEXT_TYPE, Context))
 #define CONTEXT_CLASS(klass) \
-    (G_TYPE_CHECK_CLASS_CAST( (klass), CONTEXT_TYPE, ContextClass))
+    (G_TYPE_CHECK_CLASS_CAST((klass), CONTEXT_TYPE, ContextClass))
 #define IS_CONTEXT(obj) \
     (G_TYPE_CHECK_INSTANCE_TYPE((obj), CONTEXT_TYPE))
 #define IS_CONTEXT_CLASS(klass) \
     (G_TYPE_CHECK_CLASS_TYPE((klass), CONTEXT_TYPE))
 #define CONTEXT_GET_CLASS(obj) \
-    (G_TYPE_CHECK_GET_CLASS ((obj), CONTEXT_TYPE, ContextClass))
+    (G_TYPE_INSTANCE_GET_CLASS((obj), CONTEXT_TYPE, ContextClass))
+
 
 G_BEGIN_DECLS
 
