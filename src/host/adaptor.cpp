@@ -6,6 +6,8 @@
 
 #include <QDBusReply>
 
+//#include <QDebug>
+
 namespace adaptor {
 
 Adaptor::Adaptor( host::Host* host ) : 
@@ -51,7 +53,7 @@ void Adaptor::receiveSurrounding( const QString& surrounding ) {
 }
 
 void Adaptor::cursorRectUpdate( int x, int y, int width, int height ) {
-    //qDebug() << "cursorRectUpdate"  ;
+    //qDebug() << "cursorRectUpdate" << x << y ;
     emit this->host->cursorRectUpdate( x, y, width, height ) ;
 }
 
@@ -93,6 +95,7 @@ void Adaptor::preeditStart() {
         this->host->show() ;
     }
 #else
+    emit this->queryCursorRect() ;
     this->host->show() ;
 #endif
 }

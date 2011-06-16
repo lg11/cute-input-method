@@ -23,6 +23,7 @@ Item {
     property bool t9Mode : false
     property int keyboardModeRecord : 0
     property alias t9Text : t9SwitcherText.text
+    focus : false
 
     /*IMEngine {*/
         /*id : engine*/

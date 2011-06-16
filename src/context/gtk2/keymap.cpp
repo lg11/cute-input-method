@@ -44,6 +44,18 @@ int main( int argc, char** argv ) {
     cout << "        return " << Qt::Key_Enter << ";\n" ;
     cout << "    case 65507 :\n" ;
     cout << "        return " << 16777249 << ";\n" ; // n900_ctrl
+    cout << "    case 65027 :\n" ;
+    cout << "        return " << 16781571 << ";\n" ; // n900_fn
+    cout << "    case 65505 :\n" ;
+    cout << "        return " << 16777248 << ";\n" ; // n900_shift
+    cout << "    case 65361 :\n" ;
+    cout << "        return " << 16777234 << ";\n" ; // n900_left
+    cout << "    case 65364 :\n" ;
+    cout << "        return " << 16777237 << ";\n" ; // n900_down
+    cout << "    case 65363 :\n" ;
+    cout << "        return " << 16777236 << ";\n" ; // n900_right
+    cout << "    case 65362 :\n" ;
+    cout << "        return " << 16777235 << ";\n" ; // n900_up
     cout << "    default :\n" ;
     cout << "        return -1 ;\n" ;
     cout << "    }\n" ;

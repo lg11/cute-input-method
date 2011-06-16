@@ -16,6 +16,79 @@ static GType context_type = 0 ;
 /*}*/
 
 #ifdef MAEMO_CHANGES
+#include <X11/Xlib.h>
+#include <X11/extensions/shape.h>
+#include <gdk/gdkx.h>
+
+static gboolean check_x11win_classhint( Window win ){
+    //检查client window的属性，如果是未定义的窗口（多半是浏览器里的文本输入框），则返回FALSE
+    Display* dpy ;
+    Atom* prop_list ;
+    int prop_count = 0 ;
+    Window root ;
+    Window parent ;
+    Window* child_list ;
+    unsigned int child_count ;
+
+    gboolean return_flag = TRUE ;
+
+    //首先，不断查询当前window的parent，直到获取一个有prop，可以获得信息的window id
+    g_debug("check_x11win_classhint start win id = %d", (int)win) ;
+    dpy = GDK_DISPLAY() ;
+    XQueryTree( dpy, win, &root, &parent, &child_list, &child_count ) ;
+    XFree( child_list ) ;
+    g_debug( "check_x11win_classhint query root = %d, parent = %d", (int)root, (int)parent ) ;
+    prop_list = XListProperties( dpy, win, &prop_count ) ;
+    g_debug( "check_x11win_classhint get prop_count =  %d", prop_count ) ;
+
+    if ( ( root == parent ) && ( prop_count <= 0 ) ) {
+        //输入窗口就是自己根窗口的变态，我也只想得出n900系统浏览器microB这一个了……
+        //and all qt program orz...
+        //so check prop_count <= 0
+        g_debug( "check_x11win_classhint find bt mircoB" ) ;
+        XFree( prop_list ) ;
+        return_flag = FALSE ;
+        return return_flag ;
+    }
+
+    while( prop_count == 0 && root != parent ){
+        XFree( prop_list ) ;
+        win = parent ;
+        XQueryTree( dpy, win, &root, &parent, &child_list, &child_count ) ;
+        XFree( child_list ) ;
+        g_debug( "check_x11win_classhint query root = %d, parent = %d", (int)root, (int)parent ) ;
+        prop_list = XListProperties( dpy, win, &prop_count ) ;
+        g_debug( "check_x11win_classhint get prop_count =  %d", prop_count ) ;
+    }
+    XFree(prop_list) ;
+
+    //检查classhint
+    XClassHint classhint ;
+    XGetClassHint( dpy, win, &classhint ) ;
+    if ( classhint.res_name == NULL && classhint.res_class == NULL ){
+        g_debug( "check_x11win_classhint get undefined win" );
+        return_flag = FALSE ;
+    }
+    else
+        g_debug( "check_x11win_classhint res_name = %s, res_class = %s", classhint.res_name, classhint.res_class ) ;
+    if ( g_strcmp0( classhint.res_class, "Firefox" ) == 0 ){
+        g_debug( "check_x11win_classhint find firefox" ) ;
+        return_flag = FALSE ;
+        /*return_flag = TRUE;*/
+    }
+    XFree( classhint.res_name ) ;
+    XFree( classhint.res_class ) ;
+
+    g_debug( "check_x11win_classhint end" ) ;
+
+    return return_flag ;
+}
+
+static gboolean is_fucked_microb( GdkWindow* window ) {
+    return !check_x11win_classhint( GDK_WINDOW_XID(window) ) ;
+}
+
+
 /*static void show( GtkIMContext* context ) {*/
     /*Context* c = CONTEXT(context) ;*/
     /*c->focused = TRUE ;*/
@@ -60,7 +133,7 @@ static gboolean filter_keypress( GtkIMContext* context, GdkEventKey* event ) {
     gboolean flag = FALSE ;
     int keycode = convert_keycode( event->keyval ) ;
     
-    g_debug( "prepare_send_keypress %d %d", keycode, event->type ) ;
+    /*g_debug( "prepare_send_keypress %d %d", keycode, event->type ) ;*/
     if ( keycode > 0 ) {
         int modifiers = convert_modifiers( event->state ) ;
     
@@ -70,15 +143,7 @@ static gboolean filter_keypress( GtkIMContext* context, GdkEventKey* event ) {
         }
         else if ( event->type == GDK_KEY_RELEASE ) {
             /*g_debug( "send_keyrelease %d %d", keycode, modifiers ) ;*/
-            if ( keycode == 16777221 && modifiers == 0 ) {
-                gtk_im_context_delete_surrounding( GTK_IM_CONTEXT(c), -1, 1 ) ;
-                flag = call_keyPress( &(c->connection), keycode, modifiers ) ;
-                if ( !flag ) 
-                    g_signal_emit_by_name( c, "commit", "\n" ) ;
-                flag = call_keyRelease( &(c->connection), keycode, modifiers ) && flag ;
-            }
-            else
-                flag = call_keyRelease( &(c->connection), keycode, modifiers ) ;
+            flag = call_keyRelease( &(c->connection), keycode, modifiers ) ;
         }
     }
     return flag ? flag : gtk_im_context_filter_keypress( c->slave, event )  ;
@@ -88,6 +153,12 @@ static void focus_in( GtkIMContext* context ) {
     Context* c = CONTEXT(context) ;
     c->focused = TRUE ;
     emit_focusIn( &(c->connection) ) ;
+#ifdef MAEMO_CHANGES
+    /*if ( c->window ) {*/
+        /*if ( is_fucked_microb( c->window ) )*/
+            /*emit_requestSoftwareInputPanel( &(c->connection) ) ;*/
+    /*}*/
+#endif
 }
 
 static void focus_out( GtkIMContext* context ) {

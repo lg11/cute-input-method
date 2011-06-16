@@ -62,7 +62,7 @@ Engine::Engine( QObject* parent ) :
     this->logFile = NULL ;
     this->textStream = NULL ;
 
-    this->flushTimer.setInterval( 600000 ) ;
+    this->flushTimer.setInterval( 1200000 ) ;
     QObject::connect( &(this->flushTimer), SIGNAL(timeout()), this, SLOT(flushLog() ) ) ;
 }
 
@@ -154,7 +154,7 @@ bool Engine::nextPage() {
     int pageIndex = this->pageIndex + 1 ;
     const lookup::Candidate* candidate ;
     if ( this->keyboardLayout == FullKeyboardLayout )
-        candidate = this->lookup->getCand( pageIndex * 5 ) ;
+        candidate = this->lookup->getCand( pageIndex * 4 ) ;
     else if ( this->keyboardLayout == T9KeyboardLayout )
         candidate = this->t9lookup->getCand( pageIndex * 6 ) ;
     else
@@ -194,7 +194,7 @@ bool Engine::updateCandidate( int index ) {
         if ( this->lookup->spliter.code.isEmpty() )
             this->candidate = NULL ;
         else 
-            this->candidate = this->lookup->getCand( pageIndex * 5 + index ) ;
+            this->candidate = this->lookup->getCand( pageIndex * 4 + index ) ;
     }
     else if ( this->keyboardLayout == T9KeyboardLayout ) {
         if ( this->t9lookup->code.isEmpty() )
@@ -265,7 +265,7 @@ bool Engine::select( int index ) {
     bool flag = false ;
     if ( this->getCodeLength() > 0 ) {
         if ( this->keyboardLayout == FullKeyboardLayout ) {
-            index = this->pageIndex * 5 + index ;
+            index = this->pageIndex * 4 + index ;
             const lookup::Candidate* candidate = this->lookup->getCand( index ) ;
 
             if ( candidate ) {

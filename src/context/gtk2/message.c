@@ -182,6 +182,7 @@ DBusHandlerResult filter( DBusConnection* connection, DBusMessage* message, void
             dbus_error_init( &error ) ;
             dbus_message_get_args( message, &error, DBUS_TYPE_STRING, &s, DBUS_TYPE_INVALID ) ;
             g_signal_emit_by_name( c, "commit", s ) ;
+            /*g_debug( "cim receive commit %s", s  ) ;*/
             /*dbus_free( s ) ;*/
             return DBUS_HANDLER_RESULT_HANDLED ;
         }
@@ -195,6 +196,7 @@ DBusHandlerResult filter( DBusConnection* connection, DBusMessage* message, void
             return DBUS_HANDLER_RESULT_HANDLED ;
         }
         else if ( dbus_message_is_signal( message, "inputmethod.host", "queryCursorRect" ) ) {
+            /*g_debug( "send rect %d, %d, %d", c->cursorRect.x, c->cursorRect.y, c->window ) ;*/
             emit_cursorRectUpdate( &(c->connection), c->cursorRect.x, c->cursorRect.y, c->cursorRect.width, c->cursorRect.height ) ;
             return DBUS_HANDLER_RESULT_HANDLED ;
         }
@@ -215,6 +217,8 @@ DBusHandlerResult filter( DBusConnection* connection, DBusMessage* message, void
             return DBUS_HANDLER_RESULT_HANDLED ;
         }
     }
+
+    /*dbus_message_unref( message ) ;*/
 
     return DBUS_HANDLER_RESULT_NOT_YET_HANDLED ;
 }

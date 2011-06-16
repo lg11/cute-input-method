@@ -36,11 +36,14 @@ int main( int argc, char** argv ) {
     host->setHandle( handle ) ;
 
     view::View* view = new view::View() ;
+    view->setInputContext( NULL ) ;
     host->setView( view ) ;
 
+#ifdef Q_WS_MAEMO_5
     extra::ExtraInputPanel* extraInputPanel = new extra::ExtraInputPanel() ;
     extraInputPanel->setInputContext( NULL ) ;
     host->adaptor->setExtraInputPanel( extraInputPanel ) ;
+#endif
 
     QDesktopWidget* desktop = QApplication::desktop() ;
     view->setGeometry( desktop->geometry() ) ;

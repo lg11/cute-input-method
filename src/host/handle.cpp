@@ -25,7 +25,6 @@ bool Handle::processKeyPress( int keycode ) {
         keycode = keycode + 'a' - Qt::Key_A  ;
         QChar code( keycode )  ;
         flag = this->engine->appendCode( code ) ;
-        //qDebug() << "handle" << flag ;
     }
     else if ( keycode == Qt::Key_Backspace ) {
         flag = this->engine->deselect() ? true : this->engine->popCode() ;
@@ -61,9 +60,33 @@ bool Handle::processKeyPress( int keycode ) {
         }
     }
 #ifdef Q_WS_MAEMO_5
-    //else if ( keycode == 16777249 ) {
-        //this->modifiers |= CtrlModifier ;
-    //}
+    else if ( keycode == 16777234 ) {
+        flag = this->engine->select( 1 ) ;
+        if ( flag )
+            this->engine->checkCommit() ;
+    }
+    else if ( keycode == 16777237 ) {
+        flag = this->engine->select( 2 ) ;
+        if ( flag )
+            this->engine->checkCommit() ;
+    }
+    else if ( keycode == 16777236 ) {
+        flag = this->engine->select( 3 ) ;
+        if ( flag )
+            this->engine->checkCommit() ;
+    }
+    else if ( keycode == 16777248 ) {
+        if ( this->engine->getCodeLength() > 0 ) {
+            this->engine->nextPage() ;
+            flag = true ;
+        }
+    }
+    else if ( keycode == 16781571 ) {
+        if ( this->engine->getCodeLength() > 0 ) {
+            this->engine->prevPage() ;
+            flag = true ;
+        }
+    }
 #endif
     if ( flag )
         emit this->engine->candidateUpdate() ;

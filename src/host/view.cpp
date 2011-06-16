@@ -5,14 +5,13 @@
 #include <QDesktopWidget>
 #include <QResizeEvent>
 
-#include <QDebug>
-
 #include <QX11Info>
 #include <X11/Xlib.h>
 #include <X11/extensions/shape.h>
 // use libX11 for mouse transparency
 // ref colibri (a notify app of KDE) code
 
+//#include <QDebug>
 
 namespace view {
 
@@ -23,6 +22,7 @@ View::View( QWidget* parent ) : QDeclarativeView( parent ) {
 
     this->setWindowFlags( Qt::FramelessWindowHint | Qt::X11BypassWindowManagerHint | Qt::WindowStaysOnTopHint | Qt::BypassGraphicsProxyWidget ) ;
     this->setAttribute( Qt::WA_TranslucentBackground, true ) ;
+    this->setFocusPolicy( Qt::NoFocus ) ;
 
     this->displayOffsetX = 0 ;
     this->displayOffsetY = 0 ;

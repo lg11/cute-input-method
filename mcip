@@ -27,4 +27,4 @@ sort -r /home/user/.config/mcip/userdict.log > /home/user/.config/mcip/userdict.
 python /opt/cim/data/prePhrase.py /home/user/.config/mcip/userdict.tmp > /home/user/.config/mcip/userdict.log
 
 
-run-standalone.sh /opt/cim/host/main
+QT_IM_MODULE="" run-standalone.sh /opt/cim/host/main

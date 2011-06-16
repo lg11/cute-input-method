@@ -16,6 +16,7 @@ ExtraInputPanel::ExtraInputPanel( QWidget* parent ) : QDeclarativeView( parent )
     this->setWindowFlags( Qt::FramelessWindowHint | Qt::Dialog ) ;
     this->setAttribute( Qt::WA_TranslucentBackground, true ) ;
     this->setAttribute( Qt::WA_Maemo5AutoOrientation, true ) ; 
+    this->setFocusPolicy( Qt::NoFocus ) ;
 
     QObject::connect( this, SIGNAL(sceneResized(QSize)), this, SLOT(keepSize(QSize)) ) ;
     QObject::connect( QApplication::desktop(), SIGNAL(resized(int)), this, SLOT(checkRotate(int)) ) ;

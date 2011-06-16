@@ -4,17 +4,17 @@ Rectangle {
     color : "#CC444444"
     property alias preedit : id_preedit
     property alias candidate : id_candidate
-    /*width : preedit.width > candidate.width ? preedit.width > 0 ? preedit.width + candidate.verticalMargin : 0 : candidate.width > 0 ? candidate.width + candidate.verticalMargin : 0*/
-    width : view.displayWidth
+    width : preedit.width > candidate.width ? preedit.width > 0 ? preedit.width + candidate.verticalMargin : 0 : candidate.width > 0 ? candidate.width + candidate.verticalMargin : 0
+    /*width : view.displayWidth*/
     height : preedit.height + candidate.height > 0 ? preedit.height + candidate.height + candidate.verticalMargin : 0
-    /*radius : 8*/
+    radius : 8
 
     Column {
         anchors.centerIn : parent
-        /*Preedit { id : id_preedit ; offset : ( id_candidate.horizontalMargin - id_preedit.horizontalMargin ) / 2 }*/
-        Preedit { id : id_preedit ; offset : 0
-            anchors.horizontalCenter : parent.horizontalCenter
-        }
+        Preedit { id : id_preedit ; offset : ( id_candidate.horizontalMargin - id_preedit.horizontalMargin ) / 2 }
+        /*Preedit { id : id_preedit ; offset : 0*/
+            /*anchors.horizontalCenter : parent.horizontalCenter*/
+        /*}*/
         Candidate { id : id_candidate }
     }
 

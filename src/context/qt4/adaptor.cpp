@@ -61,7 +61,7 @@ void Adaptor::querySurrounding() {
 }
 
 void Adaptor::queryCursorRect() {
-    //qDebug() << "queryCursorRect" ;
+    //qDebug() << "queryCursorRect" << this->context->cursorRect ;
     this->context->update() ;
     emit this->cursorRectUpdate( this->context->cursorRect.x(), this->context->cursorRect.y(), this->context->cursorRect.width(), this->context->cursorRect.height() ) ;
 }
