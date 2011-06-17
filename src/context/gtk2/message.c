@@ -3,6 +3,10 @@
 #include "message.h"
 #include "context.h"
 
+#ifdef MAEMO_CHANGES
+#include <gdk/gdkx.h>
+#endif
+
 static Context* focused_context = NULL ;
 static DBusConnection* connection = NULL ;
 
@@ -94,26 +98,68 @@ void emit_sendSurrounding( char* surrounding ) {
     dbus_message_unref( signal ) ;
 }
 
-static void request_name() {
-    DBusError error ;
-    dbus_error_init( &error ) ;
-    dbus_bus_request_name( connection, "inputmethod.context", DBUS_NAME_FLAG_ALLOW_REPLACEMENT | DBUS_NAME_FLAG_REPLACE_EXISTING, &error ) ;
+#ifdef MAEMO_CHANGES
+/*static void request_name() {*/
+    /*DBusError error ;*/
+    /*dbus_error_init( &error ) ;*/
+    /*dbus_bus_request_name( connection, "inputmethod.context", DBUS_NAME_FLAG_ALLOW_REPLACEMENT | DBUS_NAME_FLAG_REPLACE_EXISTING, &error ) ;*/
+/*}*/
+
+/*static gboolean check_name() {*/
+    /*DBusError error ;*/
+    /*dbus_error_init( &error ) ;*/
+    /*int result = dbus_bus_request_name( connection, "inputmethod.context", DBUS_NAME_FLAG_ALLOW_REPLACEMENT | DBUS_NAME_FLAG_DO_NOT_QUEUE, &error ) ;*/
+    /*if ( result == DBUS_REQUEST_NAME_REPLY_PRIMARY_OWNER || result == DBUS_REQUEST_NAME_REPLY_ALREADY_OWNER )*/
+        /*return TRUE ;*/
+    /*else*/
+        /*return FALSE ;*/
+/*}*/
+
+static void emit_setFocusedWindowId( guint64 id ) {
+    check_connection() ;
+
+    DBusMessage* signal = dbus_message_new_signal( "/context", "inputmethod.context", "setFocusedWindowId" ) ;
+    dbus_message_append_args( signal, DBUS_TYPE_UINT64, &id, DBUS_TYPE_INVALID ) ;
+    dbus_connection_send( connection, signal, 0 ) ;
+
+    dbus_message_unref( signal ) ;
 }
 
-static gboolean check_name() {
+static guint64 call_getFocusedWindowId() {
+    check_connection() ;
+
+    DBusMessage* method = dbus_message_new_method_call( "me.inputmethod.host", "/host", "inputmethod.host", "getFocusedWindowId" ) ;
+
     DBusError error ;
     dbus_error_init( &error ) ;
-    int result = dbus_bus_request_name( connection, "inputmethod.context", DBUS_NAME_FLAG_ALLOW_REPLACEMENT | DBUS_NAME_FLAG_DO_NOT_QUEUE, &error ) ;
-    if ( result == DBUS_REQUEST_NAME_REPLY_PRIMARY_OWNER || result == DBUS_REQUEST_NAME_REPLY_ALREADY_OWNER )
-        return TRUE ;
+    
+    DBusMessage* reply = dbus_connection_send_with_reply_and_block( connection, method, -1, &error ) ;
+
+    guint64 id  ;
+    if ( reply ) {
+        dbus_error_init( &error ) ;
+        dbus_message_get_args( reply, &error, DBUS_TYPE_UINT64, &id, DBUS_TYPE_INVALID ) ;
+        dbus_message_unref( reply ) ;
+    }
     else
-        return FALSE ;
+        id = -1 ;
+    
+    dbus_message_unref( method ) ;
+
+    return id ;
 }
+#endif
 
 void emit_focusIn() {
     check_connection() ;
-    request_name() ;
 
+#ifdef MAEMO_CHANGES
+    if ( focused_context ) {
+        if ( focused_context->window ) {
+            emit_setFocusedWindowId( GDK_WINDOW_XID(focused_context->window) ) ;
+        }
+    }
+#endif
     DBusMessage* signal = dbus_message_new_signal( "/context", "inputmethod.context", "focusIn" ) ;
     dbus_connection_send( connection, signal, 0 ) ;
     
@@ -199,7 +245,17 @@ gboolean call_keyRelease( int keycode , int modifiers ) {
 DBusHandlerResult filter( DBusConnection* connection, DBusMessage* message, void* data ) {
     /*g_debug( "filter %s", dbus_message_get_member( message ) ) ;*/
     if ( focused_context ) {
-        if ( focused_context->focused && check_name() ) {
+        if ( focused_context->focused ) {
+#ifdef MAEMO_CHANGES
+if ( focused_context->window ) {
+    guint64 xid = GDK_WINDOW_XID(focused_context->window) ;
+    /*g_debug( "xid %llu", xid ) ;*/
+    guint64 id = call_getFocusedWindowId() ;
+    /*g_debug( "get %llu", id ) ;*/
+    if ( xid != id )
+        return DBUS_HANDLER_RESULT_NOT_YET_HANDLED ;
+}
+#endif
             Context* c = focused_context ;
             if ( dbus_message_is_signal( message, "inputmethod.host", "sendCommit" ) ) {
                 char* s ;

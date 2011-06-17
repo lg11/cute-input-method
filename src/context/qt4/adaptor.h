@@ -25,6 +25,9 @@ signals :
     void focusOut() ;
     void cursorRectUpdate( int x, int y, int width, int height ) ;
     void sendSurrounding( const QString& surrounding ) ;
+#ifdef Q_WS_MAEMO_5
+    void setFocusedWindowId( quint64 id ) ;
+#endif
 
 public :
     context::Context* context ;

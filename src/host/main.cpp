@@ -100,6 +100,7 @@ int main( int argc, char** argv ) {
     QDBusConnection::systemBus().connect( "org.freedesktop.Hal", "/org/freedesktop/Hal/devices/platform_slide", "org.freedesktop.Hal.Device", "PropertyModified", host->adaptor, SLOT(checkKeyboardStatus()) ) ;
     engine->setKeyboardLayout( engine::Engine::FullKeyboardLayout ) ;
     host->adaptor->checkKeyboardStatus() ;
+    QDBusConnection::sessionBus().connect( "", "", "inputmethod.context", "setFocusedWindowId", host->adaptor, SLOT(setFocusedWindowId(quint64)) ) ;
 #endif 
     return app.exec() ;
 }

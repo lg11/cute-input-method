@@ -35,6 +35,7 @@ public :
 #ifdef Q_WS_MAEMO_5
     QDBusInterface* interface ;
     extra::ExtraInputPanel* extraInputPanel ;
+    quint64 focusedWindowId ;
 #endif
     host::Host* host ;
     
@@ -60,6 +61,8 @@ public slots :
     Q_NOREPLY void queryStatus() ;
 #ifdef Q_WS_MAEMO_5
     Q_NOREPLY void checkKeyboardStatus() ;
+    Q_NOREPLY void setFocusedWindowId( quint64 id ) ;
+    quint64 getFocusedWindowId() ;
 #endif
 } ;
 

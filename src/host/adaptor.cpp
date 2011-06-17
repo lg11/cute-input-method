@@ -15,6 +15,7 @@ Adaptor::Adaptor( host::Host* host ) :
 #ifdef Q_WS_MAEMO_5
     interface( new QDBusInterface( "org.freedesktop.Hal", "/org/freedesktop/Hal/devices/platform_slide", "org.freedesktop.Hal.Device", QDBusConnection::systemBus(), this ) ),
     extraInputPanel( NULL ),
+    focusedWindowId( 0 ),
 #endif
     host( host ) {
 }
@@ -147,27 +148,38 @@ void Adaptor::queryStatus() {
 }
 
 #ifdef Q_WS_MAEMO_5
-    void Adaptor::checkKeyboardStatus() {
-        if ( this->interface->isValid() ) {
-            QDBusReply<bool> result = this->interface->call( "GetProperty", "button.state.value" ) ;
-            bool status ;
-            if ( result.isValid() ) {
-                status = result.value() ;
-                //qDebug() << "keyboard isClosed" << status ;
-                if ( status ) {
-                    this->host->inputDevice = host::OnscreenInputDevice ;
-                    this->host->hide() ;
-                    this->host->requestReset.invoke( this->host->handle ) ;
-                }
-                else {
-                    this->host->inputDevice = host::HardwareInputDevice ;
-                    this->extraInputPanel->hide() ;
-                    this->host->setKeyboardLayout.invoke( this->host->handle, Q_ARG( int, 1 ) ) ;
-                    this->host->requestReset.invoke( this->host->handle ) ;
-                }
+void Adaptor::checkKeyboardStatus() {
+    if ( this->interface->isValid() ) {
+        QDBusReply<bool> result = this->interface->call( "GetProperty", "button.state.value" ) ;
+        bool status ;
+        if ( result.isValid() ) {
+            status = result.value() ;
+            //qDebug() << "keyboard isClosed" << status ;
+            if ( status ) {
+                this->host->inputDevice = host::OnscreenInputDevice ;
+                this->host->hide() ;
+                this->host->requestReset.invoke( this->host->handle ) ;
+            }
+            else {
+                this->host->inputDevice = host::HardwareInputDevice ;
+                this->extraInputPanel->hide() ;
+                this->host->setKeyboardLayout.invoke( this->host->handle, Q_ARG( int, 1 ) ) ;
+                this->host->requestReset.invoke( this->host->handle ) ;
             }
         }
     }
+}
+
+void Adaptor::setFocusedWindowId( quint64 id ) {
+    //qDebug() << "setFocusedWindowId" << id ;
+    this->focusedWindowId = id ;
+}
+
+quint64 Adaptor::getFocusedWindowId() {
+    //qDebug() << "getFocusedWindowId" ;
+    return this->focusedWindowId ;
+}
+
 #endif
 
 }

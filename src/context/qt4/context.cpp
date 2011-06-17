@@ -81,6 +81,10 @@ void Context::setFocusWidget( QWidget* widget ) {
         //QDBusConnection::sessionBus().registerService( "me.inputmethod.context" ) ;
         //emit this->adaptor->sendMessage( "focusIn" ) ;
         emit this->adaptor->focusIn() ;
+#ifdef Q_WS_MAEMO_5
+        quint64 id = widget->winId() ;
+        emit this->adaptor->setFocusedWindowId( id ) ;
+#endif
     }
     else {
         //emit this->adaptor->sendMessage( "focusOut" ) ;
