@@ -84,7 +84,7 @@ static gboolean is_fucked_microb( GdkWindow* window ) {
 
 /*static void show( GtkIMContext* context ) {*/
     /*Context* c = CONTEXT(context) ;*/
-    /*emit_requestSoftwareInputPanel( &(c->connection) ) ;*/
+    /*emit_requestSoftwareInputPanel() ;*/
 /*}*/
 
 /*static void hide( GtkIMContext* context ) {*/
@@ -103,7 +103,7 @@ gboolean filter_event( GtkIMContext* context, GdkEvent* event ) {
         glong d = ( current_time.tv_sec - c->press_time.tv_sec ) * 1000000 + current_time.tv_usec - c->press_time.tv_usec ;
         /*g_debug( "timestamp %ld.%ld, %ld.%ld, %ld", c->press_time.tv_sec, c->press_time.tv_usec, current_time.tv_sec, current_time.tv_usec, d ) ;*/
         if ( d > 0 && d < 200000 )
-            emit_requestSoftwareInputPanel( &(c->connection) ) ;
+            emit_requestSoftwareInputPanel() ;
     }
 
     return FALSE ;
@@ -128,11 +128,11 @@ static gboolean filter_keypress( GtkIMContext* context, GdkEventKey* event ) {
     
         if ( event->type == GDK_KEY_PRESS ) {
             /*g_debug( "send_keypress %d %d", keycode, modifiers ) ;*/
-            flag = call_keyPress( &(c->connection), keycode, modifiers ) ;
+            flag = call_keyPress( keycode, modifiers ) ;
         }
         else if ( event->type == GDK_KEY_RELEASE ) {
             /*g_debug( "send_keyrelease %d %d", keycode, modifiers ) ;*/
-            flag = call_keyRelease( &(c->connection), keycode, modifiers ) ;
+            flag = call_keyRelease( keycode, modifiers ) ;
         }
     }
     return flag ? flag : gtk_im_context_filter_keypress( c->slave, event )  ;
@@ -143,11 +143,11 @@ static void focus_in( GtkIMContext* context ) {
     Context* c = CONTEXT(context) ;
     set_focused_context( G_OBJECT(c) ) ;
     c->focused = TRUE ;
-    emit_focusIn( &(c->connection) ) ;
+    emit_focusIn() ;
 #ifdef MAEMO_CHANGES
     /*if ( c->window ) {*/
         /*if ( is_fucked_microb( c->window ) )*/
-            /*emit_requestSoftwareInputPanel( &(c->connection) ) ;*/
+            /*emit_requestSoftwareInputPanel() ;*/
     /*}*/
 #endif
 }
@@ -156,7 +156,7 @@ static void focus_out( GtkIMContext* context ) {
     /*g_debug( "focus_out" ) ;*/
     Context* c = CONTEXT(context) ;
     c->focused = FALSE ;
-    emit_focusOut( &(c->connection) ) ;
+    emit_focusOut() ;
 }
 
 static void set_cursor_location( GtkIMContext* context, const GdkRectangle* area ) {
@@ -194,22 +194,22 @@ static void context_finalize( Context* context ) {
     /*g_debug( "context_finalize" ) ;*/
     if ( context->slave )
         g_object_unref( context->slave ) ;
-    if ( context->connection )
-        dbus_connection_unref( context->connection ) ;
+    /*if ( context->connection )*/
+        /*dbus_connection_unref( context->connection ) ;*/
 }
 
 static void context_init( Context* context ) {
     /*g_debug( "context_init" ) ;*/
     context->slave = gtk_im_context_simple_new() ;
     g_signal_connect( G_OBJECT(context->slave), "commit", G_CALLBACK(slave_commit), context ) ;
-    context->connection = NULL ;
+    /*context->connection = NULL ;*/
     context->window = NULL ;
     context->focused = FALSE ;
     context->surrounding = NULL ;
     context->surrounding_cursor_offset = 0 ;
     context->surrounding_length = 0 ;
     g_get_current_time( &(context->press_time) ) ;
-    request_connect( &(context->connection) ) ;
+    request_connect() ;
 }
 
 static void context_class_init( ContextClass* context_class ) {
@@ -222,7 +222,7 @@ static void context_class_init( ContextClass* context_class ) {
 #ifdef MAEMO_CHANGES
     /*gtk_im_context_class->show = show ;*/
     /*gtk_im_context_class->hide = hide ;*/
-    /*gtk_im_context_class->filter_event = filter_event ;*/
+    gtk_im_context_class->filter_event = filter_event ;
 #endif
     gtk_im_context_class->set_client_window = set_client_window ;
     gtk_im_context_class->filter_keypress = filter_keypress ;

@@ -6,23 +6,23 @@
 
 //gboolean send_surrounding( void* data ) {
 
-void emit_sendMessage( DBusConnection** connection, char* message ) ;
+void emit_sendMessage( char* message ) ;
 
-void emit_sendSurrounding( DBusConnection** connection, char* surrounding ) ;
+void emit_sendSurrounding( char* surrounding ) ;
 
-void emit_focusIn( DBusConnection** connection ) ;
+void emit_focusIn() ;
 
-void emit_focusOut( DBusConnection** connection ) ;
+void emit_focusOut() ;
 
-void emit_requestSoftwareInputPanel( DBusConnection** connection ) ;
+void emit_requestSoftwareInputPanel() ;
 
-void emit_cursorRectUpdate( DBusConnection**, int x, int y, int width, int height ) ;
+void emit_cursorRectUpdate( int x, int y, int width, int height ) ;
 
-gboolean call_keyPress( DBusConnection** connection, int keycode , int modifiers ) ;
+gboolean call_keyPress( int keycode , int modifiers ) ;
 
-gboolean call_keyRelease( DBusConnection** connection, int keycode , int modifiers ) ;
+gboolean call_keyRelease( int keycode , int modifiers ) ;
 
-void request_connect( DBusConnection** connection ) ;
+void request_connect() ;
 
 void set_focused_context( GObject* object ) ;
 

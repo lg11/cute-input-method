@@ -25,7 +25,7 @@ G_BEGIN_DECLS
 typedef struct {
     GtkIMContext parent ;
     GtkIMContext* slave ;
-    DBusConnection* connection ;
+    //DBusConnection* connection ;
     GdkRectangle cursorRect ;
     GdkWindow* window ;
     gboolean focused ;
