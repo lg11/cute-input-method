@@ -94,8 +94,25 @@ void emit_sendSurrounding( char* surrounding ) {
     dbus_message_unref( signal ) ;
 }
 
+static void request_name() {
+    DBusError error ;
+    dbus_error_init( &error ) ;
+    dbus_bus_request_name( connection, "inputmethod.context", DBUS_NAME_FLAG_ALLOW_REPLACEMENT | DBUS_NAME_FLAG_REPLACE_EXISTING, &error ) ;
+}
+
+static gboolean check_name() {
+    DBusError error ;
+    dbus_error_init( &error ) ;
+    int result = dbus_bus_request_name( connection, "inputmethod.context", DBUS_NAME_FLAG_ALLOW_REPLACEMENT | DBUS_NAME_FLAG_DO_NOT_QUEUE, &error ) ;
+    if ( result == DBUS_REQUEST_NAME_REPLY_PRIMARY_OWNER || result == DBUS_REQUEST_NAME_REPLY_ALREADY_OWNER )
+        return TRUE ;
+    else
+        return FALSE ;
+}
+
 void emit_focusIn() {
     check_connection() ;
+    request_name() ;
 
     DBusMessage* signal = dbus_message_new_signal( "/context", "inputmethod.context", "focusIn" ) ;
     dbus_connection_send( connection, signal, 0 ) ;
@@ -182,7 +199,7 @@ gboolean call_keyRelease( int keycode , int modifiers ) {
 DBusHandlerResult filter( DBusConnection* connection, DBusMessage* message, void* data ) {
     /*g_debug( "filter %s", dbus_message_get_member( message ) ) ;*/
     if ( focused_context ) {
-        if ( focused_context->focused ) {
+        if ( focused_context->focused && check_name() ) {
             Context* c = focused_context ;
             if ( dbus_message_is_signal( message, "inputmethod.host", "sendCommit" ) ) {
                 char* s ;

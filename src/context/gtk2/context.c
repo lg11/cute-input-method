@@ -139,7 +139,7 @@ static gboolean filter_keypress( GtkIMContext* context, GdkEventKey* event ) {
 }
 
 static void focus_in( GtkIMContext* context ) {
-    /*g_debug( "focus_in" ) ;*/
+    g_debug( "focus_in" ) ;
     Context* c = CONTEXT(context) ;
     set_focused_context( G_OBJECT(c) ) ;
     c->focused = TRUE ;
@@ -153,7 +153,7 @@ static void focus_in( GtkIMContext* context ) {
 }
 
 static void focus_out( GtkIMContext* context ) {
-    /*g_debug( "focus_out" ) ;*/
+    g_debug( "focus_out" ) ;
     Context* c = CONTEXT(context) ;
     c->focused = FALSE ;
     emit_focusOut() ;
@@ -177,11 +177,6 @@ static void set_cursor_location( GtkIMContext* context, const GdkRectangle* area
     }
 }
 
-static void slave_commit( GtkIMContext* slave, const char* text, gpointer data ) {
-    Context* c = CONTEXT(data) ;
-    g_signal_emit_by_name( c, "commit", text ) ;
-}
-
 static void context_base_init( Context* context ) {
     /*g_debug( "context_base_init" ) ;*/
 }
@@ -198,6 +193,18 @@ static void context_finalize( Context* context ) {
         /*dbus_connection_unref( context->connection ) ;*/
 }
 
+static void slave_commit( GtkIMContext* slave, const char* text, gpointer data ) {
+    Context* c = CONTEXT(data) ;
+    g_signal_emit_by_name( c, "commit", text ) ;
+}
+
+/*static gboolean unmap_handler( GSignalInvocationHint *ihint, guint n_param_values, const GValue *param_values, gpointer data ) {*/
+    /*g_debug( "unmap_handler" ) ;*/
+    /*Context* c = CONTEXT(data) ;*/
+    /*focus_out( c ) ;*/
+    /*return FALSE ;*/
+/*}*/
+
 static void context_init( Context* context ) {
     /*g_debug( "context_init" ) ;*/
     context->slave = gtk_im_context_simple_new() ;
@@ -210,7 +217,12 @@ static void context_init( Context* context ) {
     context->surrounding_length = 0 ;
     g_get_current_time( &(context->press_time) ) ;
     request_connect() ;
+
+    /*gint signal_id = g_signal_lookup( "focus-out-event", GTK_TYPE_WIDGET ) ;*/
+    /*g_signal_add_emission_hook( signal_id, 0, unmap_handler, context, NULL ) ;*/
+
 }
+
 
 static void context_class_init( ContextClass* context_class ) {
     /*g_debug( "context_class_init" ) ;*/
