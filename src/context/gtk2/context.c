@@ -153,6 +153,7 @@ static void focus_in( GtkIMContext* context ) {
 }
 
 static void focus_out( GtkIMContext* context ) {
+    /*g_debug( "focus_out" ) ;*/
     Context* c = CONTEXT(context) ;
     c->focused = FALSE ;
     emit_focusOut( &(c->connection) ) ;

@@ -181,46 +181,48 @@ gboolean call_keyRelease( DBusConnection** connection, int keycode , int modifie
 DBusHandlerResult filter( DBusConnection* connection, DBusMessage* message, void* data ) {
     /*g_debug( "filter %s", dbus_message_get_member( message ) ) ;*/
     if ( focused_context ) {
-        Context* c = focused_context ;
-        if ( dbus_message_is_signal( message, "inputmethod.host", "sendCommit" ) ) {
-            char* s ;
-            DBusError error ;
-            dbus_error_init( &error ) ;
-            dbus_message_get_args( message, &error, DBUS_TYPE_STRING, &s, DBUS_TYPE_INVALID ) ;
-            /*g_debug( "cim receive commit %s", s  ) ;*/
-            g_signal_emit_by_name( c, "commit", s ) ;
-            /*dbus_free( s ) ;*/
-            return DBUS_HANDLER_RESULT_HANDLED ;
-        }
-        else if ( dbus_message_is_signal( message, "inputmethod.host", "sendMessage" ) ) {
-            char* s ;
-            DBusError error ;
-            dbus_error_init( &error ) ;
-            dbus_message_get_args( message, &error, DBUS_TYPE_STRING, &s, DBUS_TYPE_INVALID ) ;
-            /*g_debug( "received %s", s ) ;*/
-            /*dbus_free( s ) ;*/
-            return DBUS_HANDLER_RESULT_HANDLED ;
-        }
-        else if ( dbus_message_is_signal( message, "inputmethod.host", "queryCursorRect" ) ) {
-            /*g_debug( "send rect %d, %d, %d", c->cursorRect.x, c->cursorRect.y, c->window ) ;*/
-            emit_cursorRectUpdate( &(c->connection), c->cursorRect.x, c->cursorRect.y, c->cursorRect.width, c->cursorRect.height ) ;
-            return DBUS_HANDLER_RESULT_HANDLED ;
-        }
-        else if ( dbus_message_is_signal( message, "inputmethod.host", "querySurrounding" ) ) {
-            query_surrounding( c ) ;
-            send_surrounding( c ) ;
-            return DBUS_HANDLER_RESULT_HANDLED ;
-        }
-        else if ( dbus_message_is_signal( message, "inputmethod.host", "replaceSurrounding" ) ) {
-            /*g_debug( "replaceSurrounding" ) ;*/
-            char* s ;
-            DBusError error ;
-            dbus_error_init( &error ) ;
-            dbus_message_get_args( message, &error, DBUS_TYPE_STRING, &s, DBUS_TYPE_INVALID ) ;
-            /*g_debug( "replaceSurrounding with %s", s ) ;*/
-            replace_surrounding( c, s ) ;
-            /*g_signal_emit_by_name( c, "commit", s ) ;*/
-            return DBUS_HANDLER_RESULT_HANDLED ;
+        if ( focused_context->focused ) {
+            Context* c = focused_context ;
+            if ( dbus_message_is_signal( message, "inputmethod.host", "sendCommit" ) ) {
+                char* s ;
+                DBusError error ;
+                dbus_error_init( &error ) ;
+                dbus_message_get_args( message, &error, DBUS_TYPE_STRING, &s, DBUS_TYPE_INVALID ) ;
+                /*g_debug( "cim receive commit %s", s  ) ;*/
+                g_signal_emit_by_name( c, "commit", s ) ;
+                /*dbus_free( s ) ;*/
+                return DBUS_HANDLER_RESULT_HANDLED ;
+            }
+            else if ( dbus_message_is_signal( message, "inputmethod.host", "sendMessage" ) ) {
+                char* s ;
+                DBusError error ;
+                dbus_error_init( &error ) ;
+                dbus_message_get_args( message, &error, DBUS_TYPE_STRING, &s, DBUS_TYPE_INVALID ) ;
+                /*g_debug( "received %s", s ) ;*/
+                /*dbus_free( s ) ;*/
+                return DBUS_HANDLER_RESULT_HANDLED ;
+            }
+            else if ( dbus_message_is_signal( message, "inputmethod.host", "queryCursorRect" ) ) {
+                /*g_debug( "send rect %d, %d, %d", c->cursorRect.x, c->cursorRect.y, c->window ) ;*/
+                emit_cursorRectUpdate( &(c->connection), c->cursorRect.x, c->cursorRect.y, c->cursorRect.width, c->cursorRect.height ) ;
+                return DBUS_HANDLER_RESULT_HANDLED ;
+            }
+            else if ( dbus_message_is_signal( message, "inputmethod.host", "querySurrounding" ) ) {
+                query_surrounding( c ) ;
+                send_surrounding( c ) ;
+                return DBUS_HANDLER_RESULT_HANDLED ;
+            }
+            else if ( dbus_message_is_signal( message, "inputmethod.host", "replaceSurrounding" ) ) {
+                /*g_debug( "replaceSurrounding" ) ;*/
+                char* s ;
+                DBusError error ;
+                dbus_error_init( &error ) ;
+                dbus_message_get_args( message, &error, DBUS_TYPE_STRING, &s, DBUS_TYPE_INVALID ) ;
+                /*g_debug( "replaceSurrounding with %s", s ) ;*/
+                replace_surrounding( c, s ) ;
+                /*g_signal_emit_by_name( c, "commit", s ) ;*/
+                return DBUS_HANDLER_RESULT_HANDLED ;
+            }
         }
     }
 
