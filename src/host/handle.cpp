@@ -10,13 +10,27 @@ Handle::Handle( host::Host* host, engine::Engine* engine, QObject* parent ) :
     QObject( parent ),
     host( host ),
     engine( engine ),
+    modifiers( NoModifier ), 
     pressCount( 0 ) {
-    //this->modifiers = NoModifier ;
 }
 
 bool Handle::processKeyPress( int keycode ) {
     //qDebug() << "handle" << keycode ;
     this->pressCount++ ;
+
+#ifdef Q_WS_MAEMO_5
+    //if ( this->engine->getCodeLength() <= 0 ) {
+        if ( keycode == 16777249 ) {
+            this->pressCount = 0 ;
+            this->modifiers |= CtrlModifier ;
+            return false ;
+        }
+        else if ( this->modifiers & CtrlModifier ) {
+            return false ;
+        }
+    //}
+#endif
+
     bool flag = false ;
 
     if ( this->host->inputLanguage == host::SimplifiedChinese ) {
@@ -87,18 +101,8 @@ bool Handle::processKeyPress( int keycode ) {
             }
         }
 #endif
-#ifdef Q_WS_MAEMO_5
-        else if ( keycode == 16777249 ) {
-            this->pressCount = 0 ;
-        }
-#endif
     }
     else if ( this->host->inputLanguage == host::UnknownLanguage ) {
-#ifdef Q_WS_MAEMO_5
-        if ( keycode == 16777249 ) {
-            this->pressCount = 0 ;
-        }
-#endif
     }
 
     if ( flag )
@@ -109,7 +113,7 @@ bool Handle::processKeyPress( int keycode ) {
 bool Handle::processKeyRelease( int keycode ) {
 #ifdef Q_WS_MAEMO_5
     if ( keycode == 16777249 ) {
-        //this->modifiers = NoModifier ;
+        this->modifiers &= (~CtrlModifier) ;
         if ( this->pressCount < 1 ) {
             if ( this->host->inputLanguage == host::SimplifiedChinese ) {
                 this->host->setInputLanguage( host::UnknownLanguage ) ;
@@ -128,6 +132,8 @@ bool Handle::processKeyRelease( int keycode ) {
 }
 
 void Handle::requestReset() {
+    this->pressCount = 0 ;
+    this->modifiers = NoModifier ;
     this->engine->reset() ;
 }
 

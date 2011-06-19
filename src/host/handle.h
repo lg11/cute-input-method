@@ -12,7 +12,8 @@ class Host ;
 
 namespace handle {
 
-//enum Modifiers { NoModifier = 1, CtrlModifier = 2, FnModifier = 4, ShiftModifier = 8 } ;
+enum Modifier { NoModifier = 0, CtrlModifier = 1, FnModifier = 2, ShiftModifier = 4 } ;
+Q_DECLARE_FLAGS( Modifiers, Modifier )
 
 class Handle : public QObject {
     Q_OBJECT 
@@ -21,7 +22,7 @@ signals :
 public :
     host::Host* host ;
     engine::Engine* engine ;
-    //Modifiers modifiers ;
+    Modifiers modifiers ;
     int pressCount ;
 
     Handle( host::Host* host, engine::Engine* engine, QObject* parent = NULL ) ;
@@ -30,6 +31,8 @@ public :
     Q_INVOKABLE void requestReset() ;
     Q_INVOKABLE void setKeyboardLayout( int layout ) ;
 } ;
+
+Q_DECLARE_OPERATORS_FOR_FLAGS( Modifiers )
 
 } 
 

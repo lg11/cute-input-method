@@ -60,6 +60,7 @@ void Adaptor::cursorRectUpdate( int x, int y, int width, int height ) {
 
 void Adaptor::focusIn() {
     //qDebug() << "focusIn"  ;
+    this->host->requestReset.invoke( this->host->handle ) ;
 }
 
 void Adaptor::focusOut() {
