@@ -6,12 +6,282 @@
 
 namespace handle {
 
+#ifdef Q_WS_MAEMO_5
+inline QChar punc( host::InputLanguage language, int keycode ) {
+    if ( language == host::UnknownLanguage ) {
+        switch ( keycode ) {
+        case Qt::Key_1 :
+            return QChar('1') ;
+        case Qt::Key_2 :
+            return QChar('2') ;
+        case Qt::Key_3 :
+            return QChar('3') ;
+        case Qt::Key_4 :
+            return QChar('4') ;
+        case Qt::Key_5 :
+            return QChar('5') ;
+        case Qt::Key_6 :
+            return QChar('6') ;
+        case Qt::Key_7 :
+            return QChar('7') ;
+        case Qt::Key_8 :
+            return QChar('8') ;
+        case Qt::Key_9 :
+            return QChar('9') ;
+        case Qt::Key_0 :
+            return QChar('0') ;
+        //case Qt::Key_Comma :
+            //return QChar(',') ;
+        //case Qt::Key_Semicolon :
+            //return QChar(';') ;
+        case Qt::Key_Equal :
+            return QChar('=') ;
+        case Qt::Key_Asterisk :
+            return QChar('*') ;
+        case Qt::Key_Plus :
+            return QChar('+') ;
+        case Qt::Key_NumberSign :
+            return QChar('#') ;
+        case Qt::Key_Minus :
+            return QChar('-') ;
+        case Qt::Key_Underscore :
+            return QChar('_') ;
+        case Qt::Key_ParenLeft :
+            return QChar('(') ;
+        case Qt::Key_ParenRight :
+            return QChar(')') ;
+        case Qt::Key_Ampersand :
+            return QChar('&') ;
+        case Qt::Key_Exclam :
+            return QChar('!') ;
+        //case Qt::Key_Period :
+            //return QChar('.') ;
+        //case Qt::Key_Colon :
+            //return QChar(':') ;
+        case Qt::Key_Question :
+            return QChar('?') ;
+        case 163 :
+            return QChar('|') ;
+        case Qt::Key_Dollar :
+            return QChar('$') ;
+        case 8364 :
+            return QChar('%') ;
+        case Qt::Key_Slash :
+            return QChar('/') ;
+        case Qt::Key_Backslash :
+            return QChar('\\') ;
+        case Qt::Key_QuoteDbl :
+            return QChar('"') ;
+        case Qt::Key_Apostrophe :
+            return QChar('\'') ;
+        case Qt::Key_At :
+            return QChar('@') ;
+        case Qt::Key_Q :
+            return QChar('1') ;
+        case Qt::Key_W :
+            return QChar('2') ;
+        case Qt::Key_E :
+            return QChar('3') ;
+        case Qt::Key_R :
+            return QChar('4') ;
+        case Qt::Key_T :
+            return QChar('5') ;
+        case Qt::Key_Y :
+            return QChar('6') ;
+        case Qt::Key_U :
+            return QChar('7') ;
+        case Qt::Key_I :
+            return QChar('8') ;
+        case Qt::Key_O :
+            return QChar('9') ;
+        case Qt::Key_P :
+            return QChar('0') ;
+        case Qt::Key_Comma :
+            return QChar('=') ;
+        case Qt::Key_A :
+            return QChar('*') ;
+        case Qt::Key_S :
+            return QChar('+') ;
+        case Qt::Key_D :
+            return QChar('#') ;
+        case Qt::Key_F :
+            return QChar('-') ;
+        case Qt::Key_G :
+            return QChar('_') ;
+        case Qt::Key_H :
+            return QChar('(') ;
+        case Qt::Key_J :
+            return QChar(')') ;
+        case Qt::Key_K :
+            return QChar('&') ;
+        case Qt::Key_L :
+            return QChar('!') ;
+        case Qt::Key_Period :
+            return QChar('?') ;
+        case Qt::Key_Z :
+            return QChar('|') ;
+        case Qt::Key_X :
+            return QChar('$') ;
+        case Qt::Key_C :
+            return QChar('%') ;
+        case Qt::Key_V :
+            return QChar('/') ;
+        case Qt::Key_B :
+            return QChar('\\') ;
+        case Qt::Key_N :
+            return QChar('"') ;
+        case Qt::Key_M :
+            return QChar('\'') ;
+        case Qt::Key_Space :
+            return QChar('@') ;
+        default :
+            return QChar('\0') ;
+        }
+    }
+    else if ( language == host::SimplifiedChinese ) {
+        switch ( keycode ) {
+        case Qt::Key_1 :
+            return QChar('1') ;
+        case Qt::Key_2 :
+            return QChar('2') ;
+        case Qt::Key_3 :
+            return QChar('3') ;
+        case Qt::Key_4 :
+            return QChar('4') ;
+        case Qt::Key_5 :
+            return QChar('5') ;
+        case Qt::Key_6 :
+            return QChar('6') ;
+        case Qt::Key_7 :
+            return QChar('7') ;
+        case Qt::Key_8 :
+            return QChar('8') ;
+        case Qt::Key_9 :
+            return QChar('9') ;
+        case Qt::Key_0 :
+            return QChar('0') ;
+        //case Qt::Key_Comma :
+            //return QChar(',') ;
+        //case Qt::Key_Semicolon :
+            //return QChar(';') ;
+        case Qt::Key_Equal :
+            return QChar('=') ;
+        case Qt::Key_Asterisk :
+            return QChar('*') ;
+        case Qt::Key_Plus :
+            return QChar('+') ;
+        case Qt::Key_NumberSign :
+            return QChar('#') ;
+        case Qt::Key_Minus :
+            return QChar('-') ;
+        case Qt::Key_Underscore :
+            return QChar('_') ;
+        case Qt::Key_ParenLeft :
+            return QChar('(') ;
+        case Qt::Key_ParenRight :
+            return QChar(')') ;
+        case Qt::Key_Ampersand :
+            return QChar('&') ;
+        case Qt::Key_Exclam :
+            return QChar('!') ;
+        //case Qt::Key_Period :
+            //return QChar('.') ;
+        //case Qt::Key_Colon :
+            //return QChar(':') ;
+        case Qt::Key_Question :
+            return QChar('?') ;
+        case 163 :
+            return QChar('|') ;
+        case Qt::Key_Dollar :
+            return QChar('$') ;
+        case 8364 :
+            return QChar('%') ;
+        case Qt::Key_Slash :
+            return QChar('/') ;
+        case Qt::Key_Backslash :
+            return QChar('\\') ;
+        case Qt::Key_QuoteDbl :
+            return QChar('"') ;
+        case Qt::Key_Apostrophe :
+            return QChar('\'') ;
+        case Qt::Key_At :
+            return QChar('@') ;
+        case Qt::Key_Q :
+            return QChar('1') ;
+        case Qt::Key_W :
+            return QChar('2') ;
+        case Qt::Key_E :
+            return QChar('3') ;
+        case Qt::Key_R :
+            return QChar('4') ;
+        case Qt::Key_T :
+            return QChar('5') ;
+        case Qt::Key_Y :
+            return QChar('6') ;
+        case Qt::Key_U :
+            return QChar('7') ;
+        case Qt::Key_I :
+            return QChar('8') ;
+        case Qt::Key_O :
+            return QChar('9') ;
+        case Qt::Key_P :
+            return QChar('0') ;
+        case Qt::Key_Comma :
+            return QChar('=') ;
+        case Qt::Key_A :
+            return QChar('*') ;
+        case Qt::Key_S :
+            return QChar('+') ;
+        case Qt::Key_D :
+            return QChar('#') ;
+        case Qt::Key_F :
+            return QChar('-') ;
+        case Qt::Key_G :
+            return QChar('_') ;
+        case Qt::Key_H :
+            return QChar('(') ;
+        case Qt::Key_J :
+            return QChar(')') ;
+        case Qt::Key_K :
+            return QChar('&') ;
+        case Qt::Key_L :
+            return QChar('!') ;
+        case Qt::Key_Period :
+            return QChar('?') ;
+        case Qt::Key_Z :
+            return QChar('|') ;
+        case Qt::Key_X :
+            return QChar('$') ;
+        case Qt::Key_C :
+            return QChar('%') ;
+        case Qt::Key_V :
+            return QChar('/') ;
+        case Qt::Key_B :
+            return QChar('\\') ;
+        case Qt::Key_N :
+            return QChar('"') ;
+        case Qt::Key_M :
+            return QChar('\'') ;
+        case Qt::Key_Space :
+            return QChar('@') ;
+        default :
+            return QChar('\0') ;
+        }
+    }
+    return QChar( '\0' ) ;
+}
+#endif
+
 Handle::Handle( host::Host* host, engine::Engine* engine, QObject* parent ) : 
     QObject( parent ),
     host( host ),
     engine( engine ),
     modifiers( NoModifier ), 
     pressCount( 0 ) {
+#ifdef Q_WS_MAEMO_5
+    this->fnPressed = false ;
+    this->shiftPressed = false ;
+#endif
 }
 
 bool Handle::processKeyPress( int keycode ) {
@@ -29,8 +299,22 @@ bool Handle::processKeyPress( int keycode ) {
             return false ;
         }
     //}
-#endif
+        
+    if ( keycode == 16781571 ) {
+        this->pressCount = 0 ;
+        this->fnPressed = true ;
+        this->modifiers |= FnModifier ;
+        return true ;
+    }
 
+    if ( this->modifiers & FnModifier ) {
+        QChar ch( punc( this->host->inputLanguage, keycode ) ) ;
+        if ( ch != QChar( '\0' ) )
+            emit this->engine->sendCommit( ch ) ;
+        return true ;
+    }
+
+#endif
     bool flag = false ;
 
     if ( this->host->inputLanguage == host::SimplifiedChinese ) {
@@ -126,6 +410,18 @@ bool Handle::processKeyRelease( int keycode ) {
                 emit this->engine->candidateUpdate() ;
             }
         }
+        return false ;
+    }
+    else if ( keycode == 16781571 ) {
+        this->fnPressed = false ;
+        if ( this->pressCount > 0 ) {
+            this->modifiers &= (~FnModifier) ;
+        }
+        //return true ;
+    }
+    else if ( ( this->modifiers & FnModifier ) && ( !this->fnPressed ) ) {
+            this->modifiers &= (~FnModifier) ;
+        //return true ;
     }
 #endif
     return false ;
@@ -134,6 +430,10 @@ bool Handle::processKeyRelease( int keycode ) {
 void Handle::requestReset() {
     this->pressCount = 0 ;
     this->modifiers = NoModifier ;
+#ifdef Q_WS_MAEMO_5
+    this->fnPressed = false ;
+    this->shiftPressed = false ;
+#endif
     this->engine->reset() ;
 }
 

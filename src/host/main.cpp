@@ -82,6 +82,7 @@ int main( int argc, char** argv ) {
     QObject::connect( host, SIGNAL(cursorRectUpdate( int, int, int, int )), view, SLOT(cursorRectUpdate( int, int, int, int )) ) ;
     QObject::connect( engine, SIGNAL(candidateUpdate()), view, SIGNAL(candidateUpdate()) ) ;
     QObject::connect( engine, SIGNAL(sendCommit( const QString& )), host->adaptor, SIGNAL( sendCommit( const QString& ) ) ) ;
+    //QObject::connect( engine, SIGNAL(sendCommit( QChar )), host->adaptor, SIGNAL( sendCommit( QChar ) ) ) ;
     QObject::connect( engine, SIGNAL(preeditStart()), host->adaptor, SLOT(preeditStart()) ) ;
     QObject::connect( engine, SIGNAL(preeditEnd()), host->adaptor, SLOT(preeditEnd()) ) ;
 #ifdef Q_WS_MAEMO_5

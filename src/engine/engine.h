@@ -41,6 +41,7 @@ signals :
     void preeditStart() ;
     void preeditEnd() ;
     void sendCommit( const QString& text ) ;
+    //void sendCommit( QChar ch ) ;
     void candidateUpdate() ;
 
 public:

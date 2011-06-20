@@ -24,6 +24,7 @@ class Adaptor : public QDBusAbstractAdaptor {
 signals :
     void sendMessage( const QString& message ) ;
     void sendCommit( const QString& text ) ;
+    //void sendCommit( QChar ch ) ;
     //void sendKeyEvent( int type, int keycode, int modifiers, bool autoRepeat, const QString& text, int count ) ;
     void sendKeyEvent( int type, int keycode, int modifiers ) ;
     void querySurrounding() ;

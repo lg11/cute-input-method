@@ -24,6 +24,12 @@ public :
     engine::Engine* engine ;
     Modifiers modifiers ;
     int pressCount ;
+#ifdef Q_WS_MAEMO_5
+    //int fnPressCount ;
+    //int shiftPressCount ;
+    bool fnPressed ;
+    bool shiftPressed ;
+#endif
 
     Handle( host::Host* host, engine::Engine* engine, QObject* parent = NULL ) ;
     Q_INVOKABLE bool processKeyPress( int keycode ) ;
