@@ -289,7 +289,7 @@ bool Handle::processKeyPress( int keycode ) {
     this->pressCount++ ;
 
 #ifdef Q_WS_MAEMO_5
-    //if ( this->engine->getCodeLength() <= 0 ) {
+    if ( this->engine->getCodeLength() <= 0 ) {
         if ( keycode == 16777249 ) {
             this->pressCount = 0 ;
             this->modifiers |= CtrlModifier ;
@@ -298,22 +298,22 @@ bool Handle::processKeyPress( int keycode ) {
         else if ( this->modifiers & CtrlModifier ) {
             return false ;
         }
-    //}
         
-    if ( keycode == 16781571 ) {
-        this->pressCount = 0 ;
-        this->fnPressed = true ;
-        this->modifiers |= FnModifier ;
-        return true ;
-    }
+        if ( keycode == 16781571 ) {
+            this->pressCount = 0 ;
+            this->fnPressed = true ;
+            this->modifiers |= FnModifier ;
+            return true ;
+        }
 
-    if ( this->modifiers & FnModifier ) {
-        QChar ch( punc( this->host->inputLanguage, keycode ) ) ;
-        if ( ch != QChar( '\0' ) )
-            emit this->engine->sendCommit( ch ) ;
-        return true ;
-    }
+        if ( this->modifiers & FnModifier ) {
+            QChar ch( punc( this->host->inputLanguage, keycode ) ) ;
+            if ( ch != QChar( '\0' ) )
+                emit this->engine->sendCommit( ch ) ;
+            return true ;
+        }
 
+    }
 #endif
     bool flag = false ;
 
