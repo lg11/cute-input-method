@@ -141,25 +141,25 @@ Item {
         }
         else if ( keycode == Utils.keycode_shift_l ) {
             if ( engine.getCodeLength() > 0 ) {
-                engine.prevPage()
+                engine.prevPage( 5 )
                 updateCandString()
             }
         }
         else if ( keycode == Utils.keycode_shift_r ) {
             if ( engine.getCodeLength() > 0 ) {
-                engine.nextPage()
+                engine.nextPage( 5 )
                 updateCandString()
             }
         }
         else if ( keycode == Utils.keycode_alt_l ) {
             if ( engine.getCodeLength() > 0 ) {
-                engine.prevPage()
+                engine.prevPage( 5 )
                 updateCandString()
             }
         }
         else if ( keycode == Utils.keycode_alt_r ) {
             if ( engine.getCodeLength() > 0 ) {
-                engine.nextPage()
+                engine.nextPage( 5 )
                 updateCandString()
             }
         }

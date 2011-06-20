@@ -133,11 +133,11 @@ Item {
                 }
             }
             else if ( keycode == Utils.keycode_7 ) {
-                engine.prevPage()
+                engine.prevPage( 6 )
                 updateCandString()
             }
             else if ( keycode == Utils.keycode_9 ) {
-                engine.nextPage()
+                engine.nextPage( 6 )
                 updateCandString()
             }
             else if ( keycode == Utils.keycode_backspace ) {

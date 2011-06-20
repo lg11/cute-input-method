@@ -62,13 +62,13 @@ bool Handle::processKeyPress( int keycode ) {
         }
         else if ( keycode == Qt::Key_Minus ) {
             if ( this->engine->getCodeLength() > 0 ) {
-                this->engine->prevPage() ;
+                this->engine->prevPage( 4 ) ;
                 flag = true ;
             }
         }
         else if ( keycode == Qt::Key_Equal ) {
             if ( this->engine->getCodeLength() > 0 ) {
-                this->engine->nextPage() ;
+                this->engine->nextPage( 4 ) ;
                 flag = true ;
             }
         }
@@ -90,13 +90,13 @@ bool Handle::processKeyPress( int keycode ) {
         }
         else if ( keycode == 16777248 ) {
             if ( this->engine->getCodeLength() > 0 ) {
-                this->engine->nextPage() ;
+                this->engine->nextPage( 4 ) ;
                 flag = true ;
             }
         }
         else if ( keycode == 16781571 ) {
             if ( this->engine->getCodeLength() > 0 ) {
-                this->engine->prevPage() ;
+                this->engine->prevPage( 4 ) ;
                 flag = true ;
             }
         }

@@ -44,12 +44,14 @@ signals :
     void candidateUpdate() ;
 
 public:
+    Q_ENUMS( KeyboardLayout )
     enum KeyboardLayout { UnknownKeyboardLayout = 0, FullKeyboardLayout = 1, T9KeyboardLayout = 2 } ;
+
     lookup::Lookup* lookup ;
     t9::T9Lookup* t9lookup ;
     SelectedPair selected ;
     QString* selectedWord ;
-    int pageIndex ;
+    int pageStartIndex ;
     const Candidate* candidate ;
     KeyboardLayout keyboardLayout ;
     QFile* logFile ;
@@ -70,9 +72,9 @@ public slots :
     
     void load( const QString& path ) ;
     
-    bool prevPage() ;
+    bool prevPage( int pageLength ) ;
     
-    bool nextPage() ;
+    bool nextPage( int pageLength ) ;
     
     int getCodeLength() const ;
     

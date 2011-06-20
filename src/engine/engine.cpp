@@ -56,7 +56,7 @@ Engine::Engine( QObject* parent ) :
     t9lookup( new t9::T9Lookup( &(this->lookup->dict) ) ),
     selected(),
     selectedWord( &(this->selected.second.first) ) {
-    this->pageIndex = 0 ;
+    this->pageStartIndex = 0 ;
     this->candidate = NULL ;
     this->keyboardLayout = UnknownKeyboardLayout ;
     this->logFile = NULL ;
@@ -140,27 +140,29 @@ void Engine::load( const QString& path ) {
     }
 }
 
-bool Engine::prevPage() {
+bool Engine::prevPage( int pageLength ) {
     bool flag = false ;
-    if ( this->pageIndex > 0 ) {
-        this->pageIndex-- ;
+    if ( this->pageStartIndex >= pageLength ) {
+        this->pageStartIndex -= pageLength ;
+        if ( this->pageStartIndex < 0 )
+            this->pageStartIndex = 0 ;
         flag = true ;
     }
     return flag ;
 }
 
-bool Engine::nextPage() {
+bool Engine::nextPage( int pageLength ) {
     bool flag = false ;
-    int pageIndex = this->pageIndex + 1 ;
+    int pageStartIndex = this->pageStartIndex + pageLength ;
     const lookup::Candidate* candidate ;
     if ( this->keyboardLayout == FullKeyboardLayout )
-        candidate = this->lookup->getCand( pageIndex * 4 ) ;
+        candidate = this->lookup->getCand( pageStartIndex ) ;
     else if ( this->keyboardLayout == T9KeyboardLayout )
-        candidate = this->t9lookup->getCand( pageIndex * 6 ) ;
+        candidate = this->t9lookup->getCand( pageStartIndex ) ;
     else
         candidate = NULL ;
     if ( candidate ) {
-        this->pageIndex = pageIndex ;
+        this->pageStartIndex = pageStartIndex ;
         flag = true ;
     }
     return flag ;
@@ -194,13 +196,13 @@ bool Engine::updateCandidate( int index ) {
         if ( this->lookup->spliter.code.isEmpty() )
             this->candidate = NULL ;
         else 
-            this->candidate = this->lookup->getCand( pageIndex * 4 + index ) ;
+            this->candidate = this->lookup->getCand( pageStartIndex + index ) ;
     }
     else if ( this->keyboardLayout == T9KeyboardLayout ) {
         if ( this->t9lookup->code.isEmpty() )
             this->candidate = NULL ;
         else 
-            this->candidate = this->t9lookup->getCand( pageIndex * 6 + index ) ;
+            this->candidate = this->t9lookup->getCand( pageStartIndex + index ) ;
     }
     return this->candidate ;
     //if ( this->candidate ) 
@@ -265,7 +267,7 @@ bool Engine::select( int index ) {
     bool flag = false ;
     if ( this->getCodeLength() > 0 ) {
         if ( this->keyboardLayout == FullKeyboardLayout ) {
-            index = this->pageIndex * 4 + index ;
+            index = this->pageStartIndex + index ;
             const lookup::Candidate* candidate = this->lookup->getCand( index ) ;
 
             if ( candidate ) {
@@ -294,11 +296,11 @@ bool Engine::select( int index ) {
                     //qDebug() << "r" << code ; 
                     this->lookup->reset() ;
                     this->lookup->setCode( code ) ;
-                    this->pageIndex = 0 ;
+                    this->pageStartIndex = 0 ;
                 }
                 else {
                     this->lookup->reset() ;
-                    this->pageIndex = 0 ;
+                    this->pageStartIndex = 0 ;
                 }
 
                 flag = true ;
@@ -306,7 +308,7 @@ bool Engine::select( int index ) {
             //else ;
         }
         else if ( this->keyboardLayout == T9KeyboardLayout ) {
-            index = this->pageIndex * 6 + index ;
+            index = this->pageStartIndex + index ;
             const lookup::Candidate* candidate = this->t9lookup->getCand( index ) ;
 
             if ( candidate ) {
@@ -335,11 +337,11 @@ bool Engine::select( int index ) {
                     //qDebug() << "r" << code ; 
                     this->t9lookup->reset() ;
                     this->t9lookup->setCode( code ) ;
-                    this->pageIndex = 0 ;
+                    this->pageStartIndex = 0 ;
                 }
                 else {
                     this->t9lookup->reset() ;
-                    this->pageIndex = 0 ;
+                    this->pageStartIndex = 0 ;
                 }
                 flag = true ;
             }
@@ -358,7 +360,7 @@ bool Engine::deselect() {
             code.append( this->lookup->spliter.code ) ;
             this->lookup->reset() ;
             this->lookup->setCode( code ) ;
-            this->pageIndex = 0 ;
+            this->pageStartIndex = 0 ;
         }
         else if ( this->keyboardLayout == T9KeyboardLayout ) {
             for ( int i = 0 ; i < code.length() ; i++ ) 
@@ -366,7 +368,7 @@ bool Engine::deselect() {
             code.append( this->t9lookup->code ) ;
             this->t9lookup->reset() ;
             this->t9lookup->setCode( code ) ;
-            this->pageIndex = 0 ;
+            this->pageStartIndex = 0 ;
         }
 
         flag = true ;
@@ -379,7 +381,7 @@ void Engine::reset() {
     else if ( this->keyboardLayout == T9KeyboardLayout ) 
         this->t9lookup->reset() ;
     clear_selected( &(this->selected) ) ;
-    this->pageIndex = 0 ;
+    this->pageStartIndex = 0 ;
 }
 
 bool Engine::appendCode( QChar code ) {
@@ -389,7 +391,7 @@ bool Engine::appendCode( QChar code ) {
             if ( this->lookup->spliter.code.isEmpty() )
                 emit this->preeditStart() ;
             this->lookup->appendCode( code ) ;
-            this->pageIndex = 0 ;
+            this->pageStartIndex = 0 ;
             flag = true ;
         }
     }
@@ -398,7 +400,7 @@ bool Engine::appendCode( QChar code ) {
             if ( this->t9lookup->code.isEmpty() )
                 emit this->preeditStart() ;
             this->t9lookup->appendCode( code ) ;
-            this->pageIndex = 0 ;
+            this->pageStartIndex = 0 ;
             flag = true ;
         }
     }
@@ -413,14 +415,14 @@ bool Engine::popCode() {
     if ( this->keyboardLayout == FullKeyboardLayout ) {
         if ( !this->lookup->spliter.code.isEmpty() ) {
             this->lookup->popCode() ;
-            this->pageIndex = 0 ;
+            this->pageStartIndex = 0 ;
             flag = true ;
         }
     }
     else if ( this->keyboardLayout == T9KeyboardLayout ) {
         if ( !this->t9lookup->code.isEmpty() ) {
             this->t9lookup->popCode() ;
-            this->pageIndex = 0 ;
+            this->pageStartIndex = 0 ;
             flag = true ;
         }
     }
