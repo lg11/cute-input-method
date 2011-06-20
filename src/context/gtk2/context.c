@@ -120,6 +120,7 @@ static gboolean filter_keypress( GtkIMContext* context, GdkEventKey* event ) {
     /*g_debug( "filter_keypress" ) ;*/
     Context* c = CONTEXT(context) ;
     gboolean flag = FALSE ;
+    /*g_debug( "prepare_send_keypress %d %d", event->keyval, event->type ) ;*/
     int keycode = convert_keycode( event->keyval ) ;
     
     /*g_debug( "prepare_send_keypress %d %d", keycode, event->type ) ;*/
