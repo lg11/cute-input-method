@@ -1,0 +1,6 @@
+FakeMouseArea mouseArea/FakeMouseArea.qml
+RealMouseArea mouseArea/RealMouseArea.qml
+RootMouseArea mouseArea/RootMouseArea.qml
+ProxyMouseArea mouseArea/ProxyMouseArea.qml
+
+plugin engine

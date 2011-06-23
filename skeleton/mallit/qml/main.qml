@@ -10,30 +10,36 @@ Rectangle {
     opacity : 1
 
     IMEngine {
-        id : imEngine
+        id : engine
     }
 
-    Button {
-        id : button
-        x : 200
-        y : 200
-        width : 200
-        height : 80
-        text : "test"
-        onClicked : {
-            imEngine.appendCode( "a" )
-            imEngine.updateCandidate( 0 )
-            console.log( "getcode", imEngine.getCode() )
-            console.log( "getcode", imEngine.getPreeditCode() )
-            button.text = imEngine.getWord()
+    Palette {
+        id : palette
+    }
+
+    RealMouseArea {
+        id : root
+        x : 0
+        y : 160
+        width : 854
+        height : 320
+        Keyboard {
+            id : keyboard
+            x : 0
+            y : 0
+            width : 854
+            height : 320
         }
+    }
+    Tooltip {
+        id : tooltip
     }
 
     Component.onCompleted : {
-        inputmethod.setInputMethodArea( Qt.rect( button.x, button.y, button.width, button.height ) )
+        inputmethod.setInputMethodArea( Qt.rect( root.x, root.y, root.width, root.height ) )
         console.log( "load start" ) 
-        imEngine.load( "workspace/cim/data/formated" )
-        imEngine.setKeyboardLayout( 1 )
+        engine.load( "workspace/cim/data/formated" )
+        engine.setKeyboardLayout( 1 )
         console.log( "load end" ) 
     }
 }
