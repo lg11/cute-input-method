@@ -1,4 +1,5 @@
-import Qt 4.7
+import QtQuick 1.1
+import com.meego 1.0
 
 Item {
     id : key
@@ -7,7 +8,7 @@ Item {
     /*color : "#00000000"*/
     property alias keycode_l : key_l.keycode
     property alias keycode_r : key_r.keycode
-    property alias candString : candText.text
+    property alias candString : candButton.text
     property bool isActive : false
 
     Key {
@@ -29,19 +30,15 @@ Item {
     property alias color_l : key_l.color
     property alias color_r : key_r.color
 
-    Rectangle {
-        id : plat
-        x : 1
-        y : 1
-        width : parent.width - 1
-        height : parent.height - 1
-        color : "#00000000"
-        Text {
-            id : candText
-            anchors.centerIn : parent
-            color : "#FFFFFFFF"
-            font.pointSize: 24; font.bold: false
-        }
+    Button {
+        id : candButton
+        x : 2
+        y : 2
+        width : parent.width - 4
+        height : parent.height - 4
+        /*anchors.fill :parent*/
+        checked : key_l.checked || key_r.checked
+        visible : false
     }
 
     Row {
@@ -60,14 +57,14 @@ Item {
     states {
         State {
             name : "CAND" ; when : candString != ""
-            PropertyChanges { target : plat ; color : key_r.color }
             PropertyChanges { target : key ; isActive : true }
             PropertyChanges { target : key_l ; text : candString }
             PropertyChanges { target : key_r ; text : candString }
             PropertyChanges { target : key_l ; x : key.width / 4 }
             PropertyChanges { target : key_r ; x : key.width / 4 }
-            PropertyChanges { target : key_l ; opacity : 0 }
-            PropertyChanges { target : key_r ; opacity : 0 }
+            PropertyChanges { target : key_l ; visible : false }
+            PropertyChanges { target : key_r ; visible : false }
+            PropertyChanges { target : candButton ; visible : true }
         } 
     }
 }

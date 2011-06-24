@@ -1,47 +1,32 @@
-import Qt 4.7
+import QtQuick 1.1
+import com.meego 1.0
 /*import Qt.labs.gestures 1.0*/
 
 FakeMouseArea {
     id : key
     property bool keepDown : false 
+    property alias checked : button.checked
 
-    Rectangle {
-        id : plat
-        x : 1 ; y : 1
-        width : parent.width - 1
-        height : parent.height - 1
-        Text {
-            id : title
-            anchors.centerIn : parent
-            color : palette.keyTextColor
-            font.pointSize: 30; font.bold: true
-        }
+    Button {
+        id : button
+        x : 2
+        y : 2
+        width : parent.width - 4
+        height : parent.height - 4
+        /*anchors.fill :parent*/
+        checked : down || keepDown
     }
-    property alias text : title.text
-    property alias titleVisible : title.visible
-    property alias textColor : title.color
-    property alias color : plat.color
-    property alias platVisible : plat.visible
+    property alias text : button.text
+    property bool titleVisible
+    property color textColor
+    property bool platVisible
+    property color color
 
-    states {
-        State {
-            name : "DOWN" ; when : down || keepDown
-            PropertyChanges { target : plat ; color : palette.keyDownColor }
-        } 
-    }
-
-    /*transitions {*/
-        /*Transition {*/
-            /*from : "" ; to : "DOWN" ; reversible : true*/
-            /*ParallelAnimation {*/
-                /*ColorAnimation { target : plat ; duration : 128 }*/
-            /*}*/
-        /*} */
-        /*Transition {*/
-            /*from : "DOWN" ; to : "" ; reversible : false*/
-            /*ParallelAnimation {*/
-                /*ColorAnimation { target : plat ; duration : 192 }*/
-            /*}*/
+    /*states {*/
+        /*State {*/
+            /*name : "DOWN" ; when : down || keepDown*/
+            /*PropertyChanges { target : plat ; color : palette.keyDownColor }*/
         /*} */
     /*}*/
+
 }

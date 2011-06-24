@@ -17,12 +17,16 @@ Rectangle {
         id : palette
     }
 
-    RealMouseArea {
+    RootMouseArea {
         id : root
         x : 0
         y : 160
         width : 854
         height : 320
+        /*Rectangle {*/
+            /*anchors.fill : parent*/
+            /*color : "#FF000000"*/
+        /*}*/
         Keyboard {
             id : keyboard
             x : 0
@@ -33,6 +37,16 @@ Rectangle {
     }
     Tooltip {
         id : tooltip
+    }
+    RealMouseArea {
+        x : root.x
+        y : root.y
+        width : root.width
+        height : root.height
+        ProxyMouseArea {
+            anchors.fill : parent
+            target : root
+        }
     }
 
     Component.onCompleted : {

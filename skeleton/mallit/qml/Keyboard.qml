@@ -6,7 +6,7 @@ Rectangle {
     clip : true
     width : 800
     height : 400
-    /*color : "#FFFF0000"*/
+    color : "#FFDDDDDD"
 
     property int keyWidth : 80
     property int keyHeight : 60
@@ -119,7 +119,7 @@ Rectangle {
                     key_backspace.pauseAutoRepeat()
             }
             else {
-                root.textview.backspace()
+                inputmethod.sendCommit( "\b" )
             }
         }
     }
@@ -133,7 +133,7 @@ Rectangle {
                 updateCandString()
             }
             else {
-                root.textview.insert( keysym[mask] )
+                inputmethod.sendCommit( keysym[mask] )
             }
         }
         else if ( keycode == Utils.keycode_backspace ) {
@@ -165,12 +165,12 @@ Rectangle {
         }
         else if ( keycode == Utils.keycode_enter ) {
             if ( engine.getCodeLength() > 0 ) {
-                root.textview.insert( engine.getCode() )
+                inputmethod.sendCommit( engine.getCode() )
                 engine.reset()
                 updateCandString()
             }
             else {
-                root.textview.insert( "\n" )
+                inputmethod.sendCommit( "\n" )
             }
         }
         else if ( keycode == Utils.keycode_space ) {
@@ -183,7 +183,7 @@ Rectangle {
                 }
             }
             else {
-                root.textview.insert( keysym[mask] )
+                inputmethod.sendCommit( keysym[mask] )
             }
         }
         else if ( keycode >= Utils.keycode_0 && keycode <= Utils.keycode_9 ) {
@@ -198,11 +198,11 @@ Rectangle {
                 }
             }
             else {
-                root.textview.insert( keysym[mask] )
+                inputmethod.sendCommit( keysym[mask] )
             }
         }
         else if ( keycode != Utils.keycode_ctrl && keycode != Utils.keycode_alt_l && keycode != Utils.keycode_alt_r ) {
-            root.textview.insert( keysym[mask] )
+            inputmethod.sendCommit( keysym[mask] )
         }
         tooltip.text = ""
         if ( keycode == Utils.keycode_shift_l || keycode == Utils.keycode_shift_r ) {
