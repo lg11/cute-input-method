@@ -17,6 +17,7 @@ Item {
         anchors.centerIn : plat
         color : palette.keyTextColor
         font.pointSize: 36; font.bold: true
+        /*visible : false*/
     }
     property alias text : title.text
 

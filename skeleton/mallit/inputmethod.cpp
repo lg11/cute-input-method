@@ -129,13 +129,13 @@ void InputMethod::setPreedit( const QString &preeditString, int cursorPos ) {
 
 void InputMethod::update() {
     qDebug() << "inputmethod" << "update" ;
-    //Q_D( InputMethod ) ;
-    //bool flag ;
-    //const QRect cursorRect( this->inputMethodHost()->cursorRectangle( &flag ) ) ;
-    //if ( flag && d->cursorRect != cursorRect ) {
-        //d->cursorRect = cursorRect ;
-        //emit this->cursorRectChanged( d->cursorRect ) ;
-    //}
+    Q_D( InputMethod ) ;
+    bool flag ;
+    const QRect cursorRect( this->inputMethodHost()->cursorRectangle( flag ) ) ;
+    if ( flag && d->cursorRect != cursorRect ) {
+        d->cursorRect = cursorRect ;
+        emit this->cursorRectChanged( d->cursorRect ) ;
+    }
 }
 
 void InputMethod::reset() {
@@ -240,10 +240,10 @@ int InputMethod::screenHeight() {
     return display_rect().height() ;
 }
 
-//QRect& InputMethod::cursorRect() {
-    //Q_D( InputMethod ) ;
-    //return d->cursorRect ;
-//}
+QRect& InputMethod::cursorRect() {
+    Q_D( InputMethod ) ;
+    return d->cursorRect ;
+}
 
 void InputMethod::setScreenRegion( const QRect &area ) {
     //Q_D( InputMethod ) ;

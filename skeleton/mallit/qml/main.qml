@@ -35,6 +35,13 @@ Rectangle {
             height : 320
         }
     }
+    Preedit {
+        id : preedit
+        x : 0
+        selectedWord : "s"
+        preeditCode : "p"
+        invaildCode : "i"
+    }
     Tooltip {
         id : tooltip
     }

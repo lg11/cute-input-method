@@ -45,6 +45,7 @@ Rectangle {
         /*root.textview.insert( engine.getSelectedWord() )*/
         inputmethod.sendCommit( engine.getSelectedWord() )
         engine.commit()
+        /*console.log( inputmethod.cursorRect.x, inputmethod.cursorRect.y, inputmethod.cursorRect.width, inputmethod.cursorRect.height)*/
         /*}*/
     }
     property bool needClearShift : false

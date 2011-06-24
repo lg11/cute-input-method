@@ -13,12 +13,12 @@ class InputMethod : public MAbstractInputMethod {
     Q_OBJECT
     Q_PROPERTY( int screenWidth READ screenWidth NOTIFY screenWidthChanged )
     Q_PROPERTY( int screenHeight READ screenHeight NOTIFY screenHeightChanged )
-    //Q_PROPERTY( QRect cursorRect READ cursorRect NOTIFY cursorRectChanged )
+    Q_PROPERTY( QRect cursorRect READ cursorRect NOTIFY cursorRectChanged )
 
 signals :
     void screenWidthChanged( int width ) ;
     void screenHeightChanged( int height ) ;
-    //void cursorRectChanged( QRect& cursorRect ) ;
+    void cursorRectChanged( QRect& cursorRect ) ;
     //void keyEvent() ;
 
 public :
@@ -49,7 +49,7 @@ public :
 
     int screenWidth() ;
     int screenHeight() ;
-    //QRect& cursorRect() ;
+    QRect& cursorRect() ;
     Q_INVOKABLE void setScreenRegion( const QRect &area ) ;
     Q_INVOKABLE void setInputMethodArea( const QRect &area ) ;
     Q_INVOKABLE void sendCommit( const QString& text ) ;
