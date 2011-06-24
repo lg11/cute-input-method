@@ -7,6 +7,7 @@ Rectangle {
     width : 800
     height : 400
     color : "#FFDDDDDD"
+    /*color : "#FF000000"*/
 
     property int keyWidth : 80
     property int keyHeight : 60
@@ -27,9 +28,9 @@ Rectangle {
         engine.updateCandidate( 0 )
         key_5_6.candString = engine.getWord()
 
-        /*preedit.preeditString = engine.getPreeditCode()*/
-        /*preedit.invaildCode = engine.getInvalidCode()*/
-        /*preedit.selectedWord = engine.getSelectedWord()*/
+        preedit.preeditCode = engine.getPreeditCode()
+        preedit.invaildCode = engine.getInvalidCode()
+        preedit.selectedWord = engine.getSelectedWord()
 
         engine.updateCandidate( 1 )
         key_3_4.candString = engine.getWord()

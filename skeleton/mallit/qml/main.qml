@@ -37,10 +37,8 @@ Rectangle {
     }
     Preedit {
         id : preedit
-        x : 0
-        selectedWord : "s"
-        preeditCode : "p"
-        invaildCode : "i"
+        x : inputmethod.cursorRect.x
+        y : inputmethod.cursorRect.y + inputmethod.cursorRect.height
     }
     Tooltip {
         id : tooltip

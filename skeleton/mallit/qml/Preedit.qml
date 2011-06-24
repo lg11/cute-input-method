@@ -1,10 +1,11 @@
-import Qt 4.7
+import QtQuick 1.1
+import com.meego 1.0
 
-Rectangle {
+Button {
     id : plat
-    width : selectedWordText.paintedWidth + break_1.paintedWidth + preeditCodeText.paintedWidth + break_2.paintedWidth + invaildCodeText.paintedWidth + 10
+    width : selectedWordText.paintedWidth + break_1.paintedWidth + preeditCodeText.paintedWidth + break_2.paintedWidth + invaildCodeText.paintedWidth + 20
     height : preeditCodeText.paintedHeight + 10
-    color : palette.preeditBackgroundColor
+    /*color : palette.preeditBackgroundColor*/
     visible : false
 
     property string selectedWord : ""
@@ -16,34 +17,32 @@ Rectangle {
         Text {
             id : selectedWordText
             text : selectedWord
-            font.pointSize : 28; font.bold: false
+            font.pointSize : 22; font.bold: false
             color : palette.selectedWordColor
         }
         Text {
             id : break_1
-            text : ""
-            font.pointSize : 28; font.bold: false
-            color : palette.preeditStringColor
+            text : selectedWord.length > 0 && preeditCode.length > 0 ? "'" : ""
+            font.pointSize : 22; font.bold: false
+            color : palette.preeditCodeColor
         }
         Text {
             id : preeditCodeText
             text : preeditCode
-            font.pointSize : 28; font.bold: false
-            color : palette.preeditStringColor
-            onTextChanged : break_1.text = text.length > 0 ? "'" : ""
+            font.pointSize : 22; font.bold: false
+            color : palette.preeditCodeColor
         }
         Text {
             id : break_2
-            text : ""
-            font.pointSize : 28; font.bold: false
+            text : invaildCode.length > 0 && preeditCode.length > 0 ? "'" : ""
+            font.pointSize : 22; font.bold: false
             color : palette.invaildCodeColor
         }
         Text {
             id : invaildCodeText
             text : invaildCode
-            font.pointSize : 28; font.bold: false
+            font.pointSize : 22; font.bold: false
             color : palette.invaildCodeColor
-            onTextChanged : break_2.text = text.length > 0 ? "'" : ""
         }
     }
 
@@ -54,7 +53,7 @@ Rectangle {
 
     states {
         State {
-            name : "ACTIVE" ; when : selectedWord.length > 0 || preeditString.length > 0 || invaildCode.length > 0
+            name : "ACTIVE" ; when : selectedWord.length > 0 || preeditCode.length > 0 || invaildCode.length > 0
             /*PropertyChanges { target : plat ; width : selectedWordText.paintedWidth + preeditStringText.paintedWidth + invaildCodeText.paintedWidth + 30 }*/
             PropertyChanges { target : plat ; visible : true }
         } 

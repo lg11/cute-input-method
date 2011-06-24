@@ -1,13 +1,17 @@
-import Qt 4.7
+import QtQuick 1.1
+import com.meego 1.0
 
 Item {
+    ButtonStyle {
+        id : buttonStyle
+    }
     property color keyNormalColor : "#FF444444"
     property color keyDownColor : "#FF2299FF"
     property color keyTextColor : "#FFFFFFFF"
     property color keyBorderColor : "#FF444444"
     property color preeditBackgroundColor : "#AA444444"
-    property color selectedWordColor : "#FFFFFFFF"
-    property color preeditStringColor : "#FFFFFFFF"
+    property color selectedWordColor : buttonStyle.textColor
+    property color preeditCodeColor : buttonStyle.textColor
     property color invaildCodeColor : "#FFFF0000"
     property color backgroundColor : "#FFFFFFFF"
     property color textviewBackgroundColor : "#FFFFFFFF"
