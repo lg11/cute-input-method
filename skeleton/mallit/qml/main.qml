@@ -21,7 +21,7 @@ Rectangle {
         id : root
         x : 0
         y : 160
-        width : 854
+        width : parent.width
         height : 320
         /*Rectangle {*/
             /*anchors.fill : parent*/
@@ -31,7 +31,7 @@ Rectangle {
             id : keyboard
             x : 0
             y : 0
-            width : 854
+            width : parent.width
             height : 320
         }
     }

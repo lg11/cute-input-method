@@ -27,9 +27,6 @@ Item {
         keepDown : key.isActive && key_l.down
     }
 
-    property alias color_l : key_l.color
-    property alias color_r : key_r.color
-
     Button {
         id : candButton
         x : 2

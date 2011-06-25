@@ -6,6 +6,7 @@ FakeMouseArea {
     id : key
     property bool keepDown : false 
     property alias checked : button.checked
+    property alias text : button.text
 
     Button {
         id : button
@@ -13,20 +14,7 @@ FakeMouseArea {
         y : 2
         width : parent.width - 4
         height : parent.height - 4
-        /*anchors.fill :parent*/
+        /*anchors.centerIn :parent*/
         checked : down || keepDown
     }
-    property alias text : button.text
-    property bool titleVisible
-    property color textColor
-    property bool platVisible
-    property color color
-
-    /*states {*/
-        /*State {*/
-            /*name : "DOWN" ; when : down || keepDown*/
-            /*PropertyChanges { target : plat ; color : palette.keyDownColor }*/
-        /*} */
-    /*}*/
-
 }
