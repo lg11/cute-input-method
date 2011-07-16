@@ -9,26 +9,26 @@
 
 namespace split {
 
-typedef QPair< QPair< QSet<QString>, QSet<QChar> >, QSet<QString> > KeySet ;
+typedef QPair< QSet<QString>, QPair< QSet<QChar>, QSet<QString> > > KeySet ;
 
 inline void add_key( KeySet* set, const QString& key ) {
-    if ( !set->first.first.contains( key ) ) {
-        QString k = key ;
-        set->first.first.insert( k ) ;
-        set->first.second.insert( k.at(0) ) ;
-        set->second.remove( k ) ;
+    if ( !set->first.contains( key ) ) {
+        set->first.insert( key ) ;
+        set->second.first.insert( key.at(0) ) ;
+        set->second.second.remove( key ) ;
+        QString k( key ) ;
         k.chop( 1 ) ;
         while( k.length() > 0 ) {
-            if ( !set->first.first.contains( k ) )
-                set->second.insert( k ) ;
+            if ( !set->first.contains( k ) )
+                set->second.second.insert( k ) ;
             k.chop( 1 ) ;
         }
     }
 }
 
-inline bool check_complete( const KeySet* set, const QString& key ) { return set->first.first.contains( key ) ; } 
-inline bool check_head( const KeySet* set, QChar head ) { return set->first.second.contains( head ) ; } 
-inline bool check_valid( const KeySet* set, const QString& key ) { return set->first.first.contains( key ) ? true : set->second.contains( key ) ; } 
+inline bool check_complete( const KeySet* set, const QString& key ) { return set->first.contains( key ) ; } 
+inline bool check_head( const KeySet* set, QChar head ) { return set->second.first.contains( head ) ; } 
+inline bool check_valid( const KeySet* set, const QString& key ) { return set->first.contains( key ) ? true : set->second.second.contains( key ) ; } 
 
 typedef QPair< QStringList, QPair<int,int> > KeyString ;
 
