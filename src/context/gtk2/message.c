@@ -71,10 +71,23 @@ static void query_surrounding( Context* c ) {
 }
 
 static void check_connection() {
+    g_debug( "check_connection" ) ;
     if ( !connection ) {
-        DBusError error ;
-        dbus_error_init( &error ) ;
-        connection = dbus_bus_get( DBUS_BUS_SESSION, &error ) ;
+        /*DBusError error ;*/
+        /*dbus_error_init( &error ) ;*/
+        /*connection = dbus_bus_get( DBUS_BUS_SESSION, &error ) ;*/
+        GError* error ;
+        DBusGConnection* gconnection = NULL ;
+        gconnection = dbus_g_bus_get( DBUS_BUS_SESSION, &error ) ;
+        if ( gconnection == NULL ) {
+            g_debug( "connect error : %s", error->message ) ;
+            g_error_free( error ) ;
+        }
+        else {
+            g_debug( "connect" ) ;
+            connection = dbus_g_connection_get_connection( gconnection ) ;
+            /*dbus_connection_setup_with_g_main( connection, NULL ) ;*/
+        }
     }
 }
 
@@ -243,15 +256,16 @@ gboolean call_keyRelease( int keycode , int modifiers ) {
 }
 
 DBusHandlerResult filter( DBusConnection* connection, DBusMessage* message, void* data ) {
-    /*g_debug( "filter %s", dbus_message_get_member( message ) ) ;*/
+    g_debug( "filter %s", dbus_message_get_member( message ) ) ;
     if ( focused_context ) {
+        g_debug( "has focused_context" ) ;
         if ( focused_context->focused ) {
 #ifdef MAEMO_CHANGES
 if ( focused_context->window ) {
     guint64 xid = GDK_WINDOW_XID(focused_context->window) ;
-    /*g_debug( "xid %llu", xid ) ;*/
+    g_debug( "xid %llu", xid ) ;
     guint64 id = call_getFocusedWindowId() ;
-    /*g_debug( "get %llu", id ) ;*/
+    g_debug( "get %llu", id ) ;
     if ( xid != id )
         return DBUS_HANDLER_RESULT_NOT_YET_HANDLED ;
 }
@@ -307,7 +321,7 @@ if ( focused_context->window ) {
 
 void request_connect() {
     check_connection() ;
-    dbus_connection_setup_with_g_main( connection, NULL ) ;
+    /*dbus_connection_setup_with_g_main( connection, NULL ) ;*/
     dbus_bus_add_match( connection, "type='signal',interface='inputmethod.host',member='sendCommit',path='/host'", NULL ) ;
     dbus_bus_add_match( connection, "type='signal',interface='inputmethod.host',member='sendKeyEvent',path='/host'", NULL ) ;
     dbus_bus_add_match( connection, "type='signal',interface='inputmethod.host',member='sendMessage',path='/host'", NULL ) ;

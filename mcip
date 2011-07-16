@@ -26,5 +26,4 @@ touch /home/user/.config/mcip/userdict.log
 sort -r /home/user/.config/mcip/userdict.log > /home/user/.config/mcip/userdict.tmp
 python /opt/cim/data/prePhrase.py /home/user/.config/mcip/userdict.tmp > /home/user/.config/mcip/userdict.log
 
-
-QT_IM_MODULE="" run-standalone.sh /opt/cim/host/main
+GTK_IM_MODULE="hildon-input-method" QT_IM_MODULE="" run-standalone.sh /opt/cim/host/main

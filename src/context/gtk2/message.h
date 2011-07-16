@@ -1,8 +1,9 @@
 #ifndef MESSAGE_H
 #define MESSAGE_H
 
-#include <dbus/dbus-glib.h>
+#include <glib.h>
 #include <dbus/dbus.h>
+#include <dbus/dbus-glib.h>
 
 //gboolean send_surrounding( void* data ) {
 

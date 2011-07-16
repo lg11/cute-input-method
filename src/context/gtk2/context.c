@@ -141,6 +141,7 @@ static gboolean filter_keypress( GtkIMContext* context, GdkEventKey* event ) {
 
 static void focus_in( GtkIMContext* context ) {
     g_debug( "focus_in" ) ;
+    /*request_connect() ;*/
     Context* c = CONTEXT(context) ;
     set_focused_context( G_OBJECT(c) ) ;
     c->focused = TRUE ;
