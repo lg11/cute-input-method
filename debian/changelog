@@ -1,3 +1,7 @@
+cuteinputmethod (0.4.0.2-maemo6-1) unstable; urgency=low
+  * start on maemo6
+ -- liang <sd.foolegg@gmail.com>  Web,  21 Jul 2011 00:13:00 +0800
+
 mcip-nt1 (0.4.0.2-maemo5-1) fremantle; urgency=low
   * fix Onscreen Keyboard cannot deselecet issue.
   * fix not reset issue when close/open keyboard.

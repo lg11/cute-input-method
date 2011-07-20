@@ -1,15 +1,15 @@
-Source: mcip-nt1
+Source: cuteinputmethod
 Section: user/system
 Priority: optional
 Maintainer: liang <sd.foolegg@gmail.com> 
 XSBC-Original-Maintainer: liang <sd.foolegg@gmail.com>
-Build-Depends: dpkg-dev (>= 1.13.19), debhelper (>= 4.0.0), dpatch, autotools-dev, pkg-config, libgconf2-dev, libdbus-glib-1-dev, libgtk2.0-dev, python2.5, libqt4-dev
+Build-Depends: dpkg-dev (>= 1.13.19), debhelper (>= 4.0.0), dpatch, autotools-dev, pkg-config, python, libqt4-dev, libmeegoimframework-dev
 Standards-Version: 3.7.2
 
-Package: mcip-nt1
-Architecture: armel
-Conflicts: scim, mscim, mcip
-Depends:  ${shlibs:Depends}, pyside-qt4, python2.5-qt4-dbus
+Package: cuteinputmethod
+Architecture: any
+Conflicts:
+Depends:  ${shlibs:Depends}, libmeegoimframework0
 Description: A Chinese Pinyin input method for N900
  This package will install new gtk+/qt4 IMContext, and will replace your default virtual keyboard.
  Please uninstall MSCIM/mcip if you already installed that before.

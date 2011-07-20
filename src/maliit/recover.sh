@@ -1,11 +1,11 @@
-gconftool-2 -s /meegotouch/inputmethods/onscreen/enabled --list-type=string -t list "["libcuteinputmethod.so",""]"
-gconftool-2 -s /meegotouch/inputmethods/onscreen/active --list-type=string -t list "["libcuteinputmethod.so",""]"
+#gconftool-2 -s /meegotouch/inputmethods/onscreen/enabled --list-type=string -t list "["libcuteinputmethod.so",""]"
+#gconftool-2 -s /meegotouch/inputmethods/onscreen/active --list-type=string -t list "["libcuteinputmethod.so",""]"
 
-rm /usr/lib/meego-im-plugins/libcuteinputmethod.so
-cp libcuteinputmethod.so /usr/lib/meego-im-plugins
+#rm /usr/lib/meego-im-plugins/libcuteinputmethod.so
+#cp libcuteinputmethod.so /usr/lib/meego-im-plugins
 
-#gconftool-2 -s /meegotouch/inputmethods/onscreen/enabled --list-type=string -t list "["libmeego-keyboard.so","en_gb.xml"]"
-#gconftool-2 -s /meegotouch/inputmethods/onscreen/active --list-type=string -t list "["libmeego-keyboard.so","en_gb.xml"]"
+gconftool-2 -s /meegotouch/inputmethods/onscreen/enabled --list-type=string -t list "["libmeego-keyboard.so","en_gb.xml"]"
+gconftool-2 -s /meegotouch/inputmethods/onscreen/active --list-type=string -t list "["libmeego-keyboard.so","en_gb.xml"]"
 
 
 

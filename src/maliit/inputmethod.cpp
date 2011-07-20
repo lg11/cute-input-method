@@ -80,7 +80,7 @@ public :
 InputMethod::InputMethod( MAbstractInputMethodHost *host, QWidget *mainWindow ) : MAbstractInputMethod( host, mainWindow ), d_ptr( new InputMethodPrivate( this, mainWindow ) ) {
     qDebug() << "inputmethod" << "construct" ;
     Q_D( InputMethod ) ;
-    d->load( "/home/user/workspace/cim/skeleton/mallit/qml/main.qml" ) ;
+    d->load( "/usr/share/cuteinputmethod/maliit/qml/main.qml" ) ;
 
     QWidget* viewport = d->view->viewport() ;
 

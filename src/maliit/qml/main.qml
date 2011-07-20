@@ -57,7 +57,7 @@ Rectangle {
     Component.onCompleted : {
         inputmethod.setInputMethodArea( Qt.rect( root.x, root.y, root.width, root.height ) )
         console.log( "load start" ) 
-        engine.load( "workspace/cim/data/formated" )
+        engine.load( "/usr/share/cuteinputmethod/data/formated" )
         engine.setKeyboardLayout( 1 )
         console.log( "load end" ) 
     }
