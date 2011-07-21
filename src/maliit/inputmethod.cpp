@@ -40,7 +40,7 @@ public :
     InputMethodPrivate( InputMethod* inputmethod, QWidget* mainWindow ) :
         q_ptr( inputmethod ) ,
         scene( new QGraphicsScene( display_rect(), inputmethod ) ),
-        view( new QGraphicsView( this->scene, mainWindow ) ) ,
+        view( new MImGraphicsView( this->scene, mainWindow ) ) ,
         engine( new QDeclarativeEngine( inputmethod ) ),
         content( NULL ),
         component( NULL )
@@ -102,9 +102,8 @@ void InputMethod::show() {
     qDebug() << "inputmethod" << "show" ;
     Q_D( InputMethod ) ;
     d->show() ;
-    d->view->show() ;
+    //d->view->show() ;
 
-    //const QRegion r( display_rect() ) ;
     const QRegion region( d->inputMethodArea ) ;
     this->inputMethodHost()->setScreenRegion( region ) ;
     this->inputMethodHost()->setInputMethodArea( region ) ;
@@ -114,7 +113,7 @@ void InputMethod::hide() {
     qDebug() << "inputmethod" << "hide" ;
     Q_D( InputMethod ) ;
     d->hide() ;
-    d->view->hide() ;
+    //d->view->hide() ;
 
     const QRegion region ;
     this->inputMethodHost()->setScreenRegion( region ) ;
@@ -255,8 +254,8 @@ void InputMethod::setInputMethodArea( const QRect &area ) {
     Q_D( InputMethod ) ;
     if ( d->inputMethodArea != area ) {
         d->inputMethodArea = area ;
-        QRegion region( d->inputMethodArea ) ;
-        this->inputMethodHost()->setInputMethodArea( region ) ;
+        //QRegion region( d->inputMethodArea ) ;
+        //this->inputMethodHost()->setInputMethodArea( region ) ;
     }
 }
 

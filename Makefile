@@ -1,25 +1,17 @@
 DIRS = data
 QML_PLUGIN_DIRS = src/mousetrack
+QMAKE_DIRS = src/mousetrack src/maliit src/engine
 
-ALL : qml_plugin maliit engine
+ALL : qmake
 	set -e ; for d in $(DIRS) ; do $(MAKE) -C $$d ; done
 
-maliit :
-	qmake -makefile src/maliit/plugin.pro -o src/maliit/Makefile 
-	$(MAKE) -C src/maliit
-
-engine :
-	qmake -makefile src/engine/plugin.pro -o src/maliit/Makefile 
-	$(MAKE) -C src/engine
-
-qml_plugin :
-	set -e ; for d in $(QML_PLUGIN_DIRS) ; do qmake -makefile $$d/plugin.pro -o $$d/Makefile ; done
-	set -e ; for d in $(QML_PLUGIN_DIRS) ; do $(MAKE) -C $$d ; done
+qmake :
+	set -e ; for d in $(QMAKE_DIRS) ; do qmake -makefile $$d/plugin.pro -o $$d/Makefile ; done
+	set -e ; for d in $(QMAKE_DIRS) ; do $(MAKE) -C $$d ; done
 
 clean :
+	set -e ; for d in $(QMAKE_DIRS) ; do $(MAKE) -C $$d clean ; done
 	set -e ; for d in $(DIRS) ; do $(MAKE) -C $$d clean ; done
-	set -e ; for d in $(QML_PLUGIN_DIRS) ; do $(MAKE) -C $$d clean ; done
-	$(MAKE) -C src/host clean
 
 install :
 	mkdir -p $(DESTDIR)/usr/share/cuteinputmethod
@@ -39,6 +31,8 @@ install :
 	set -e ; for d in $(QML_PLUGIN_DIRS) ; do cp $$d/*.so $(DESTDIR)/usr/share/cuteinputmethod/maliit/qml/mouseArea ; done
 	cp src/engine/libengine.so $(DESTDIR)/usr/share/cuteinputmethod/maliit/qml
 	cp src/maliit/libcuteinputmethod.so $(DESTDIR)/usr/lib/meego-im-plugins
+	cp src/maliit/gconf.sh $(DESTDIR)/usr/share/cuteinputmethod/maliit/
+	cp src/maliit/recover.sh $(DESTDIR)/usr/share/cuteinputmethod/maliit/
 
 uninstall :
 	rm -rf $(DESTDIR)/usr/share/cuteinputmethod
