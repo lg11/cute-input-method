@@ -21,7 +21,6 @@ inline void add_key( KeyMap* map, const QString& key ) {
         i = key.indexOf( QChar('\''), i ) ;
     }
     (*map)[path].insert( key ) ;
-    //qDebug() << key << path ;
 }
 
 inline const QSet<QString>* get_keys( KeyMap* map, const QString& path ) {
